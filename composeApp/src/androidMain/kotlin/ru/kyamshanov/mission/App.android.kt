@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.core.view.WindowCompat
 
 class AndroidApp : Application() {
     companion object {
@@ -21,16 +22,7 @@ class AndroidApp : Application() {
 class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent { App() }
     }
-}
-
-internal actual fun openUrl(url: String?) {
-    val uri = url?.let { Uri.parse(it) } ?: return
-    val intent = Intent().apply {
-        action = Intent.ACTION_VIEW
-        data = uri
-        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    }
-    AndroidApp.INSTANCE.startActivity(intent)
 }
