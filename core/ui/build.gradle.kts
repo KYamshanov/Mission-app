@@ -1,3 +1,3 @@
 plugins{
-    id("feature-impl")
+    id("multiplatform-compose")
 }
