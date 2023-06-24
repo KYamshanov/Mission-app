@@ -1,12 +1,13 @@
 plugins {
-    id("multiplatform-application")
+    id("multiplatform-compose")
 }
 
 kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(projects.core.splashScreen)
+                implementation(projects.core.theme)
+                implementation(projects.core.ui)
             }
         }
     }

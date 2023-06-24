@@ -20,4 +20,8 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":composeApp")
-include(":core:ui")
+include(
+    ":core:theme",
+    ":core:ui",
+    ":core:splash-screen",
+)
