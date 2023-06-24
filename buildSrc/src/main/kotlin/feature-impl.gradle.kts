@@ -1,27 +1,30 @@
+import org.gradle.accessors.dm.LibrariesForLibs
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
+//see https://github.com/gradle/gradle/issues/15383
+val libs = the<LibrariesForLibs>()
+
 plugins {
-    use(libs.plugins.multiplatform)
-    use(libs.plugins.compose)
-    use(libs.plugins.android.application)
-    alias(libs.plugins.kotlinx.serialization)
+    id("org.jetbrains.kotlin.multiplatform")
+    id("com.android.application")
+    id("org.jetbrains.compose")
 }
 
 kotlin {
-    android {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
-    }
-
+    android()
     jvm("desktop")
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(projects.core.ui)
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.ktor.core)
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 
@@ -30,25 +33,6 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.androidx.appcompat)
-                implementation(libs.androidx.activityCompose)
-                implementation(libs.compose.uitooling)
-                implementation(libs.kotlinx.coroutines.android)
-                implementation(libs.ktor.client.okhttp)
-            }
-        }
-
-        val desktopMain by getting {
-            dependencies {
-                implementation(compose.desktop.common)
-                implementation(compose.desktop.currentOs)
-                implementation(libs.ktor.client.okhttp)
-            }
-        }
-
     }
 }
 

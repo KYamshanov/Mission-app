@@ -21,6 +21,9 @@ ktor-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+compose-gradle-plugin = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "compose" }
 
 [plugins]
 
