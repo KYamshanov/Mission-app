@@ -4,13 +4,13 @@ import android.app.Application
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import android.view.WindowInsets
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 import ru.kyamshanov.mission.core.di.common.DiRegistry
 import ru.kyamshanov.mission.core.splash_screen.MainContent
 
@@ -23,6 +23,7 @@ class AndroidApp : Application() {
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
+        Napier.base(DebugAntilog())
         DiRegistry.registering()
     }
 }
