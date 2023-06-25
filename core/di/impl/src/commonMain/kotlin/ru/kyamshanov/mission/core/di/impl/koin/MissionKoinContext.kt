@@ -4,7 +4,7 @@ import org.koin.dsl.koinApplication
 
 internal object MissionKoinContext {
 
-    val koinApp = koinApplication { }
+    private val koinApp = koinApplication { }
 
     val koin = koinApp.koin
 }

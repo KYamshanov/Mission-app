@@ -30,4 +30,7 @@ include(
     ":core:di:api",
     ":core:di:impl",
     ":core:di:common",
+    ":core:navigation:api",
+    ":core:navigation:impl",
+    ":core:navigation:common",
 )

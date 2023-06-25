@@ -1,12 +1,15 @@
 package ru.kyamshanov.mission.core.login_screen.impl.di
 
-import ru.kyamshanov.mission.core.di.api.ComponentBuilder
+import org.koin.core.module.Module
+import ru.kyamshanov.mission.core.di.impl.koin.AbstractComponentBuilder
 import ru.kyamshanov.mission.core.login_screen.api.di.AuthenticationComponent
 
-class AuthenticationComponentBuilder : ComponentBuilder<AuthenticationComponent> {
-    override fun build(): AuthenticationComponent {
-        TODO("Not yet implemented")
-    }
+class AuthenticationComponentBuilder : AbstractComponentBuilder<AuthenticationComponent>() {
+
+    override val modules: List<Module> = listOf(authenticationModule)
+
+
+    override fun build() = AuthenticationComponentImpl()
 
 
 }
