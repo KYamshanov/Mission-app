@@ -10,7 +10,7 @@ class KoinComponentBuilder<T : AbstractComponent>(
         val koin = MissionKoinContext.koin
         koin.loadModules(sourceAbstractComponentBuilder.modules)
         val component = sourceAbstractComponentBuilder.build()
-        koin.unloadModules(sourceAbstractComponentBuilder.modules)
+       // koin.unloadModules(sourceAbstractComponentBuilder.modules)
         return component
     }
 }

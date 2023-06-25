@@ -33,4 +33,10 @@ include(
     ":core:navigation:api",
     ":core:navigation:impl",
     ":core:navigation:common",
+    ":core:network:api",
+    ":core:network:impl",
+    ":core:session-front:api",
+    ":core:session-front:impl",
+    ":core:base:api",
+    ":core:base:impl",
 )
