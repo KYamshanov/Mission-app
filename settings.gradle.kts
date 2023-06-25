@@ -17,6 +17,7 @@ dependencyResolutionManagement {
     }
 }
 
+//For enable access to modules as projects.core.ui
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":composeApp")
@@ -24,4 +25,6 @@ include(
     ":core:theme",
     ":core:ui",
     ":core:splash-screen",
+    ":core:login-screen:api",
+    ":core:login-screen:impl",
 )

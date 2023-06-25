@@ -12,7 +12,7 @@ import ru.kyamshanov.mission.MissionTheme
 import ru.kyamshanov.mission.core.ui.R
 
 @Composable
-actual fun SplashScreen() = MissionTheme {
+internal actual fun SplashComposable() = MissionTheme {
     Surface(modifier = Modifier.fillMaxSize(), color = MissionTheme.colors.background) {
         Box(contentAlignment = Alignment.Center) {
             Image(

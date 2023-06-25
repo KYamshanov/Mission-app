@@ -4,7 +4,7 @@ import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import ru.kyamshanov.mission.core.splash_screen.SplashScreen
+import ru.kyamshanov.mission.core.splash_screen.MainContent
 
 class AndroidApp : Application() {
     companion object {
@@ -20,6 +20,6 @@ class AndroidApp : Application() {
 class AppActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { SplashScreen() }
+        setContent { MainContent() }
     }
 }

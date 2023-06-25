@@ -7,13 +7,16 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.delay
 import ru.kyamshanov.mission.MissionTheme
+import ru.kyamshanov.mission.core.login_screen.impl.domain.AuthenticationLauncherImpl
 
 @Composable
-actual fun SplashScreen() =
+internal actual fun SplashComposable() =
     MissionTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MissionTheme.colors.background) {
             Box(contentAlignment = Alignment.Center) {

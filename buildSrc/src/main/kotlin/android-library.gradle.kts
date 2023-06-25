@@ -14,7 +14,6 @@ android {
 
     defaultConfig {
         minSdk = Versions.MinSDK
-        targetSdk = Versions.CompileSDK
     }
     sourceSets["main"].apply {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -25,7 +24,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    packagingOptions {
+    packaging {
         resources.excludes.add("META-INF/**")
     }
 }

@@ -9,6 +9,7 @@ compose-uitooling = "1.4.1"
 kotlinx-coroutines = "1.6.4"
 ktor = "2.3.0"
 kotlinx-serialization = "1.5.1"
+voyager = "1.0.0-rc06"
 
 [libraries]
 
@@ -24,6 +25,7 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 android-gradle-plugin = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 compose-gradle-plugin = { module = "org.jetbrains.compose:compose-gradle-plugin", version.ref = "compose" }
+voyager = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 
 [plugins]
 
