@@ -27,4 +27,7 @@ include(
     ":core:splash-screen",
     ":core:login-screen:api",
     ":core:login-screen:impl",
+    ":core:di:api",
+    ":core:di:impl",
+    ":core:di:common",
 )

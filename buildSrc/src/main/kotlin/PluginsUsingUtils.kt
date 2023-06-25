@@ -1,6 +1,9 @@
 import org.gradle.api.provider.Provider
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.getting
 import org.gradle.plugin.use.PluginDependenciesSpec
 import org.gradle.plugin.use.PluginDependency
+import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 
 /**
  * Хак для описание плагинов [.get().pluginId], которые были описаны в buildSrc.

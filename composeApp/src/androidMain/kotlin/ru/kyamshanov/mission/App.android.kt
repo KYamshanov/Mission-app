@@ -4,6 +4,7 @@ import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import ru.kyamshanov.mission.core.di.common.DiRegistry
 import ru.kyamshanov.mission.core.splash_screen.MainContent
 
 class AndroidApp : Application() {
@@ -14,6 +15,7 @@ class AndroidApp : Application() {
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
+        DiRegistry.registering()
     }
 }
 

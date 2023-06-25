@@ -7,6 +7,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(projects.core.splashScreen)
+                implementation(projects.core.di.common)
             }
         }
     }

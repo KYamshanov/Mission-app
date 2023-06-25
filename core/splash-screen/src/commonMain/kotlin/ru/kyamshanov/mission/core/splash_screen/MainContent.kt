@@ -10,13 +10,6 @@ import ru.kyamshanov.mission.core.login_screen.impl.domain.AuthenticationLaunche
 @Composable
 fun MainContent() = Navigator(SplashScreen()) {
     CurrentScreen()
-    AuthenticationLauncherImpl.nav = it
-
-    LaunchedEffect(true) {
-        delay(5000)
-
-        AuthenticationLauncherImpl.launch()
-    }
 }
 
 

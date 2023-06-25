@@ -3,9 +3,10 @@ package ru.kyamshanov.mission.core.login_screen.impl.domain
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
+import ru.kyamshanov.mission.core.login_screen.api.domain.AuthenticationLauncher
 import ru.kyamshanov.mission.core.login_screen.impl.ui.composable.AuthenticationComponent
 
-object AuthenticationLauncherImpl {
+class AuthenticationLauncherImpl : AuthenticationLauncher {
 
     var nav: Navigator? = null
 
