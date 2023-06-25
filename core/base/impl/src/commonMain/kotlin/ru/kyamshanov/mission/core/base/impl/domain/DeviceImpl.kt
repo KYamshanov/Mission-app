@@ -4,6 +4,6 @@ import ru.kyamshanov.mission.core.base.api.Device
 
 internal class DeviceImpl constructor() : Device {
 
-    override val info: Map<String, Any>
+    override val info: Map<String, String>
         get() = mutableMapOf("front-type" to "android", "fingerprint" to "unknown")
 }

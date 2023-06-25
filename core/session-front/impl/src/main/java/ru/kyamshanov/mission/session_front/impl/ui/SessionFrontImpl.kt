@@ -55,6 +55,8 @@ internal class SessionFrontImpl constructor(
             .also { sessionInfoImpl.session = it }
             .let { finishSetupSession(login, it) }
             .also { startAutoRefreshing() }
+    }.onFailure {
+        it.printStackTrace()
     }
 
     override suspend fun destroySession() {

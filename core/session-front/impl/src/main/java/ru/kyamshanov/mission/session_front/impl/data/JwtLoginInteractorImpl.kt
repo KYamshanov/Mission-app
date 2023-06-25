@@ -17,7 +17,7 @@ internal class JwtLoginInteractorImpl constructor(
 ) : JwtLoginInteractor {
 
     override suspend fun login(login: String, password: CharSequence): Result<AccessData> =
-        authenticationApi.login(UserDto(login, password, info = device.info))
+        authenticationApi.login(UserDto(login, password.toString(), info = device.info))
             .map { it.toDomain() }
 
     override suspend fun check(accessToken: Token): Result<AccessStatus> =

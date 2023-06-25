@@ -8,6 +8,7 @@ kotlin {
             dependencies {
                 api(projects.core.loginScreen.api)
                 implementation(projects.core.sessionFront.api)
+                implementation(projects.core.network.api)
             }
         }
     }

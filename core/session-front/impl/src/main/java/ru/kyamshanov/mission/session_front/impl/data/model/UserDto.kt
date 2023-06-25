@@ -12,6 +12,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class UserDto(
     val login: String,
-    val password: CharSequence,
-    val info: Map<String, @Contextual Any>? = null
+    val password: String,
+    val info: Map<String, String>? = null
 )

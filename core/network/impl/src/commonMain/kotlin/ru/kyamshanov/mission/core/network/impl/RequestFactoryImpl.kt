@@ -2,27 +2,27 @@ package ru.kyamshanov.mission.core.network.impl
 
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.*
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.http.HttpHeaders
-import io.ktor.serialization.kotlinx.json.*
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.network.api.RequestFactory
-import ru.kyamshanov.mission.session_front.api.SessionInfo
 import ru.kyamshanov.mission.session_front.api.di.SessionFrontComponent
 import ru.kyamshanov.mission.session_front.api.session.JwtLoggedSession
 import ru.kyamshanov.mission.session_front.api.session.LoggedSession
 
 class RequestFactoryImpl : RequestFactory {
 
-    private val client = HttpClient(Android) {
+    private val client = HttpClient {
         install(Logging) {
             logger = NetworkLogger()
             level = LogLevel.ALL
@@ -33,6 +33,7 @@ class RequestFactoryImpl : RequestFactory {
                 useAlternativeNames = false
             })
         }
+
         defaultRequest {
             url("http://192.168.43.29:80/") //mobile internet
             // url("http://10.2.15.91:80/") //wifi
@@ -56,7 +57,7 @@ class RequestFactoryImpl : RequestFactory {
     private inner class NetworkLogger : Logger {
 
         override fun log(message: String) {
-            Napier.v("HTTP Client", null, message)
+            Napier.i(message)
         }
     }
 

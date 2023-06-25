@@ -1,5 +1,4 @@
 import org.gradle.accessors.dm.LibrariesForLibs
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 //see https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
@@ -22,6 +21,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.napier)
             }
         }
 

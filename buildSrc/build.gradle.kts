@@ -13,6 +13,7 @@ dependencies {
     implementation(libs.kotlin.gradle.plugin)
     implementation(libs.android.gradle.plugin)
     implementation(libs.compose.gradle.plugin)
+    implementation(libs.kotlinx.serialization.gradle.plugin)
 
     //see https://github.com/gradle/gradle/issues/15383
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
