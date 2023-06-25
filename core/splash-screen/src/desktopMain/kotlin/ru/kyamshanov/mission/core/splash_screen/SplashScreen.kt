@@ -19,8 +19,7 @@ import ru.kyamshanov.mission.core.login_screen.impl.domain.AuthenticationLaunche
 
 @Composable
 internal actual fun SplashComposable() =
-    MissionTheme {
-        Surface(modifier = Modifier.fillMaxSize(), color = MissionTheme.colors.background) {
+
             Box(contentAlignment = Alignment.Center, modifier = Modifier.background(MissionTheme.colors.background)) {
                 Text(
                     text = "Загрузка...",
@@ -28,5 +27,3 @@ internal actual fun SplashComposable() =
                     modifier = Modifier.padding(16.dp)
                 )
             }
-        }
-    }

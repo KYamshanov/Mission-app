@@ -15,12 +15,11 @@ internal class SplashScreen : ComposableScreen {
     @Composable
     override fun Content() {
         SplashComposable()
-        LaunchedEffect(true){
+        LaunchedEffect(true) {
             delay(5000)
             requireNotNull(Di.getComponent<AuthenticationComponent>()).launcher.launch()
         }
     }
-
 }
 
 

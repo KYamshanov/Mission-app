@@ -1,5 +1,5 @@
 plugins{
-    id("multiplatform-ui-lib")
+    id("multiplatform-lib")
 }
 
 kotlin {

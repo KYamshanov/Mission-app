@@ -12,6 +12,9 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":core:ui"))
+                implementation(project(":core:di:impl"))
+                implementation(project(":core:navigation:api"))
+                implementation(project(":core:navigation:common"))
             }
         }
     }

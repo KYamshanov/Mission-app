@@ -5,7 +5,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
+import ru.kyamshanov.mission.core.ui.extensions.imePadding
+import ru.kyamshanov.mission.core.ui.extensions.navigationBarsPadding
 
 @Composable
 fun Surface(
@@ -75,6 +78,8 @@ fun Surface(
         topContent?.invoke()
         Column(
             modifier = modifier
+                .imePadding()
+                .navigationBarsPadding()
                 .fillMaxHeight()
                 .run { if (verticalScroll) verticalScroll(rememberScrollState()) else this }
                 .padding(16.dp)
