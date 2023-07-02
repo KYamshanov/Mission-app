@@ -5,5 +5,7 @@ import ru.kyamshanov.mission.core.login_screen.api.domain.AuthenticationLauncher
 import ru.kyamshanov.mission.core.login_screen.impl.domain.AuthenticationLauncherImpl
 
 internal val authenticationModule = module {
-    single<AuthenticationLauncher> { AuthenticationLauncherImpl() }
+    scope<ModuleComponent> {
+        scoped<AuthenticationLauncher> { AuthenticationLauncherImpl() }
+    }
 }

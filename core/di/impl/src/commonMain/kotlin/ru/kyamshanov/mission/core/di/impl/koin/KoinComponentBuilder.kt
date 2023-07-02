@@ -6,11 +6,10 @@ class KoinComponentBuilder<T : AbstractComponent>(
     private val sourceAbstractComponentBuilder: AbstractComponentBuilder<T>
 ) : ComponentBuilder<T> {
 
-    override fun build(): T {
+    init {
         val koin = MissionKoinContext.koin
         koin.loadModules(sourceAbstractComponentBuilder.modules)
-        val component = sourceAbstractComponentBuilder.build()
-       // koin.unloadModules(sourceAbstractComponentBuilder.modules)
-        return component
     }
+
+    override fun build(): T = sourceAbstractComponentBuilder.build()
 }
