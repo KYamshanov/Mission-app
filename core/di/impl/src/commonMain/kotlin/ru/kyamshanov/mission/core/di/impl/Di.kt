@@ -5,6 +5,7 @@ import ru.kyamshanov.mission.core.di.api.CoreComponent
 import ru.kyamshanov.mission.core.di.impl.koin.AbstractComponent
 import ru.kyamshanov.mission.core.di.impl.koin.AbstractComponentBuilder
 import ru.kyamshanov.mission.core.di.impl.koin.KoinComponentBuilder
+import java.io.Closeable
 import kotlin.reflect.KClass
 
 private const val CORE_COMPONENT_KEY = "core"
@@ -20,7 +21,7 @@ object Di {
     inline fun <reified ComponentType : Any, ReturnType : ComponentType> getInternalComponent(holderId: Any? = null): ReturnType =
         getComponent(ComponentType::class, holderId) as ReturnType
 
-    inline fun <reified T : Any> getComponent(holderId: Any? = null) : T? =
+    inline fun <reified T : Any> getComponent(holderId: Any? = null): T? =
         getComponent(T::class, holderId)
 
     inline fun <reified T : AbstractComponent> releaseComponent(holderId: Any) =
@@ -37,7 +38,7 @@ object Di {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun  <T : Any> getBuilder(clazz: KClass<Any>): ComponentBuilder<T>? =
+    fun <T : Any> getBuilder(clazz: KClass<Any>): ComponentBuilder<T>? =
         this.builders[clazz] as? ComponentBuilder<T>
 
     @Suppress("UNCHECKED_CAST")
@@ -48,13 +49,14 @@ object Di {
             id = CORE_COMPONENT_KEY
 
         return if (id != null) getSavableComponent(clazz, id)
-        else builders[clazz]?.build() as? T
+        else (builders[clazz]?.build() as? T)?.also { onBeforeReleaseComponent(null, it) }
     }
 
     fun <T : Any> releaseComponent(clazz: KClass<T>, holderId: Any) {
-        componentsHolder[clazz]?.let {
-            it.remove(holderId)
-            if (it.isEmpty()) componentsHolder.remove(clazz)
+        componentsHolder[clazz]?.let { components ->
+            components.filter { it.key == holderId }.forEach(::onBeforeReleaseComponent)
+            components.remove(holderId)
+            if (components.isEmpty()) componentsHolder.remove(clazz)
         }
     }
 
@@ -65,5 +67,9 @@ object Di {
         return (holders[holderId]
             ?: builders[clazz]?.build()?.also { holders[holderId] = it }
             ?: releaseComponent(clazz, holderId)) as T?
+    }
+
+    private fun onBeforeReleaseComponent(id: Any?, component: Any) {
+        if (component is Closeable) component.close()
     }
 }

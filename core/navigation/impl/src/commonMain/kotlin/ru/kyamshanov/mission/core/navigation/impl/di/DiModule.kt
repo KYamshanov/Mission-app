@@ -8,13 +8,14 @@ import ru.kyamshanov.mission.core.navigation.impl.domain.ResultProviderImpl
 import ru.kyamshanov.mission.core.navigation.impl.domain.NavigatorControllerHolder
 import cafe.adriel.voyager.navigator.Navigator as VoyagerNavigator
 
-internal val bindsModule = module {
-    single<Navigator> { NavigatorImpl(get(), get()) }
-    single<ResultProvider> { ResultProviderImpl(get()) }
-
-    single<NavigatorControllerHolder> {
-        object : NavigatorControllerHolder {
-            override var navigator: VoyagerNavigator? = null
+internal val navigationModule = module {
+    scope<ModuleComponent> {
+        scoped<Navigator> { NavigatorImpl(get(), get()) }
+        scoped<ResultProvider> { ResultProviderImpl(get()) }
+        scoped<NavigatorControllerHolder> {
+            object : NavigatorControllerHolder {
+                override var navigator: VoyagerNavigator? = null
+            }
         }
     }
 }

@@ -8,8 +8,5 @@ class AuthenticationComponentBuilder : AbstractComponentBuilder<AuthenticationCo
 
     override val modules: List<Module> = listOf(authenticationModule)
 
-
-    override fun build() = AuthenticationComponentImpl()
-
-
+    override fun build(): AuthenticationComponent = ModuleComponent()
 }
