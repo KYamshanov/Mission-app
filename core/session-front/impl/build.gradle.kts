@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     api(projects.core.sessionFront.api)
-    api(projects.core.di.impl)
+    api(projects.core.di.common)
     implementation(projects.core.network.api)
     implementation(projects.core.base.api)
 }

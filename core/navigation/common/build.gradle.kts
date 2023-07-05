@@ -1,14 +1,8 @@
-plugins{
-    id("multiplatform-lib")
+plugins {
+    id("kotlin-api")
 }
 
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(projects.core.navigation.api)
-                api(libs.voyager)
-            }
-        }
-    }
+dependencies {
+    api(libs.voyager)
+    implementation(projects.core.navigation.api)
 }

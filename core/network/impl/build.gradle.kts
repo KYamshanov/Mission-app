@@ -9,7 +9,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(projects.core.network.api)
-                implementation(projects.core.di.impl)
+                implementation(projects.core.di.common)
                 implementation(projects.core.sessionFront.api)
                 implementation(libs.ktor.core)
                 implementation(libs.ktor.client.negotiation)

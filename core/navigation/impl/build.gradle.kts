@@ -8,7 +8,7 @@ kotlin {
             dependencies {
                 api(projects.core.navigation.api)
                 api(projects.core.navigation.common)
-                implementation(projects.core.di.impl)
+                implementation(projects.core.di.common)
                 implementation(libs.voyager)
             }
         }
