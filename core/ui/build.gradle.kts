@@ -1,4 +1,4 @@
-plugins{
+plugins {
     id("multiplatform-compose")
 }
 
@@ -6,12 +6,11 @@ android {
     namespace = "ru.kyamshanov.mission.core.ui"
 }
 
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(projects.core.theme)
-            }
-        }
-    }
+
+dependencies {
+    //base api
+    commonMainApi(projects.core.theme)
+
+    //External libs
+    commonMainApi(libs.moko.mvvm)
 }

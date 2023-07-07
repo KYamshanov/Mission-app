@@ -8,4 +8,5 @@ dependencies {
     implementation(projects.core.base.impl)
     implementation(projects.core.sessionFront.impl)
     implementation(projects.core.network.impl)
+    implementation(projects.components.mainScreen.impl)
 }

@@ -1,5 +1,6 @@
 package ru.kyamshanov.mission.core.di.bundle
 
+import ru.kyamshanov.mission.components.main_screen.impl.di.MainScreenComponentBuilder
 import ru.kyamshanov.mission.core.base.impl.di.BaseCoreComponentBuilder
 import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.foundation.impl.login.di.AuthenticationComponentBuilder
@@ -17,6 +18,7 @@ object DiRegistry {
         Di.registration(SessionFrontComponentBuilder())
         Di.registration(NetworkComponentBuilder())
         Di.registration(SplashScreenComponentBuilder())
+        Di.registration(MainScreenComponentBuilder())
     }
 
 }

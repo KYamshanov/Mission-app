@@ -10,6 +10,4 @@ interface SessionInfo {
 
     val session: Session
         get() = sessionState.value
-
-    fun hasRole(role: UserRole): Boolean
 }
