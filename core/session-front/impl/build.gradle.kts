@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.getValue
+import org.gradle.kotlin.dsl.getting
+
 plugins {
     id("kotlin-api")
     id("network")

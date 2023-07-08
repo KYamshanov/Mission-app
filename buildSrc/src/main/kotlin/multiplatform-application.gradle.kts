@@ -1,7 +1,5 @@
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.gradle.api.JavaVersion
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.kotlin
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 //see https://github.com/gradle/gradle/issues/15383
@@ -22,7 +20,6 @@ kotlin {
                 implementation(compose.material)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
-                implementation(kotlin("test"))
             }
         }
 
@@ -57,6 +54,8 @@ compose.desktop {
             packageName = "ru.kyamshanov.mission.desktopApp"
             packageVersion = "1.0.0"
         }
+
+        args += listOf("--add-reads", "kotlin.stdlib=kotlinx.coroutines.core.jvm")
     }
 }
 
