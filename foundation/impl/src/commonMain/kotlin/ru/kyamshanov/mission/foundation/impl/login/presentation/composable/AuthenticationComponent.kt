@@ -2,9 +2,8 @@ package ru.kyamshanov.mission.foundation.impl.login.presentation.composable
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -25,9 +24,6 @@ internal fun AuthenticationComponent(
     moduleComponent: ModuleComponent = requireNotNull(Di.getInternalComponent<AuthenticationComponent, ModuleComponent>()),
     viewModel: AuthenticationViewModel = viewModel { moduleComponent.viewModel }
 ) {
-
-    val state by viewModel.state.collectAsState()
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -42,14 +38,14 @@ internal fun AuthenticationComponent(
         ) {
             CellInput(
                 Modifier.fillMaxWidth(),
-                value = state.login,
+                value = viewModel.loginState.value,
                 onValueChange = { text -> viewModel.setLogin(text) },
                 label = "Логин",
             )
             Spacer(modifier = Modifier.height(16.dp))
             CellInput(
                 Modifier.fillMaxWidth(),
-                value = state.password.toString(),
+                value = viewModel.passwordState.value.toString(),
                 onValueChange = { text -> viewModel.setPassword(text) },
                 label = "Пароль",
                 isMasked = true,

@@ -9,23 +9,9 @@ internal class AuthenticationInteractorImpl(
     private val sessionFront: SessionFront
 ) : AuthenticationInteractor {
 
-    private var currentLogin: String? = null
-    private var currentPassword: CharSequence? = null
 
-    override fun setLogin(login: String): Result<String> = runCatching {
-        currentLogin = login
-        requireNotNull(currentLogin)
-    }
-
-    override fun setPassword(password: CharSequence): Result<CharSequence> = runCatching {
-        currentPassword = password
-        requireNotNull(currentPassword)
-    }
-
-    override suspend fun onLogin(): Result<Unit> = runCatching {
+    override suspend fun login(login: String, password: CharSequence): Result<Unit> = runCatching {
         withContext(Dispatchers.Default) {
-            val login = requireNotNull(currentLogin)
-            val password = requireNotNull(currentPassword)
             sessionFront.openSession(login, password).getOrThrow()
         }
     }

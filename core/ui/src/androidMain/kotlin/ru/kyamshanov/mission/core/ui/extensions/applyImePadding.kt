@@ -19,3 +19,6 @@ actual fun ViewConfiguration.getOrientation(): Int = LocalConfiguration.current.
 @Composable
 actual fun WindowInsets.Companion.getStatusBars(): WindowInsets = WindowInsets.statusBars
 actual fun Modifier.systemBarsPadding(): Modifier = systemBarsPadding()
+
+@Composable
+actual fun isSingleLineSupported(): Boolean = true

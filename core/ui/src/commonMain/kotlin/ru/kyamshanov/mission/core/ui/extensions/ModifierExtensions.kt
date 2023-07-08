@@ -16,3 +16,6 @@ expect fun ViewConfiguration.getOrientation(): Int
 
 @Composable
 expect fun WindowInsets.Companion.getStatusBars(): WindowInsets
+
+@Composable
+expect fun isSingleLineSupported(): Boolean
