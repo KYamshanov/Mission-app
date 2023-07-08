@@ -3,6 +3,7 @@ package ru.kyamshanov.mission.foundation.impl.login.presentation.composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -13,7 +14,6 @@ import ru.kyamshanov.mission.core.ui.components.CellInput
 import ru.kyamshanov.mission.core.ui.components.MainButton
 import ru.kyamshanov.mission.core.ui.extensions.imePadding
 import ru.kyamshanov.mission.core.ui.extensions.systemBarsPadding
-import ru.kyamshanov.mission.core.ui.utils.collectAsState
 import ru.kyamshanov.mission.core.ui.utils.viewModel
 import ru.kyamshanov.mission.foundation.api.login.di.AuthenticationComponent
 import ru.kyamshanov.mission.foundation.impl.login.di.ModuleComponent
@@ -26,7 +26,7 @@ internal fun AuthenticationComponent(
     viewModel: AuthenticationViewModel = viewModel { moduleComponent.viewModel }
 ) {
 
-    val state by viewModel.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     Box(
         modifier = Modifier

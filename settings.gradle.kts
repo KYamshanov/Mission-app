@@ -39,6 +39,7 @@ include(
     ":core:session-front:common",
     ":core:base:api",
     ":core:base:impl",
+    ":core:platform-base",
 )
 include(
     ":foundation:api",

@@ -1,4 +1,4 @@
-package ru.kyamshanov.mission.core.splash_screen
+package ru.kyamshanov.mission.foundation.impl.splash_screen.presentation.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

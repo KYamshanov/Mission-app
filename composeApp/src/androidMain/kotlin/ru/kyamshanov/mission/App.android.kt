@@ -11,8 +11,11 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
-import ru.kyamshanov.mission.core.di.common.DiRegistry
+import ru.kyamshanov.mission.core.di.bundle.DiRegistry
+import ru.kyamshanov.mission.core.di.impl.Di
+import ru.kyamshanov.mission.core.platform_base.di.PlatformBaseComponentBuilder
 import ru.kyamshanov.mission.navigation.MainContent
+
 class AndroidApp : Application() {
     companion object {
 
@@ -23,6 +26,7 @@ class AndroidApp : Application() {
         super.onCreate()
         INSTANCE = this
         Napier.base(DebugAntilog())
+        Di.registration(PlatformBaseComponentBuilder(this))
         DiRegistry.registering()
     }
 }

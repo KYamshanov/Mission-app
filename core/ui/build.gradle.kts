@@ -13,5 +13,4 @@ dependencies {
 
     //External libs
     commonMainApi(libs.moko.mvvm)
-    commonMainApi(libs.orbit.mvi.core)
 }

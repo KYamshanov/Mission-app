@@ -1,37 +1,35 @@
 package ru.kyamshanov.mission.foundation.impl.login.presentation.viewmodel
 
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.container
-import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.reduce
 import ru.kyamshanov.mission.components.main_screen.api.domain.MainScreenLauncher
 import ru.kyamshanov.mission.foundation.impl.login.domain.AuthenticationInteractor
-import ru.kyamshanov.mission.foundation.impl.login.presentation.state.AuthenticationSideEffect
 import ru.kyamshanov.mission.foundation.impl.login.presentation.state.AuthenticationState
 
 internal class AuthenticationViewModel(
     private val authenticationInteractor: AuthenticationInteractor,
     private val mainScreenLauncher: MainScreenLauncher,
-) : ViewModel(), ContainerHost<AuthenticationState, AuthenticationSideEffect> {
+) : ViewModel() {
 
-    override val container =
-        viewModelScope.container<AuthenticationState, AuthenticationSideEffect>(AuthenticationState())
+    private val _state = MutableStateFlow(AuthenticationState())
+    val state = _state.asStateFlow()
 
-    fun setLogin(login: String) = intent {
+    fun setLogin(login: String) {
         authenticationInteractor.setLogin(login).onSuccess { updatedLogin ->
-            reduce { state.copy(login = updatedLogin) }
+            _state.update { it.copy(login = updatedLogin) }
         }
     }
 
-    fun setPassword(password: CharSequence) = intent {
+    fun setPassword(password: CharSequence) {
         authenticationInteractor.setPassword(password).onSuccess { updatedPassword ->
-            reduce { state.copy(password = updatedPassword) }
+            _state.update { it.copy(password = updatedPassword) }
         }
     }
 
-    fun clickOnLogin() = intent {
+    fun clickOnLogin() = viewModelScope.launch {
         authenticationInteractor.onLogin()
             .onSuccess { mainScreenLauncher.launch() }
     }
