@@ -24,12 +24,11 @@ include(":composeApp")
 include(
     ":core:theme",
     ":core:ui",
-    ":core:splash-screen",
     ":core:login-screen:api",
     ":core:login-screen:impl",
     ":core:di:api",
-    ":core:di:impl",
     ":core:di:common",
+    ":core:di:bundle",
     ":core:navigation:api",
     ":core:navigation:impl",
     ":core:navigation:common",
@@ -37,6 +36,15 @@ include(
     ":core:network:impl",
     ":core:session-front:api",
     ":core:session-front:impl",
+    ":core:session-front:common",
     ":core:base:api",
     ":core:base:impl",
+)
+include(
+    ":foundation:api",
+    ":foundation:impl",
+)
+include(
+    ":components:main-screen:api",
+    ":components:main-screen:impl",
 )

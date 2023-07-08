@@ -2,13 +2,9 @@ plugins {
     id("multiplatform-application")
 }
 
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(projects.core.splashScreen)
-                implementation(projects.core.di.common)
-            }
-        }
-    }
+dependencies {
+    commonMainImplementation(projects.core.di.bundle)
+    commonMainImplementation(projects.core.di.common)
+    commonMainImplementation(projects.core.navigation.impl)
+    commonMainImplementation(projects.foundation.api)
 }

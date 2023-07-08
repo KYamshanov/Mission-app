@@ -24,11 +24,5 @@ kotlin {
                 implementation(libs.napier)
             }
         }
-
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
     }
 }

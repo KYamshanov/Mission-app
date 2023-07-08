@@ -40,7 +40,7 @@ internal val YellowPleasant = Color(0xFFF1EA3E)
 internal val OrangePleasant = Color(0xFFF2994A)
 
 internal val DarkColorPalette = MissionColors(
-    background = WhitePleasant,
+    background = GrayPleasant,
     secondary = Color.Blue,
     baseButtonText = White,
     input = White,

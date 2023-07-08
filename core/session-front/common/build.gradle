@@ -1,0 +1,7 @@
+plugins {
+    id("kotlin-api")
+}
+
+dependencies {
+    api(projects.core.sessionFront.api)
+}

@@ -12,8 +12,7 @@ import androidx.core.view.WindowCompat
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import ru.kyamshanov.mission.core.di.common.DiRegistry
-import ru.kyamshanov.mission.core.splash_screen.MainContent
-
+import ru.kyamshanov.mission.navigation.MainContent
 class AndroidApp : Application() {
     companion object {
 
