@@ -55,8 +55,6 @@ compose.desktop {
             packageName = "ru.kyamshanov.mission.desktopApp"
             packageVersion = "1.0.0"
         }
-
-        args += listOf("--add-reads", "kotlin.stdlib=kotlinx.coroutines.core.jvm")
     }
 }
 

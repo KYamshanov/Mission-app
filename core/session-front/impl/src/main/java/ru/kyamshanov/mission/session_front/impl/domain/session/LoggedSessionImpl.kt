@@ -9,5 +9,7 @@ import ru.kyamshanov.mission.session_front.impl.domain.model.AccessStatus
 
 internal class LoggedSessionImpl(
     override val userInfo: UserInfo,
-    override val tokenRepository: TokenRepository,
+    override val idToken: Token,
+    override val accessToken: Token,
+    override val refreshToken: Token,
 ) : LoggedSession

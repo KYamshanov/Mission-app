@@ -1,5 +1,6 @@
 package ru.kyamshanov.mission.core.di.impl
 
+import io.github.aakira.napier.Napier
 import ru.kyamshanov.mission.core.di.api.ComponentBuilder
 import ru.kyamshanov.mission.core.di.api.CoreComponent
 import ru.kyamshanov.mission.core.di.impl.koin.AbstractComponent
@@ -34,7 +35,7 @@ object Di {
         this.builders[clazz] = KoinComponentBuilder(builder as AbstractComponentBuilder<AbstractComponent>)
         componentsHolder.remove(clazz)
 
-        println("Registration component : ${clazz.simpleName}")
+        Napier.i("Registration component : ${clazz.simpleName}")
     }
 
     @Suppress("UNCHECKED_CAST")

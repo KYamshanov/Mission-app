@@ -18,7 +18,7 @@ internal data class CheckAccessRqDto(
  */
 internal data class CheckAccessRsDto(
     val status: AccessStatus,
-    val roles: List<UserRole>?
+    val roles: List<UserRoleDto>?
 ) {
 
     /**

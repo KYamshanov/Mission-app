@@ -6,6 +6,7 @@ import ru.kyamshanov.mission.components.main_screen.api.domain.MainScreenLaunche
 import ru.kyamshanov.mission.foundation.api.login.domain.AuthenticationLauncher
 import ru.kyamshanov.mission.session_front.api.SessionInfo
 import ru.kyamshanov.mission.session_front.api.session.LoggedSession
+import ru.kyamshanov.mission.session_front.api.session.LoggingSession
 import ru.kyamshanov.mission.session_front.api.session.UnauthorizedSession
 import ru.kyamshanov.mission.session_front.api.session.UnidentifiedSession
 
@@ -22,6 +23,7 @@ internal class SplashViewModel(
                     is LoggedSession -> openMainScreen()
                     is UnauthorizedSession -> startLogin()
                     UnidentifiedSession -> Unit
+                    is LoggingSession -> Unit
                 }
             }
         }

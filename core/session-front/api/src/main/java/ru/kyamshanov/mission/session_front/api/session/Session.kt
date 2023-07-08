@@ -9,18 +9,16 @@ import ru.kyamshanov.mission.session_front.api.model.UserInfo
  */
 sealed interface Session
 
+interface LoggingSession : Session, TokenRepository
+
 /**
  * Авторизованная сессия
  */
 
-interface LoggedSession : Session {
+interface LoggedSession : Session, TokenRepository {
 
     /** Информация о пользователе */
     val userInfo: UserInfo
-
-    /** Хранилище токенов */
-    val tokenRepository: TokenRepository
-
 }
 
 /**

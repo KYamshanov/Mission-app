@@ -17,6 +17,7 @@ import kotlinx.serialization.json.Json
 import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.network.api.RequestFactory
 import ru.kyamshanov.mission.session_front.api.di.SessionFrontComponent
+import ru.kyamshanov.mission.session_front.api.model.TokenRepository
 import ru.kyamshanov.mission.session_front.api.session.LoggedSession
 
 class RequestFactoryImpl : RequestFactory {
@@ -48,15 +49,15 @@ class RequestFactoryImpl : RequestFactory {
         client.post(endpoint, block)
 
     private fun getAuthorizationHeader(): String? =
-        (requireNotNull(Di.getComponent<SessionFrontComponent>()).sessionInfo.session as? LoggedSession)?.tokenRepository?.accessToken?.value
+        (requireNotNull(Di.getComponent<SessionFrontComponent>()).sessionInfo.session as? TokenRepository)?.accessToken?.value
 
     private fun getIdTokenHeader(): String? =
-        (requireNotNull(Di.getComponent<SessionFrontComponent>()).sessionInfo.session as? LoggedSession)?.tokenRepository?.idToken?.value
+        (requireNotNull(Di.getComponent<SessionFrontComponent>()).sessionInfo.session as? TokenRepository)?.idToken?.value
 
     private inner class NetworkLogger : Logger {
 
         override fun log(message: String) {
-            Napier.i(message)
+            Napier.d(message, tag = LOG_TEG)
         }
     }
 

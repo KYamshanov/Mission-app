@@ -49,6 +49,7 @@ internal class SessionFrontImpl constructor(
     }
 
     override suspend fun openSession(login: String, password: CharSequence): Result<Session> = runCatching {
+        sessionInfoImpl.session = LoggingSessionImpl()
         jwtLoginInteractor.login(login, password).getOrThrow().also {
             missionPreferences.saveValue(PREFERENCES_ACCESS_KEY, it.accessToken)
             missionPreferences.saveValue(PREFERENCES_REFRESH_KEY, it.refreshToken)
@@ -101,7 +102,7 @@ internal class SessionFrontImpl constructor(
         var mLogin: String? = null
 
         (sessionInfoImpl.session as? LoggedSessionImpl)?.let {
-            mRefreshToken = it.tokenRepository.refreshToken.value
+            mRefreshToken = it.refreshToken.value
             mLogin = it.userInfo.login
         } ?: run {
             mRefreshToken = missionPreferences.getValue(PREFERENCES_REFRESH_KEY)
@@ -119,6 +120,8 @@ internal class SessionFrontImpl constructor(
     }
 
     private suspend fun createSession(useLogin: String, data: AccessData): LoggedSession {
+        sessionInfoImpl.session =
+            LoggingSessionImpl(accessToken = Token(data.accessToken), refreshToken = Token(data.accessToken))
         val idToken = identifyUserUseCase.identify().getOrThrow()
         val userInfo = UserInfo(
             login = useLogin,
@@ -126,11 +129,9 @@ internal class SessionFrontImpl constructor(
         )
         return LoggedSessionImpl(
             userInfo = userInfo,
-            tokenRepository = TokenRepository(
-                idToken = idToken,
-                accessToken = Token(data.accessToken),
-                refreshToken = Token(data.refreshToken)
-            )
+            idToken = idToken,
+            accessToken = Token(data.accessToken),
+            refreshToken = Token(data.refreshToken),
         )
     }
 
