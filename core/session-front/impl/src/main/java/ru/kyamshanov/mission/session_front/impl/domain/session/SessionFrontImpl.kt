@@ -1,5 +1,6 @@
 package ru.kyamshanov.mission.session_front.impl.domain.session
 
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -43,7 +44,10 @@ internal class SessionFrontImpl constructor(
                 .onSuccess {
                     startAutoRefreshing()
                 }
-                .onFailure { makeUnauthorizedSession(it) }
+                .onFailure {
+                    Napier.e(throwable = it, tag = "SessionFront") { "RefreshSession exception" }
+                    makeUnauthorizedSession(it)
+                }
             scope.cancel()
         }
     }
@@ -121,7 +125,7 @@ internal class SessionFrontImpl constructor(
 
     private suspend fun createSession(useLogin: String, data: AccessData): LoggedSession {
         sessionInfoImpl.session =
-            LoggingSessionImpl(accessToken = Token(data.accessToken), refreshToken = Token(data.accessToken))
+            LoggingSessionImpl(accessToken = Token(data.accessToken), refreshToken = Token(data.refreshToken))
         val idToken = identifyUserUseCase.identify().getOrThrow()
         val userInfo = UserInfo(
             login = useLogin,
