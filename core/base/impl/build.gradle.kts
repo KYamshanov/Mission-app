@@ -9,6 +9,7 @@ kotlin {
             dependencies {
                 api(projects.core.base.api)
                 implementation(projects.core.di.common)
+                implementation(projects.core.platformBase)
             }
         }
 

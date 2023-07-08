@@ -8,4 +8,5 @@ object Versions {
     const val MinSDK = 24
     const val VersionCode = 1
     const val VersionName = "1.2.1"
+    const val TargetJVM = "1.8"
 }
