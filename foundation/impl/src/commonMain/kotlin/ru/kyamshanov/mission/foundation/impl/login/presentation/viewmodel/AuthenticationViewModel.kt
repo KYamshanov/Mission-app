@@ -1,36 +1,33 @@
 package ru.kyamshanov.mission.foundation.impl.login.presentation.viewmodel
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.kyamshanov.mission.components.main_screen.api.domain.MainScreenLauncher
 import ru.kyamshanov.mission.foundation.impl.login.domain.AuthenticationInteractor
-import ru.kyamshanov.mission.foundation.impl.login.presentation.state.AuthenticationState
 
 internal class AuthenticationViewModel(
     private val authenticationInteractor: AuthenticationInteractor,
     private val mainScreenLauncher: MainScreenLauncher,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(AuthenticationState())
-    val state = _state.asStateFlow()
+    private val _loginState = mutableStateOf("")
+    val loginState: State<String> = _loginState
+    private val _passwordState = mutableStateOf<CharSequence>(String())
+    val passwordState: State<CharSequence> = _passwordState
+
 
     fun setLogin(login: String) {
-        authenticationInteractor.setLogin(login).onSuccess { updatedLogin ->
-            _state.update { it.copy(login = updatedLogin) }
-        }
+        _loginState.value = login
     }
 
     fun setPassword(password: CharSequence) {
-        authenticationInteractor.setPassword(password).onSuccess { updatedPassword ->
-            _state.update { it.copy(password = updatedPassword) }
-        }
+        _passwordState.value = password
     }
 
     fun clickOnLogin() = viewModelScope.launch {
-        authenticationInteractor.onLogin()
+        authenticationInteractor.login(_loginState.value, _passwordState.value)
             .onSuccess { mainScreenLauncher.launch() }
     }
 }

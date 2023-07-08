@@ -1,7 +1,9 @@
 package ru.kyamshanov.mission.core.ui.components
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,10 +16,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.OffsetMapping
-import androidx.compose.ui.text.input.TransformedText
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.IntSize
 import ru.kyamshanov.mission.MissionTheme
 
@@ -65,17 +64,23 @@ fun MissionTextField(
     onValueChange: (String) -> Unit,
 ) {
     val localDensity = LocalDensity.current
+    val interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 
     BasicTextField(
         modifier = modifier,
         textStyle = textStyle,
         value = text,
         onValueChange = onValueChange,
-        singleLine = maxLines == 1,
+        singleLine = false,
         maxLines = maxLines,
         readOnly = editable.not(),
         cursorBrush = SolidColor(MissionTheme.colors.darkSecondary),
-        keyboardOptions = if (isMasked) KeyboardOptions(keyboardType = KeyboardType.Password, autoCorrect = false) else KeyboardOptions.Default,
+        keyboardOptions = if (isMasked) KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            autoCorrect = false
+        ) else KeyboardOptions.Default,
+        keyboardActions = KeyboardActions(),
+        interactionSource = interactionSource,
         visualTransformation = if (suffix != null || isMasked) {
             val s = suffix ?: AnnotatedString("")
             VisualTransformation { annotatedString ->
