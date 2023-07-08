@@ -1,7 +1,11 @@
 package ru.kyamshanov.mission.core.ui.components
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,9 +20,13 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.IntSize
 import ru.kyamshanov.mission.MissionTheme
+import ru.kyamshanov.mission.core.ui.extensions.isSingleLineSupported
 
 @Composable
 fun EditTextField(
@@ -71,7 +79,7 @@ fun MissionTextField(
         textStyle = textStyle,
         value = text,
         onValueChange = onValueChange,
-        singleLine = false,
+        singleLine = isSingleLineSupported() && maxLines == 1,
         maxLines = maxLines,
         readOnly = editable.not(),
         cursorBrush = SolidColor(MissionTheme.colors.darkSecondary),
