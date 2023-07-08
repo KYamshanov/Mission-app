@@ -1,12 +1,12 @@
 plugins {
-    id("kotlin-api")
+    id("multiplatform-lib")
 }
 
 dependencies {
-    implementation(projects.core.navigation.impl)
-    implementation(projects.foundation.impl)
-    implementation(projects.core.base.impl)
-    implementation(projects.core.sessionFront.impl)
-    implementation(projects.core.network.impl)
-    implementation(projects.components.mainScreen.impl)
+    commonMainImplementation(projects.core.navigation.impl)
+    commonMainImplementation(projects.foundation.impl)
+    commonMainImplementation(projects.core.base.impl)
+    commonMainImplementation(projects.core.sessionFront.impl)
+    commonMainImplementation(projects.core.network.impl)
+    commonMainImplementation(projects.components.mainScreen.impl)
 }
