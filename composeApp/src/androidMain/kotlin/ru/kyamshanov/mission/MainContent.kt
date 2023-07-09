@@ -1,4 +1,4 @@
-package ru.kyamshanov.mission.core.navigation.impl
+package ru.kyamshanov.mission
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
