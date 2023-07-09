@@ -14,7 +14,10 @@ import ru.kyamshanov.mission.core.ui.R
 
 @Composable
 internal actual fun SplashComposable() = MissionTheme {
-    Surface(modifier = Modifier.fillMaxSize().imePadding(), color = MissionTheme.colors.background) {
+    Surface(
+        modifier = Modifier.fillMaxSize().imePadding(),
+        color = MissionTheme.colors.background
+    ) {
         Box(contentAlignment = Alignment.Center) {
             Image(
                 painter = painterResource(id = R.drawable.app_icon),

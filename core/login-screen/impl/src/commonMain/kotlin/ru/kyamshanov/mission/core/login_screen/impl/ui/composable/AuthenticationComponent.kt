@@ -15,13 +15,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.ktor.client.utils.EmptyContent.contentType
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
 import ru.kyamshanov.mission.MissionTheme
 import ru.kyamshanov.mission.core.di.impl.Di
-import ru.kyamshanov.mission.core.network.api.di.NetworkComponent
-import ru.kyamshanov.mission.core.network.api.utils.retrieveBody
 import ru.kyamshanov.mission.core.ui.components.CellInput
 import ru.kyamshanov.mission.core.ui.components.MainButton
 import ru.kyamshanov.mission.core.ui.extensions.imePadding
@@ -39,8 +34,6 @@ internal fun AuthenticationComponent(
 
     LaunchedEffect(state.value) {
         if (state.value) {
-            println("Login")
-
             requireNotNull(Di.getComponent<SessionFrontComponent>()).sessionFront.openSession(
                 loginState.value,
                 passwordState.value

@@ -12,7 +12,7 @@ internal class ResultProviderImpl constructor(
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> get(key: String, defaultValue: T): T =
-        requireNotNull(navigatorControllerHolder.navigator) { "Navigation controller cannot be null" }
+        requireNotNull(navigatorControllerHolder.stackNavigation) { "StackNavigation controller cannot be null" }
             .let { controller ->
                 TODO("Реализовать")
                 /*controller.currentBackStackEntry?.savedStateHandle?.remove(key) ?: defaultValue*/
@@ -34,7 +34,7 @@ internal class ResultProviderImpl constructor(
 
     override fun notify(key: String) {
         deferredMap[key]?.let { deferred ->
-            requireNotNull(navigatorControllerHolder.navigator) { "Navigation controller cannot be null" }
+            requireNotNull(navigatorControllerHolder.stackNavigation) { "StackNavigation controller cannot be null" }
                 .let { controller ->
                     //TODO Реализовать
                     null

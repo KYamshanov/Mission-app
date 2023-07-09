@@ -1,7 +1,6 @@
+import gradle.kotlin.dsl.accessors._d4133f3c36cd1fd4a38fc6d50db50cdf.compose
 import org.gradle.accessors.dm.LibrariesForLibs
-import org.gradle.api.JavaVersion
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 //see https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
@@ -14,13 +13,11 @@ plugins {
 
 kotlin {
     sourceSets {
-        val commonTest by getting {
+        val commonMain by getting {
+
             dependencies {
-                implementation(compose.runtime)
                 implementation(compose.foundation)
                 implementation(compose.material)
-                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
-                implementation(compose.components.resources)
             }
         }
 

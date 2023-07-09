@@ -1,29 +1,31 @@
 package ru.kyamshanov.mission.foundation.impl.login.presentation.composable
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.kyamshanov.mission.MissionTheme
-import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.ui.components.CellInput
 import ru.kyamshanov.mission.core.ui.components.MainButton
 import ru.kyamshanov.mission.core.ui.extensions.imePadding
 import ru.kyamshanov.mission.core.ui.extensions.systemBarsPadding
-import ru.kyamshanov.mission.core.ui.utils.viewModel
-import ru.kyamshanov.mission.foundation.api.login.di.AuthenticationComponent
-import ru.kyamshanov.mission.foundation.impl.login.di.ModuleComponent
-import ru.kyamshanov.mission.foundation.impl.login.presentation.viewmodel.AuthenticationViewModel
+import ru.kyamshanov.mission.foundation.impl.login.presentation.component.AuthenticationUiComponent
 
 @Composable
 internal fun AuthenticationComponent(
     modifier: Modifier = Modifier,
-    moduleComponent: ModuleComponent = requireNotNull(Di.getInternalComponent<AuthenticationComponent, ModuleComponent>()),
-    viewModel: AuthenticationViewModel = viewModel { moduleComponent.viewModel }
+    viewModel: AuthenticationUiComponent.ViewModel
 ) {
+
+
     Box(
         modifier = Modifier
             .fillMaxSize()

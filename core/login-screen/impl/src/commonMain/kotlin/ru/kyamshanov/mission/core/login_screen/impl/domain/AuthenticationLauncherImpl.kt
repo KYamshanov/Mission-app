@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.Navigator
+import com.arkivanov.decompose.ComponentContext
 import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.login_screen.api.domain.AuthenticationLauncher
 import ru.kyamshanov.mission.core.login_screen.impl.ui.composable.AuthenticationComponent
@@ -21,7 +22,7 @@ class AuthenticationLauncherImpl : AuthenticationLauncher {
 
 
         @Composable
-        override fun Content() {
+        override fun Content(componentContext: ComponentContext) {
             AuthenticationComponent { login, password ->
 
             }

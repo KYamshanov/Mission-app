@@ -8,6 +8,7 @@ import ru.kyamshanov.mission.foundation.impl.login.presentation.screen.Authentic
 class AuthenticationLauncherImpl : AuthenticationLauncher {
 
     override fun launch() {
-        requireNotNull(Di.getComponent<NavigationComponent>()).navigator.navigateTo(AuthenticationComposableScreen())
+        requireNotNull(Di.getComponent<NavigationComponent>())
+            .navigator.newRootScreen(AuthenticationComposableScreen())
     }
 }

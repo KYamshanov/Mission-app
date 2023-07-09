@@ -1,3 +1,6 @@
+import gradle.kotlin.dsl.accessors._0382b9438993b8433c92af75c242fabc.compose
+import gradle.kotlin.dsl.accessors._0382b9438993b8433c92af75c242fabc.kotlin
+import gradle.kotlin.dsl.accessors._0382b9438993b8433c92af75c242fabc.sourceSets
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
@@ -6,6 +9,7 @@ val libs = the<LibrariesForLibs>()
 
 plugins {
     id("com.android.library")
+    id("kotlin-parcelize")
 }
 
 android {

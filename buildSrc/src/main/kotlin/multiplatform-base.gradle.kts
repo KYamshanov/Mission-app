@@ -1,3 +1,5 @@
+import gradle.kotlin.dsl.accessors._0382b9438993b8433c92af75c242fabc.kotlin
+import gradle.kotlin.dsl.accessors._0382b9438993b8433c92af75c242fabc.sourceSets
 import org.gradle.accessors.dm.LibrariesForLibs
 
 //see https://github.com/gradle/gradle/issues/15383

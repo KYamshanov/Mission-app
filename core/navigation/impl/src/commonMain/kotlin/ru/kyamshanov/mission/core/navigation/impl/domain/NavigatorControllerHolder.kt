@@ -1,8 +1,10 @@
 package ru.kyamshanov.mission.core.navigation.impl.domain
 
-import cafe.adriel.voyager.navigator.Navigator as VNavigator
+import com.arkivanov.decompose.router.stack.StackNavigation
 
 interface NavigatorControllerHolder {
 
-    var navigator: VNavigator?
+    var stackNavigation: StackNavigation<ScreenConfig>?
+
+    var rootComponent: RootComponent?
 }

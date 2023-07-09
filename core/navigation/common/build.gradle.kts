@@ -1,8 +1,19 @@
 plugins {
-    id("kotlin-api")
+    id("multiplatform-compose")
 }
 
 dependencies {
-    api(libs.voyager)
-    implementation(projects.core.navigation.api)
+    commonMainImplementation(projects.core.navigation.api)
+}
+
+kotlin {
+    sourceSets {
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.androidx.compose.viewmodel)
+                implementation(libs.decompose.android)
+            }
+        }
+    }
 }
