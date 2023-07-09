@@ -1,6 +1,8 @@
 plugins {
-    id("kotlin-api")
+    id("multiplatform-lib")
 }
 dependencies {
-    implementation(projects.core.di.api)
+    commonMainImplementation(projects.core.di.api)
+    commonMainApi(libs.decompose.core)
+    commonMainApi(libs.decompose.compose)
 }

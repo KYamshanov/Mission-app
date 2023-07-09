@@ -1,8 +1,8 @@
 package ru.kyamshanov.mission.foundation.impl.splash_screen.presentation.screens
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import kotlinx.coroutines.delay
+import com.arkivanov.essenty.parcelable.Parcelable
+import com.arkivanov.essenty.parcelable.Parcelize
 import ru.kyamshanov.mission.components.main_screen.api.di.MainScreenComponent
 import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.navigation.common.ComposableScreen
@@ -13,7 +13,8 @@ import ru.kyamshanov.mission.foundation.impl.splash_screen.presentation.viewmode
 import ru.kyamshanov.mission.session_front.api.di.SessionFrontComponent
 
 
-internal class SplashScreen : ComposableScreen {
+@Parcelize
+internal class SplashScreen : ComposableScreen, Parcelable {
 
     @Composable
     override fun Content() {

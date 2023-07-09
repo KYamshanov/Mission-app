@@ -13,7 +13,7 @@ import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 import ru.kyamshanov.mission.core.navigation.impl.di.ModuleComponent
 
 class DefaultRootComponent(
-    splashScreen: Screen,
+    initialScreen: Screen,
     componentContext: ComponentContext,
 ) : RootComponent, ComponentContext by componentContext {
 
@@ -22,7 +22,7 @@ class DefaultRootComponent(
     private val stack =
         childStack(
             source = navigation,
-            initialStack = { listOf(ScreenConfig(splashScreen)) },
+            initialStack = { listOf(ScreenConfig(initialScreen)) },
             handleBackButton = false,
             childFactory = { config, componentContext -> config.screen },
         )
@@ -30,7 +30,7 @@ class DefaultRootComponent(
     override val childStack: Value<ChildStack<*, Screen>> = stack
 
     init {
-        requireNotNull(Di.getInternalComponent<NavigationComponent, ModuleComponent>()).navigatorControllerHolder.stack =
+        requireNotNull(Di.getInternalComponent<NavigationComponent, ModuleComponent>()).navigatorControllerHolder.stackNavigation =
             navigation
     }
 

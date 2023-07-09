@@ -1,11 +1,11 @@
 package ru.kyamshanov.mission.core.navigation.impl.domain
 
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import ru.kyamshanov.mission.core.navigation.api.NavigationBoundaryData
 import ru.kyamshanov.mission.core.navigation.api.Navigator
 import ru.kyamshanov.mission.core.navigation.api.ResultProvider
 import ru.kyamshanov.mission.core.navigation.api.Screen
-import ru.kyamshanov.mission.core.navigation.common.ComposableScreen
 import ru.kyamshanov.mission.core.navigation.impl.DefaultRootComponent
 
 internal class NavigatorImpl(
@@ -13,44 +13,27 @@ internal class NavigatorImpl(
     private val resultProvider: ResultProvider,
 ) : Navigator {
 
-    private val controller: cafe.adriel.voyager.navigator.Navigator
-        get() = requireNotNull(controllerHolder.navigator) { "Navigator controller cannot be null" }
-
-    private val stack get() = requireNotNull(controllerHolder.stack) { "stack  cannot be null" }
+    private val stackNavigation get() = requireNotNull(controllerHolder.stackNavigation) { "StackNavigation cannot be null" }
 
 
     override fun navigateTo(screen: Screen) {
-
-        stack.push(DefaultRootComponent.ScreenConfig(screen))
-
-        /* val controller = requireNotNull(controllerHolder.navigator) { "Navigator controller cannot be null" }
-         when (screen) {
-             is ComposableScreen -> controller.push(screen)
-             else -> throw IllegalStateException("Screen implementation isn`t be able to navigate")
-         }*/
+        stackNavigation.push(DefaultRootComponent.ScreenConfig(screen))
     }
 
     override fun replaceTo(screen: Screen) {
-        val controller = requireNotNull(controllerHolder.navigator) { "Navigator controller cannot be null" }
-        when (screen) {
-            is ComposableScreen -> {
-                //TODO переписать
-                controller.push(screen)
-            }
-
-            else -> throw IllegalStateException("Screen implementation isn`t be able to navigate")
-        }
+        stackNavigation.push(DefaultRootComponent.ScreenConfig(screen))
     }
 
     override fun exit() {
-        val controller = requireNotNull(controllerHolder.navigator) { "Navigator controller cannot be null" }
-        controller.pop()
+        stackNavigation.pop()
     }
 
-    override fun <ReturnDataType : NavigationBoundaryData?> backWithResult(key: String, data: ReturnDataType) {
-        val controller = requireNotNull(controllerHolder.navigator) { "Navigator controller cannot be null" }
+    override fun <ReturnDataType : NavigationBoundaryData?> backWithResult(
+        key: String,
+        data: ReturnDataType
+    ) {
         //TODO переписать
-        controller.pop()
+        stackNavigation.pop()
         resultProvider.notify(key)
     }
 }

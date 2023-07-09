@@ -1,8 +1,7 @@
 plugins {
-    id("kotlin-api")
+    id("multiplatform-compose")
 }
 
 dependencies {
-    api(libs.voyager)
-    implementation(projects.core.navigation.api)
+    commonMainImplementation(projects.core.navigation.api)
 }
