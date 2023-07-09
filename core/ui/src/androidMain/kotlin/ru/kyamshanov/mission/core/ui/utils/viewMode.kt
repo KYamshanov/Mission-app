@@ -5,4 +5,4 @@ import androidx.compose.runtime.remember
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 
 @Composable
-actual fun <T : ViewModel> viewModel(block: () -> T): T = remember { block.invoke() }
+actual inline fun <reified T : ViewModel> viewModel(crossinline block: () -> T): T = androidx.lifecycle.viewmodel.compose.viewModel { block.invoke() }

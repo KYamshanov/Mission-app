@@ -14,3 +14,15 @@ dependencies {
     //External libs
     commonMainApi(libs.moko.mvvm)
 }
+
+kotlin {
+    sourceSets {
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.androidx.compose.viewmodel)
+                implementation(libs.decompose.android)
+            }
+        }
+    }
+}

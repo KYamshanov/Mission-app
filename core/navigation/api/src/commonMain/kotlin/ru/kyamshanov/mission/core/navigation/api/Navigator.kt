@@ -6,6 +6,8 @@ interface Navigator {
 
     fun replaceTo(screen: Screen)
 
+    fun newRootScreen(screen: Screen)
+
     fun exit()
 
     /**

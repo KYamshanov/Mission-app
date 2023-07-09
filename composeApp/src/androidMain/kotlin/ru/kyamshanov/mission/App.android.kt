@@ -8,9 +8,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.WindowCompat
-import com.arkivanov.decompose.DefaultComponentContext
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.decompose.defaultComponentContext
 import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 import ru.kyamshanov.mission.core.di.bundle.DiRegistry
@@ -40,14 +40,12 @@ class AppActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val lifecycle = LifecycleRegistry()
-        val componentContext = DefaultComponentContext(lifecycle)
         val splashScreen =
             requireNotNull(Di.getComponent<SplashScreenComponent>()).composableSplashScreen
 
         setContent {
             window.statusBarColor = Color.Companion.Transparent.toArgb()
-            MainContent(componentContext, splashScreen)
+            MainContent(defaultComponentContext(), splashScreen)
         }
 
         val content: View = findViewById(android.R.id.content)

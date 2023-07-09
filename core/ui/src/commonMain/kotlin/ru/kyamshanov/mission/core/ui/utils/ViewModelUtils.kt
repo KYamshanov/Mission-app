@@ -4,4 +4,4 @@ import androidx.compose.runtime.Composable
 import dev.icerock.moko.mvvm.viewmodel.ViewModel
 
 @Composable
-expect fun <T : ViewModel> viewModel(block: () -> T): T
+expect inline fun <reified T : ViewModel> viewModel(crossinline block: () -> T): T

@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
@@ -23,11 +24,14 @@ class DefaultRootComponent(
         childStack(
             source = navigation,
             initialStack = { listOf(ScreenConfig(initialScreen)) },
-            handleBackButton = false,
-            childFactory = { config, componentContext -> config.screen },
+            handleBackButton = true,
+            childFactory = { config, componentContext ->
+                RootComponent.ScreenWithContext(config.screen, componentContext)
+            },
         )
 
-    override val childStack: Value<ChildStack<*, Screen>> = stack
+    override val childStack: Value<ChildStack<*, RootComponent.ScreenWithContext>> =
+        stack
 
     init {
         requireNotNull(Di.getInternalComponent<NavigationComponent, ModuleComponent>()).navigatorControllerHolder.stackNavigation =

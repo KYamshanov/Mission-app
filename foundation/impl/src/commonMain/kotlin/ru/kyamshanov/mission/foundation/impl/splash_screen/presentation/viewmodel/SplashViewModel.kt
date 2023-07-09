@@ -34,6 +34,7 @@ internal class SplashViewModel(
     }
 
     private fun openMainScreen() {
+        authenticationLauncher.launch()
         mainScreenLauncher.launch()
     }
 }

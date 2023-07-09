@@ -8,6 +8,8 @@ import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 internal class MainScreenLauncherImpl : MainScreenLauncher {
 
     override fun launch() {
-        requireNotNull(Di.getComponent<NavigationComponent>()).navigator.navigateTo(MainComposableScreen())
+        requireNotNull(Di.getComponent<NavigationComponent>()).navigator.newRootScreen(
+            MainComposableScreen()
+        )
     }
 }
