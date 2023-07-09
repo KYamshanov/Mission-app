@@ -1,10 +1,12 @@
 package ru.kyamshanov.mission.core.navigation.impl.domain
 
+import com.arkivanov.decompose.router.stack.push
 import ru.kyamshanov.mission.core.navigation.api.NavigationBoundaryData
 import ru.kyamshanov.mission.core.navigation.api.Navigator
 import ru.kyamshanov.mission.core.navigation.api.ResultProvider
 import ru.kyamshanov.mission.core.navigation.api.Screen
 import ru.kyamshanov.mission.core.navigation.common.ComposableScreen
+import ru.kyamshanov.mission.core.navigation.impl.DefaultRootComponent
 
 internal class NavigatorImpl(
     private val controllerHolder: NavigatorControllerHolder,
@@ -14,12 +16,18 @@ internal class NavigatorImpl(
     private val controller: cafe.adriel.voyager.navigator.Navigator
         get() = requireNotNull(controllerHolder.navigator) { "Navigator controller cannot be null" }
 
+    private val stack get() = requireNotNull(controllerHolder.stack) { "stack  cannot be null" }
+
+
     override fun navigateTo(screen: Screen) {
-        val controller = requireNotNull(controllerHolder.navigator) { "Navigator controller cannot be null" }
-        when (screen) {
-            is ComposableScreen -> controller.push(screen)
-            else -> throw IllegalStateException("Screen implementation isn`t be able to navigate")
-        }
+
+        stack.push(DefaultRootComponent.ScreenConfig(screen))
+
+        /* val controller = requireNotNull(controllerHolder.navigator) { "Navigator controller cannot be null" }
+         when (screen) {
+             is ComposableScreen -> controller.push(screen)
+             else -> throw IllegalStateException("Screen implementation isn`t be able to navigate")
+         }*/
     }
 
     override fun replaceTo(screen: Screen) {
