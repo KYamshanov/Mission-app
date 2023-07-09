@@ -4,14 +4,13 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.essenty.parcelable.Parcelable
-import com.arkivanov.essenty.parcelable.Parcelize
 import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.navigation.api.Screen
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
-import ru.kyamshanov.mission.core.navigation.impl.di.ModuleComponent
+import ru.kyamshanov.mission.core.navigation.impl.di.NavigationComponentImpl
+import ru.kyamshanov.mission.core.navigation.impl.domain.RootComponent
+import ru.kyamshanov.mission.core.navigation.impl.domain.ScreenConfig
 
 class DefaultRootComponent(
     initialScreen: Screen,
@@ -34,10 +33,7 @@ class DefaultRootComponent(
         stack
 
     init {
-        requireNotNull(Di.getInternalComponent<NavigationComponent, ModuleComponent>()).navigatorControllerHolder.stackNavigation =
+        requireNotNull(Di.getInternalComponent<NavigationComponent, NavigationComponentImpl>()).navigatorControllerHolder.stackNavigation =
             navigation
     }
-
-    @Parcelize
-    class ScreenConfig(val screen: Screen) : Parcelable
 }

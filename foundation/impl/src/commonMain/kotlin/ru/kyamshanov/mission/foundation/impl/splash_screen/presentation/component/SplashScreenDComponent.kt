@@ -30,7 +30,6 @@ class SplashScreenDComponent(
         private val viewModelScope = CoroutineScope(Dispatchers.Main + SupervisorJob())
 
         init {
-            println("Init VM")
             viewModelScope.launch {
                 sessionInfo.sessionState.collect { session ->
                     when (session) {
@@ -52,7 +51,6 @@ class SplashScreenDComponent(
         }
 
         override fun onDestroy() {
-            println("Destory VM")
             viewModelScope.cancel()
         }
     }

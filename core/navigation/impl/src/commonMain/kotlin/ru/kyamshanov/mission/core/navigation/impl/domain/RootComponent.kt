@@ -1,4 +1,4 @@
-package ru.kyamshanov.mission.core.navigation.impl
+package ru.kyamshanov.mission.core.navigation.impl.domain
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack

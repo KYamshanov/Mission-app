@@ -27,7 +27,7 @@ internal class SplashScreen : ComposableScreen, Parcelable {
         val mainScreenComponent: MainScreenComponent = requireNotNull(Di.getComponent())
 
         SplashScreenDComponent(
-            componentContext = composeComponentContext(),
+            componentContext = composeComponentContext(componentContext),
             sessionInfo = sessionComponent.sessionInfo,
             authenticationLauncher = authComponent.launcher,
             mainScreenLauncher = mainScreenComponent.launcher

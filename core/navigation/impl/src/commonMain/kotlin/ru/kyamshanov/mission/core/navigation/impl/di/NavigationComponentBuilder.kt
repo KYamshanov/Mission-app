@@ -7,6 +7,6 @@ import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 class NavigationComponentBuilder : AbstractComponentBuilder<NavigationComponent>() {
 
     override val modules: List<Module> = listOf(navigationModule)
-    override fun build(): NavigationComponent = ModuleComponent()
+    override fun build(): NavigationComponent = NavigationComponentImpl()
 
 }

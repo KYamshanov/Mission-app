@@ -1,3 +1,4 @@
+import gradle.kotlin.dsl.accessors._d4133f3c36cd1fd4a38fc6d50db50cdf.compose
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
@@ -12,6 +13,14 @@ plugins {
 
 kotlin {
     sourceSets {
+        val commonMain by getting {
+
+            dependencies {
+                implementation(compose.foundation)
+                implementation(compose.material)
+            }
+        }
+
         val androidMain by getting {
             dependencies {
                 implementation(libs.androidx.appcompat)

@@ -6,7 +6,7 @@ import ru.kyamshanov.mission.core.navigation.api.ResultProvider
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 import ru.kyamshanov.mission.core.navigation.impl.domain.NavigatorControllerHolder
 
-internal class ModuleComponent : AbstractComponent(), NavigationComponent {
+class NavigationComponentImpl : AbstractComponent(), NavigationComponent {
 
     val navigatorControllerHolder: NavigatorControllerHolder = resolve()
     override val navigator: Navigator = resolve()

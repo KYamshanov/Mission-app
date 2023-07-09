@@ -7,7 +7,6 @@ import ru.kyamshanov.mission.core.navigation.api.NavigationBoundaryData
 import ru.kyamshanov.mission.core.navigation.api.Navigator
 import ru.kyamshanov.mission.core.navigation.api.ResultProvider
 import ru.kyamshanov.mission.core.navigation.api.Screen
-import ru.kyamshanov.mission.core.navigation.impl.DefaultRootComponent
 
 internal class NavigatorImpl(
     private val controllerHolder: NavigatorControllerHolder,
@@ -16,20 +15,16 @@ internal class NavigatorImpl(
 
     private val stackNavigation get() = requireNotNull(controllerHolder.stackNavigation) { "StackNavigation cannot be null" }
 
-    init {
-        println("Init stack navigation")
-    }
-
     override fun navigateTo(screen: Screen) {
-        stackNavigation.push(DefaultRootComponent.ScreenConfig(screen))
+        stackNavigation.push(ScreenConfig(screen))
     }
 
     override fun replaceTo(screen: Screen) {
-        stackNavigation.push(DefaultRootComponent.ScreenConfig(screen))
+        stackNavigation.push(ScreenConfig(screen))
     }
 
     override fun newRootScreen(screen: Screen) {
-        stackNavigation.replaceAll(DefaultRootComponent.ScreenConfig(screen))
+        stackNavigation.replaceAll(ScreenConfig(screen))
     }
 
     override fun exit() {
