@@ -22,15 +22,9 @@ internal class SplashScreen : ComposableScreen, Parcelable {
     override fun Content(componentContext: ComponentContext) {
         SplashComposable()
 
-        val sessionComponent: SessionFrontComponent = requireNotNull(Di.getComponent())
-        val authComponent: AuthenticationComponent = requireNotNull(Di.getComponent())
-        val mainScreenComponent: MainScreenComponent = requireNotNull(Di.getComponent())
-
         SplashScreenDComponent(
             componentContext = composeComponentContext(componentContext),
-            sessionInfo = sessionComponent.sessionInfo,
-            authenticationLauncher = authComponent.launcher,
-            mainScreenLauncher = mainScreenComponent.launcher
+            sessionInfo = sessionComponent.sessionInfo
         ).viewModel
     }
 }

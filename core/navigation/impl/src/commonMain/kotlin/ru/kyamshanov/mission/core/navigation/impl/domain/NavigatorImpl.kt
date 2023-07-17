@@ -3,10 +3,13 @@ package ru.kyamshanov.mission.core.navigation.impl.domain
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.replaceAll
+import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.navigation.api.NavigationBoundaryData
 import ru.kyamshanov.mission.core.navigation.api.Navigator
 import ru.kyamshanov.mission.core.navigation.api.ResultProvider
 import ru.kyamshanov.mission.core.navigation.api.Screen
+import ru.kyamshanov.mission.core.navigation.api.di.UiComponent
+import kotlin.reflect.KClass
 
 internal class NavigatorImpl(
     private val controllerHolder: NavigatorControllerHolder,
