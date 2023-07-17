@@ -48,10 +48,11 @@ object Di {
 
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> getComponent(clazz: KClass<T>, holderId: Any?): T? {
+        Napier.d("Getting component ${clazz.simpleName} with holderId $holderId")
+
         var id = holderId
 
-        if (id == null && CoreComponent::class.java.isAssignableFrom(clazz.java))
-            id = CORE_COMPONENT_KEY
+        if (CoreComponent::class.java.isAssignableFrom(clazz.java)) id = CORE_COMPONENT_KEY
 
         return if (id != null) getSavableComponent(clazz, id)
         else (builders[clazz]?.build() as? T)?.also { onBeforeReleaseComponent(null, it) }
@@ -65,6 +66,9 @@ object Di {
     ): R? = getComponent(clazz, holderId)?.let { returnClazz.cast(it) }
 
     fun <T : Any> releaseComponent(clazz: KClass<T>, holderId: Any) {
+        Napier.d("Releasing component ${clazz.simpleName} with holderId $holderId")
+
+        if (CoreComponent::class.java.isAssignableFrom(clazz.java)) return
         componentsHolder[clazz]?.let { components ->
             components.filter { it.key == holderId }.forEach(::onBeforeReleaseComponent)
             components.remove(holderId)
