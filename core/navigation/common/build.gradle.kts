@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     commonMainImplementation(projects.core.navigation.api)
+    commonMainImplementation(projects.core.di.common)
 }
 
 kotlin {

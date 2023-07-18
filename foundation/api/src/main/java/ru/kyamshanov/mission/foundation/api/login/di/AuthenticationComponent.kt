@@ -1,8 +1,5 @@
 package ru.kyamshanov.mission.foundation.api.login.di
 
-import ru.kyamshanov.mission.foundation.api.login.domain.AuthenticationLauncher
+import ru.kyamshanov.mission.core.navigation.api.di.UiComponent
 
-interface AuthenticationComponent {
-
-    val launcher: AuthenticationLauncher
-}
+interface AuthenticationComponent : UiComponent

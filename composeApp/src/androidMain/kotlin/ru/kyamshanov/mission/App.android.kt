@@ -19,7 +19,6 @@ import ru.kyamshanov.mission.core.di.bundle.DiRegistry
 import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 import ru.kyamshanov.mission.core.navigation.impl.DefaultRootComponent
-import ru.kyamshanov.mission.core.navigation.impl.MainContent
 import ru.kyamshanov.mission.core.navigation.impl.di.NavigationComponentImpl
 import ru.kyamshanov.mission.core.platform_base.di.PlatformBaseComponentBuilder
 import ru.kyamshanov.mission.foundation.api.splash_screen.di.SplashScreenComponent

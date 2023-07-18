@@ -8,9 +8,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import ru.kyamshanov.mission.components.main_screen.api.domain.MainScreenLauncher
-import ru.kyamshanov.mission.foundation.api.login.domain.AuthenticationLauncher
+import ru.kyamshanov.mission.components.main_screen.api.di.MainScreenComponent
+import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
+import ru.kyamshanov.mission.core.navigation.common.utils.di
+import ru.kyamshanov.mission.core.navigation.common.utils.newRootScreen
+import ru.kyamshanov.mission.foundation.api.login.di.AuthenticationComponent
 import ru.kyamshanov.mission.session_front.api.SessionInfo
+import ru.kyamshanov.mission.session_front.api.di.SessionFrontComponent
 import ru.kyamshanov.mission.session_front.api.session.LoggedSession
 import ru.kyamshanov.mission.session_front.api.session.LoggingSession
 import ru.kyamshanov.mission.session_front.api.session.UnauthorizedSession
@@ -18,10 +22,10 @@ import ru.kyamshanov.mission.session_front.api.session.UnidentifiedSession
 
 class SplashScreenDComponent(
     componentContext: ComponentContext,
-    private val sessionInfo: SessionInfo,
-    private val authenticationLauncher: AuthenticationLauncher,
-    private val mainScreenLauncher: MainScreenLauncher
 ) : ComponentContext by componentContext {
+
+    private val sessionInfo: SessionInfo = requireNotNull(di<SessionFrontComponent>()).sessionInfo
+    private val navigator = requireNotNull(di<NavigationComponent>()).navigator
 
     val viewModel = instanceKeeper.getOrCreate(::ViewModel)
 
@@ -43,11 +47,11 @@ class SplashScreenDComponent(
         }
 
         private fun startLogin() {
-            authenticationLauncher.launch()
+            navigator.newRootScreen<AuthenticationComponent>()
         }
 
         private fun openMainScreen() {
-            mainScreenLauncher.launch()
+            navigator.newRootScreen<MainScreenComponent>()
         }
 
         override fun onDestroy() {

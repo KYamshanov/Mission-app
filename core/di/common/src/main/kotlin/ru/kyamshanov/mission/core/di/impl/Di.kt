@@ -8,6 +8,7 @@ import ru.kyamshanov.mission.core.di.impl.koin.AbstractComponentBuilder
 import ru.kyamshanov.mission.core.di.impl.koin.KoinComponentBuilder
 import java.io.Closeable
 import kotlin.reflect.KClass
+import kotlin.reflect.cast
 
 private const val CORE_COMPONENT_KEY = "core"
 
@@ -19,20 +20,23 @@ object Di {
     private val componentsHolder = mutableMapOf<KClass<*>, MutableMap<Any, Any>>()
 
     @Suppress("UNCHECKED_CAST")
-    inline fun <reified ComponentType : Any, ReturnType : ComponentType> getInternalComponent(holderId: Any? = null): ReturnType? =
+    inline fun <reified ComponentType : Any, ReturnType : ComponentType> getInternalComponent(
+        holderId: Any? = null
+    ): ReturnType? =
         getComponent(ComponentType::class, holderId) as? ReturnType
 
     inline fun <reified T : Any> getComponent(holderId: Any? = null): T? =
         getComponent(T::class, holderId)
 
-    inline fun <reified T : AbstractComponent> releaseComponent(holderId: Any) =
+    inline fun <reified T : Any> releaseComponent(holderId: Any) =
         releaseComponent(T::class, holderId)
 
     inline fun <reified T : Any> registration(builder: AbstractComponentBuilder<T>) =
         registration(T::class, builder)
 
     fun <T : Any> registration(clazz: KClass<T>, builder: AbstractComponentBuilder<T>) {
-        this.builders[clazz] = KoinComponentBuilder(builder as AbstractComponentBuilder<AbstractComponent>)
+        this.builders[clazz] =
+            KoinComponentBuilder(builder as AbstractComponentBuilder<AbstractComponent>)
         componentsHolder.remove(clazz)
 
         Napier.i("Registration component : ${clazz.simpleName}")
@@ -44,16 +48,27 @@ object Di {
 
     @Suppress("UNCHECKED_CAST")
     fun <T : Any> getComponent(clazz: KClass<T>, holderId: Any?): T? {
+        Napier.d("Getting component ${clazz.simpleName} with holderId $holderId")
+
         var id = holderId
 
-        if (id == null && CoreComponent::class.java.isAssignableFrom(clazz.java))
-            id = CORE_COMPONENT_KEY
+        if (CoreComponent::class.java.isAssignableFrom(clazz.java)) id = CORE_COMPONENT_KEY
 
         return if (id != null) getSavableComponent(clazz, id)
         else (builders[clazz]?.build() as? T)?.also { onBeforeReleaseComponent(null, it) }
     }
 
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Any, R : T> getInternalComponent(
+        clazz: KClass<T>,
+        returnClazz: KClass<R>,
+        holderId: Any?
+    ): R? = getComponent(clazz, holderId)?.let { returnClazz.cast(it) }
+
     fun <T : Any> releaseComponent(clazz: KClass<T>, holderId: Any) {
+        Napier.d("Releasing component ${clazz.simpleName} with holderId $holderId")
+
+        if (CoreComponent::class.java.isAssignableFrom(clazz.java)) return
         componentsHolder[clazz]?.let { components ->
             components.filter { it.key == holderId }.forEach(::onBeforeReleaseComponent)
             components.remove(holderId)
