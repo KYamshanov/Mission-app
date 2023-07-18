@@ -5,7 +5,6 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import ru.kyamshanov.mission.core.navigation.common.ComposableScreen
-import ru.kyamshanov.mission.core.navigation.common.utils.composeComponentContext
 import ru.kyamshanov.mission.foundation.impl.splash_screen.presentation.component.SplashScreenDComponent
 import ru.kyamshanov.mission.foundation.impl.splash_screen.presentation.composables.SplashComposable
 
@@ -15,7 +14,7 @@ internal class SplashScreen : ComposableScreen, Parcelable {
 
     @Composable
     override fun Content(componentContext: ComponentContext) {
-        SplashScreenDComponent(componentContext = composeComponentContext(componentContext)).viewModel
+        SplashScreenDComponent(componentContext).viewModel
 
         SplashComposable()
     }

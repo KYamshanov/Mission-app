@@ -13,8 +13,7 @@ internal class AuthenticationComposableScreen : ComposableScreen {
 
     @Composable
     override fun Content(componentContext: ComponentContext) {
-        val uiComponent = AuthenticationUiComponent(composeComponentContext(componentContext))
+        val uiComponent = AuthenticationUiComponent(componentContext)
         AuthenticationComponent(viewModel = uiComponent.viewModel)
     }
-
 }

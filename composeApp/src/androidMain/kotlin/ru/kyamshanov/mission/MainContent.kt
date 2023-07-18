@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.active
 import io.github.aakira.napier.Napier
 import ru.kyamshanov.mission.MissionTheme
 import ru.kyamshanov.mission.core.navigation.common.ComposableScreen
+import ru.kyamshanov.mission.core.navigation.common.utils.composeComponentContext
 import ru.kyamshanov.mission.core.navigation.impl.domain.RootComponent
 
 @Composable
@@ -21,7 +22,7 @@ fun MainContent(defaultRootComponent: RootComponent) {
             when (screen) {
                 is ComposableScreen -> {
                     Napier.d("Installing screen : screen::class.java.simpleName")
-                    screen.Content(context)
+                    screen.Content(composeComponentContext(context))
                 }
             }
         }
