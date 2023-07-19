@@ -6,7 +6,6 @@ import ru.kyamshanov.mission.core.di.api.CoreComponent
 import ru.kyamshanov.mission.core.di.impl.koin.AbstractComponent
 import ru.kyamshanov.mission.core.di.impl.koin.AbstractComponentBuilder
 import ru.kyamshanov.mission.core.di.impl.koin.KoinComponentBuilder
-import java.io.Closeable
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
 
@@ -52,7 +51,7 @@ object Di {
 
         var id = holderId
 
-        if (CoreComponent::class.java.isAssignableFrom(clazz.java)) id = CORE_COMPONENT_KEY
+      //  if (CoreComponent::class.qualifiedName == "core") id = CORE_COMPONENT_KEY
 
         return if (id != null) getSavableComponent(clazz, id)
         else (builders[clazz]?.build() as? T)?.also { onBeforeReleaseComponent(null, it) }
@@ -68,9 +67,9 @@ object Di {
     fun <T : Any> releaseComponent(clazz: KClass<T>, holderId: Any) {
         Napier.d("Releasing component ${clazz.simpleName} with holderId $holderId")
 
-        if (CoreComponent::class.java.isAssignableFrom(clazz.java)) return
+        //if (CoreComponent::class.java.isAssignableFrom(clazz.java)) return
         componentsHolder[clazz]?.let { components ->
-            components.filter { it.key == holderId }.forEach(::onBeforeReleaseComponent)
+            components.filter { it.key == holderId }.forEach{ onBeforeReleaseComponent(it.key,it.value) }
             components.remove(holderId)
             if (components.isEmpty()) componentsHolder.remove(clazz)
         }
@@ -86,6 +85,6 @@ object Di {
     }
 
     private fun onBeforeReleaseComponent(id: Any?, component: Any) {
-        if (component is Closeable) component.close()
+        //if (component is Closeable) component.close()
     }
 }

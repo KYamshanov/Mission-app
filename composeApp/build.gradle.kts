@@ -12,6 +12,12 @@ kotlin {
                 implementation(libs.decompose.compose)
             }
         }
+
+        val desktopMain by getting {
+            dependencies {
+                implementation(libs.decompose.compose)
+            }
+        }
     }
 }
 

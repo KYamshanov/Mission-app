@@ -1,5 +1,4 @@
 import org.gradle.accessors.dm.LibrariesForLibs
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 //see https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
@@ -26,6 +25,18 @@ kotlin {
             dependencies {
                 implementation(kotlin("test"))
             }
+        }
+
+        val commonUiMain by creating {
+            dependsOn(commonMain)
+        }
+
+        val androidMain by getting {
+            dependsOn(commonUiMain)
+        }
+
+        val desktopMain by getting {
+            dependsOn(commonUiMain)
         }
     }
 }

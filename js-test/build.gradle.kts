@@ -29,7 +29,14 @@ kotlin {
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
 
-                implementation(projects.core.di.api)
+                implementation(projects.core.di.bundle)
+                implementation(projects.core.di.common)
+                implementation(projects.core.navigation.impl)
+                implementation(projects.core.theme)
+                implementation(projects.core.sessionFront.api)
+                implementation(projects.foundation.api)
+                implementation(projects.core.platformBase)
+                implementation(libs.decompose.core)
             }
         }
     }

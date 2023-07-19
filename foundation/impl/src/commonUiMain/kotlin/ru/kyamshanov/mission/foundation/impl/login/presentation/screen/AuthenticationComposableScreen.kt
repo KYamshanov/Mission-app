@@ -9,4 +9,12 @@ import ru.kyamshanov.mission.core.navigation.common.utils.composeComponentContex
 import ru.kyamshanov.mission.foundation.impl.login.presentation.component.AuthenticationUiComponent
 import ru.kyamshanov.mission.foundation.impl.login.presentation.composable.AuthenticationComponent
 
-internal expect class AuthenticationComposableScreen : Screen
+@Parcelize
+actual class AuthenticationComposableScreen : ComposableScreen {
+
+    @Composable
+    override fun Content(componentContext: ComponentContext) {
+        val uiComponent = AuthenticationUiComponent(componentContext)
+        AuthenticationComponent(viewModel = uiComponent.viewModel)
+    }
+}

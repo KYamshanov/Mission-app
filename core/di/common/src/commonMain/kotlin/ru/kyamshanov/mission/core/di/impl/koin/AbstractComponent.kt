@@ -3,9 +3,9 @@ package ru.kyamshanov.mission.core.di.impl.koin
 import org.koin.core.component.*
 import org.koin.core.module.Module
 import org.koin.core.scope.Scope
-import java.io.Closeable
+//import java.io.Closeable
 
-abstract class AbstractComponent : KoinScopeComponent, Closeable {
+abstract class AbstractComponent : KoinScopeComponent/*, Closeable */{
 
     override fun getKoin() = MissionKoinContext.koin
 
@@ -13,8 +13,8 @@ abstract class AbstractComponent : KoinScopeComponent, Closeable {
 
     inline fun <reified T : Any> AbstractComponent.resolve(): T = scope.get<T>()
 
-    override fun close() {
+/*    override fun close() {
         scope.close()
-    }
+    }*/
 }
 
