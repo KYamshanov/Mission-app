@@ -3,7 +3,6 @@ package ru.kyamshanov.mission.core.di.impl
 import io.github.aakira.napier.Napier
 import ru.kyamshanov.mission.core.di.api.CloseableComponent
 import ru.kyamshanov.mission.core.di.api.ComponentBuilder
-import ru.kyamshanov.mission.core.di.api.CoreComponent
 import ru.kyamshanov.mission.core.di.impl.koin.AbstractComponent
 import ru.kyamshanov.mission.core.di.impl.koin.AbstractComponentBuilder
 import ru.kyamshanov.mission.core.di.impl.koin.KoinComponentBuilder
@@ -50,11 +49,7 @@ object Di {
     fun <T : Any> getComponent(clazz: KClass<T>, holderId: Any?): T? {
         Napier.d("Getting component ${clazz.simpleName} with holderId $holderId")
 
-        var id = holderId
-
-      //  if (CoreComponent::class.qualifiedName == "core") id = CORE_COMPONENT_KEY
-
-        return if (id != null) getSavableComponent(clazz, id)
+        return if (holderId != null) getSavableComponent(clazz, holderId)
         else (builders[clazz]?.build() as? T)?.also { onBeforeReleaseComponent(null, it) }
     }
 
@@ -68,7 +63,6 @@ object Di {
     fun <T : Any> releaseComponent(clazz: KClass<T>, holderId: Any) {
         Napier.d("Releasing component ${clazz.simpleName} with holderId $holderId")
 
-        //if (CoreComponent::class.java.isAssignableFrom(clazz.java)) return
         componentsHolder[clazz]?.let { components ->
             components.filter { it.key == holderId }.forEach{ onBeforeReleaseComponent(it.key,it.value) }
             components.remove(holderId)

@@ -6,7 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.router.stack.active
 import io.github.aakira.napier.Napier
-import ru.kyamshanov.mission.MissionTheme
 import ru.kyamshanov.mission.core.navigation.common.ComposableScreen
 import ru.kyamshanov.mission.core.navigation.common.utils.composeComponentContext
 import ru.kyamshanov.mission.core.navigation.impl.domain.RootComponent

@@ -11,7 +11,10 @@ plugins {
 
 kotlin {
     sourceSets {
-        val commonMain by getting {
+
+        val commonUiMain by creating {
+            dependsOn(commonMain.get())
+
             dependencies {
                 implementation(compose.runtime)
                 implementation(compose.foundation)
@@ -21,22 +24,19 @@ kotlin {
             }
         }
 
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-
-        val commonUiMain by creating {
-            dependsOn(commonMain)
-        }
-
         val androidMain by getting {
             dependsOn(commonUiMain)
         }
 
         val desktopMain by getting {
             dependsOn(commonUiMain)
+        }
+
+        val jsMain by getting {
+            dependencies {
+                implementation(compose.html.core)
+                implementation(compose.runtime)
+            }
         }
     }
 }

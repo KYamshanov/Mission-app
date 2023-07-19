@@ -19,7 +19,7 @@ kotlin {
 
     js(IR) {
         browser()
-        binaries.executable()
+        useCommonJs()
     }
 
     sourceSets {

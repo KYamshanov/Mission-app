@@ -11,5 +11,4 @@ internal class ModuleComponent : AbstractComponent(), BaseCoreComponent {
     override val missionPreferences: MissionPreferences = resolve()
     override val device: Device = resolve()
     override val resourcesProvider: ResourcesProvider = resolve()
-
 }

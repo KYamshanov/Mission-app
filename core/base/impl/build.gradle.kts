@@ -24,6 +24,13 @@ kotlin {
                 implementation(libs.sqldelight.sqlite)
             }
         }
+
+        val jsMain by getting {
+            dependencies {
+                implementation(libs.sqldelight.web)
+                implementation(devNpm("copy-webpack-plugin", "9.1.0"))
+            }
+        }
     }
 }
 
@@ -31,6 +38,7 @@ sqldelight {
     databases {
         create("MissionDatabase") {
             packageName.set("ru.kyamshanov.mission.core.database")
+            generateAsync.set(true)
         }
     }
 }

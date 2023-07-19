@@ -1,8 +1,8 @@
 package ru.kyamshanov.mission.foundation.api.splash_screen.di
 
-import ru.kyamshanov.mission.core.navigation.common.ComposableScreen
+import ru.kyamshanov.mission.core.navigation.api.Screen
 
 interface SplashScreenComponent {
 
-    val composableSplashScreen: ComposableScreen
+    val splashScreen: Screen
 }

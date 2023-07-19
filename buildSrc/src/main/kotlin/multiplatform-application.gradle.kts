@@ -1,3 +1,4 @@
+import gradle.kotlin.dsl.accessors._d0abc96ef935f83d39c328e22f847631.sourceSets
 import gradle.kotlin.dsl.accessors._d4133f3c36cd1fd4a38fc6d50db50cdf.compose
 import org.gradle.accessors.dm.LibrariesForLibs
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
@@ -6,16 +7,32 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 val libs = the<LibrariesForLibs>()
 
 plugins {
-    id("multiplatform-base")
+    id("org.jetbrains.kotlin.multiplatform")
     id("com.android.application")
     id("org.jetbrains.compose")
 }
 
 kotlin {
     sourceSets {
+        android {
+            compilations.all {
+                kotlinOptions {
+                    jvmTarget = "1.8"
+                }
+            }
+        }
+        jvm("desktop")
+
+        js(IR) {
+            browser()
+            binaries.executable()
+        }
+
         val commonMain by getting {
 
             dependencies {
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.napier)
                 implementation(compose.foundation)
                 implementation(compose.material)
             }

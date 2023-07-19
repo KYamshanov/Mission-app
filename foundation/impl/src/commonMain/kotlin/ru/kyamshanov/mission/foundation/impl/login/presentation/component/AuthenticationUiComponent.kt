@@ -1,8 +1,7 @@
 package ru.kyamshanov.mission.foundation.impl.login.presentation.component
 
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import kotlinx.coroutines.CoroutineScope
@@ -17,6 +16,7 @@ import ru.kyamshanov.mission.core.navigation.common.utils.diInternal
 import ru.kyamshanov.mission.core.navigation.common.utils.newRootScreen
 import ru.kyamshanov.mission.foundation.api.login.di.AuthenticationComponent
 import ru.kyamshanov.mission.foundation.impl.login.di.ModuleComponent
+import com.arkivanov.decompose.value.Value
 
 class AuthenticationUiComponent(
     componentContext: ComponentContext
@@ -37,14 +37,14 @@ class AuthenticationUiComponent(
         }
 
 
-        private val _loginState = mutableStateOf("")
+        private val _loginState = MutableValue("")
 
-        val loginState: State<String> = _loginState
+        val loginState: Value<String> = _loginState
 
-        private val _passwordState = mutableStateOf<CharSequence>(String())
+        private val _passwordState = MutableValue<CharSequence>(String())
 
 
-        val passwordState: State<CharSequence> = _passwordState
+        val passwordState: Value<CharSequence> = _passwordState
 
 
         fun setLogin(login: String) {
