@@ -1,20 +1,20 @@
 package ru.kyamshanov.mission.core.di.impl.koin
 
-import org.koin.core.component.*
-import org.koin.core.module.Module
+import org.koin.core.component.KoinScopeComponent
+import org.koin.core.component.createScope
 import org.koin.core.scope.Scope
-//import java.io.Closeable
+import ru.kyamshanov.mission.core.di.api.CloseableComponent
 
-abstract class AbstractComponent : KoinScopeComponent/*, Closeable */{
+abstract class AbstractComponent : KoinScopeComponent, CloseableComponent {
 
     override fun getKoin() = MissionKoinContext.koin
 
     override val scope: Scope by lazy { createScope(this) }
 
-    inline fun <reified T : Any> AbstractComponent.resolve(): T = scope.get<T>()
+    inline fun <reified T : Any> resolve(): T = scope.get()
 
-/*    override fun close() {
+    override fun close() {
         scope.close()
-    }*/
+    }
 }
 

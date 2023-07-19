@@ -1,6 +1,7 @@
 package ru.kyamshanov.mission.core.di.impl
 
 import io.github.aakira.napier.Napier
+import ru.kyamshanov.mission.core.di.api.CloseableComponent
 import ru.kyamshanov.mission.core.di.api.ComponentBuilder
 import ru.kyamshanov.mission.core.di.api.CoreComponent
 import ru.kyamshanov.mission.core.di.impl.koin.AbstractComponent
@@ -85,6 +86,6 @@ object Di {
     }
 
     private fun onBeforeReleaseComponent(id: Any?, component: Any) {
-        //if (component is Closeable) component.close()
+       if (component is CloseableComponent) component.close()
     }
 }

@@ -27,8 +27,6 @@ include(":composeApp")
 include(
     ":core:theme",
     ":core:ui",
-    ":core:login-screen:api",
-    ":core:login-screen:impl",
     ":core:di:api",
     ":core:di:common",
     ":core:di:bundle",

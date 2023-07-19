@@ -22,3 +22,7 @@ dependencies {
     commonMainImplementation(libs.kotlinx.coroutines.core)
     commonMainImplementation(libs.napier)
 }
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = Versions.TargetJVM
+}

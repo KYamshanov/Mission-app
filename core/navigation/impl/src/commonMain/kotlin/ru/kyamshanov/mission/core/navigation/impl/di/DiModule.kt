@@ -11,15 +11,13 @@ import ru.kyamshanov.mission.core.navigation.impl.domain.RootComponent
 import ru.kyamshanov.mission.core.navigation.impl.domain.ScreenConfig
 
 internal val navigationModule = module {
-    scope<NavigationComponentImpl> {
-        scoped<Navigator> { NavigatorImpl(get(), get()) }
-        scoped<ResultProvider> { ResultProviderImpl(get()) }
-        scoped<NavigatorControllerHolder> {
-            object : NavigatorControllerHolder {
-                override var stackNavigation: StackNavigation<ScreenConfig>? =
-                    null
-                override var rootComponent: RootComponent? = null
-            }
+    single<Navigator> { NavigatorImpl(get(), get()) }
+    single<ResultProvider> { ResultProviderImpl(get()) }
+    single<NavigatorControllerHolder> {
+        object : NavigatorControllerHolder {
+            override var stackNavigation: StackNavigation<ScreenConfig>? =
+                null
+            override var rootComponent: RootComponent? = null
         }
     }
 }

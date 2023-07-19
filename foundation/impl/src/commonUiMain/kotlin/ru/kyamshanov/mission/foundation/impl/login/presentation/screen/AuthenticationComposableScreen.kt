@@ -5,12 +5,11 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.parcelable.Parcelize
 import ru.kyamshanov.mission.core.navigation.api.Screen
 import ru.kyamshanov.mission.core.navigation.common.ComposableScreen
-import ru.kyamshanov.mission.core.navigation.common.utils.composeComponentContext
 import ru.kyamshanov.mission.foundation.impl.login.presentation.component.AuthenticationUiComponent
 import ru.kyamshanov.mission.foundation.impl.login.presentation.composable.AuthenticationComponent
 
 @Parcelize
-actual class AuthenticationComposableScreen : ComposableScreen {
+internal actual class AuthenticationComposableScreen : Screen, ComposableScreen {
 
     @Composable
     override fun Content(componentContext: ComponentContext) {
