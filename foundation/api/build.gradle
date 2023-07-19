@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.core.navigation.api)
-    implementation(projects.core.navigation.common)
+    commonMainImplementation(projects.core.navigation.api)
+    commonMainImplementation(projects.core.navigation.common)
 }

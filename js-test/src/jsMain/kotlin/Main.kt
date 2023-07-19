@@ -4,7 +4,7 @@ import org.jetbrains.compose.web.attributes.InputType
 import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.*
 import org.jetbrains.compose.web.renderComposable
-
+import ru.kyamshanov.mission.core.di.api.CoreComponent
 //Development based on the PeopleInSpace project / https://github.com/joreilly/PeopleInSpace
 
 @InternalCoroutinesApi
@@ -16,7 +16,10 @@ fun main() {
 
         Div(attrs = { style { padding(16.px) } }) {
             H1(attrs = { classes(TextStyles.titleText) }) {
-                Text("Mission-app")
+                val v = object : CoreComponent{
+
+                }
+                Text("Mission-app ${v::class.toString()}")
             }
         }
     }

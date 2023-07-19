@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    api(libs.ktor.core)
-    implementation(projects.core.di.api)
+    commonMainApi(libs.ktor.core)
+    commonMainImplementation(projects.core.di.api)
 }

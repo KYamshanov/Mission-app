@@ -21,6 +21,15 @@ kotlin {
             dependencies {
                 implementation(compose.html.core)
                 implementation(compose.runtime)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.napier)
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
+
+                implementation(projects.core.di.api)
             }
         }
     }

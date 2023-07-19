@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    implementation(projects.core.di.api)
+    commonMainImplementation(projects.core.di.api)
 }

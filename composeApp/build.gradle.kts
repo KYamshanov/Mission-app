@@ -9,6 +9,7 @@ kotlin {
             dependencies {
                 implementation(libs.androidx.compose.viewmodel)
                 implementation(libs.decompose.android)
+                implementation(libs.decompose.compose)
             }
         }
     }
@@ -23,5 +24,4 @@ dependencies {
     commonMainImplementation(projects.foundation.api)
     commonMainImplementation(projects.core.platformBase)
     commonMainImplementation(libs.decompose.core)
-    commonMainImplementation(libs.decompose.compose)
 }

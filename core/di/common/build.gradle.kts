@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    api(projects.core.di.api)
-    api(libs.koin.core)
+    commonMainApi(projects.core.di.api)
+    commonMainApi(libs.koin.core)
 }
 

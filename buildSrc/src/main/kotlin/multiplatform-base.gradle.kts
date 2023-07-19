@@ -19,6 +19,11 @@ kotlin {
     }
     jvm("desktop")
 
+    js(IR) {
+        browser()
+        binaries.executable()
+    }
+
     sourceSets {
         val commonMain by getting {
             dependencies {

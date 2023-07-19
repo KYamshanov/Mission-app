@@ -4,20 +4,53 @@ import org.gradle.accessors.dm.LibrariesForLibs
 val libs = the<LibrariesForLibs>()
 
 plugins {
-    id("kotlin")
+    id("org.jetbrains.kotlin.multiplatform")
+    id("com.android.application")
 }
 
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.napier)
+
+kotlin {
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
+    jvm("desktop")
+
+
+
+    js(IR) {
+        browser()
+        binaries.executable()
+    }
 }
 
-//For support build kotlin single api module for android target 1.8
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = Versions.TargetJVM
-}
 
-//For support build java single api module for android target 1.8
-tasks.withType<JavaCompile> {
-    targetCompatibility = Versions.TargetJVM
+
+android {
+    namespace = "ru.kyamshanov.mission"
+    compileSdk = Versions.CompileSDK
+
+    defaultConfig {
+        minSdk = Versions.MinSDK
+        targetSdk = Versions.CompileSDK
+        applicationId = "ru.kyamshanov.mission"
+
+        versionCode = Versions.VersionCode
+        versionName = Versions.VersionName
+    }
+    sourceSets["main"].apply {
+        manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        res.srcDirs("src/androidMain/resources")
+        resources.srcDirs("src/commonMain/resources")
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+    packaging {
+        resources.excludes.add("META-INF/**")
+    }
 }
