@@ -12,8 +12,14 @@ plugins {
 kotlin {
     sourceSets {
 
+        val commonMain by getting {
+            dependencies {
+                implementation(libs.decompose.core)
+            }
+        }
+
         val commonUiMain by creating {
-            dependsOn(commonMain.get())
+            dependsOn(commonMain)
 
             dependencies {
                 implementation(compose.runtime)
@@ -21,11 +27,17 @@ kotlin {
                 implementation(compose.material)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
+
+                implementation(libs.decompose.compose)
+
             }
         }
 
         val androidMain by getting {
             dependsOn(commonUiMain)
+            dependencies {
+                implementation(libs.decompose.android)
+            }
         }
 
         val desktopMain by getting {

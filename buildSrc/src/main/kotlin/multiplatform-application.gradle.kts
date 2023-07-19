@@ -10,6 +10,7 @@ plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("com.android.application")
     id("org.jetbrains.compose")
+    id("kotlin-parcelize")
 }
 
 kotlin {
@@ -35,6 +36,7 @@ kotlin {
                 implementation(libs.napier)
                 implementation(compose.foundation)
                 implementation(compose.material)
+                implementation(libs.decompose.core)
             }
         }
 
@@ -45,6 +47,8 @@ kotlin {
                 implementation(libs.compose.uitooling)
                 implementation(libs.kotlinx.coroutines.android)
                 implementation(libs.ktor.client.okhttp)
+                implementation(libs.decompose.android)
+                implementation(libs.decompose.compose)
             }
         }
 
@@ -54,6 +58,7 @@ kotlin {
                 implementation(compose.desktop.currentOs)
                 implementation(libs.ktor.client.okhttp)
                 implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.decompose.compose)
             }
         }
 
