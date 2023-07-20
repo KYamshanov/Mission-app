@@ -1,5 +1,5 @@
 plugins {
-    id("multiplatform-lib")
+    id("kotlin-api")
 }
 
 dependencies {

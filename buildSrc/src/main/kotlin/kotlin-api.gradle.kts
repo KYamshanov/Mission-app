@@ -12,8 +12,11 @@ kotlin {
     jvm()
 
     js(IR) {
+        moduleName = project.displayName.toString().split(":").let{
+            "${it[2]}${if(it.size>3) it[3] else "" }"
+        }
         browser()
-        useCommonJs()
+        binaries.executable()
     }
 
 }

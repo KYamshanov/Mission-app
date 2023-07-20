@@ -1,8 +1,5 @@
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Surface
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import io.github.aakira.napier.DebugAntilog
@@ -51,24 +48,21 @@ fun main() {
             }
         }
 
-   /*     Surface(modifier = Modifier.fillMaxSize()) {
+        val screenWithContextState =
+            remember { mutableStateOf<RootComponent.ScreenWithContext?>(null) }
 
-            val screenWithContextState =
-                remember { mutableStateOf<RootComponent.ScreenWithContext?>(null) }
+        defaultRootComponent.childStack.subscribe { stack ->
+            screenWithContextState.value = stack.active.instance
+        }
 
-            defaultRootComponent.childStack.subscribe { stack ->
-                screenWithContextState.value = stack.active.instance
+        val screen = screenWithContextState.value?.screen
+        val context = screenWithContextState.value?.context
+
+        when (screen) {
+            is JsComposableScreen -> {
+                screen.Content(requireNotNull(context) { " Context cannot be null for drawing screen " })
             }
-
-            val screen = screenWithContextState.value?.screen
-            val context = screenWithContextState.value?.context
-
-            when (screen) {
-                is JsComposableScreen -> {
-                    screen.Content(requireNotNull(context){" Context cannot be null for drawing screen "})
-                }
-            }
-        }*/
+        }
     }
 }
 

@@ -20,6 +20,9 @@ dependencyResolutionManagement {
 //For enable access to modules as projects.core.ui
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
+include(":js-test")
+
+
 include(":composeApp")
 include(
     ":core:theme",

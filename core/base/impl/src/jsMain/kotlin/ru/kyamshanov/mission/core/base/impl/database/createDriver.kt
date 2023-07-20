@@ -8,7 +8,7 @@ import ru.kyamshanov.mission.core.database.MissionDatabase
 internal actual fun createDriver(): SqlDriver {
     val driver = WebWorkerDriver(
         Worker(
-            js("""new URL("@cashapp/sqldelight-sqljs-worker/sqljs.worker.js", import.meta.url)""")
+            js("""new URL("sqldelight-web-worker-driver", import.meta.url)""")
         )
     )
     MissionDatabase.Schema.create(driver)
