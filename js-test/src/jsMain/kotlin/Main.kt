@@ -38,15 +38,8 @@ fun main() {
     requireNotNull(Di.getInternalComponent<NavigationComponent, NavigationComponentImpl>())
         .navigatorControllerHolder.rootComponent = defaultRootComponent
 
-
     renderComposable(rootElementId = "root") {
         Style(TextStyles)
-
-        Div {
-            H1 {
-                Text("Poshel na xer")
-            }
-        }
 
         val screenWithContextState =
             remember { mutableStateOf<RootComponent.ScreenWithContext?>(null) }

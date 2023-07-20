@@ -16,11 +16,13 @@ import org.jetbrains.compose.web.dom.Text
 import ru.kyamshanov.mission.TextStyles
 import ru.kyamshanov.mission.core.navigation.api.Screen
 import ru.kyamshanov.mission.core.navigation.common.JsComposableScreen
+import ru.kyamshanov.mission.foundation.impl.splash_screen.presentation.component.SplashScreenDComponent
 
 internal actual class SplashScreen : Screen, JsComposableScreen {
 
     @Composable
     override fun Content(componentContext: ComponentContext) {
+        SplashScreenDComponent(componentContext).viewModel
 
         Div(attrs = { style { padding(16.px) } }) {
             H1(attrs = { classes(TextStyles.titleText) }) {
