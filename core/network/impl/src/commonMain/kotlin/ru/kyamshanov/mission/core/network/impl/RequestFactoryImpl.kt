@@ -35,8 +35,8 @@ class RequestFactoryImpl : RequestFactory {
         }
 
         defaultRequest {
-            url("http://192.168.43.29:80/") //mobile internet
-            // url("http://10.2.15.91:80/") //wifi
+            //url("http://192.168.43.29:80/") //mobile internet
+             url("http://10.2.15.91:80/") //wifi
             getAuthorizationHeader()?.let { header(HttpHeaders.Authorization, it) }
             getIdTokenHeader()?.let { header(IDENTIFICATION_HEADER, it) }
         }

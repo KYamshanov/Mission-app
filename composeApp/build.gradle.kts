@@ -16,12 +16,6 @@ kotlin {
         }
         jvm("desktop")
 
-        js(IR) {
-            moduleName = "mission-web"
-            browser()
-            binaries.executable()
-        }
-
         val commonMain by getting {
 
             dependencies {
@@ -65,16 +59,6 @@ kotlin {
                 implementation(compose.material)
             }
         }
-
-        val jsMain by getting {
-            dependencies {
-                implementation(compose.foundation)
-                implementation(compose.material)
-                implementation(libs.sqldelight.web)
-                implementation(devNpm("copy-webpack-plugin", "9.1.0"))
-            }
-        }
-
     }
 }
 

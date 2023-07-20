@@ -9,6 +9,7 @@ import org.jetbrains.compose.web.css.DisplayStyle
 import org.jetbrains.compose.web.css.display
 import org.jetbrains.compose.web.css.padding
 import org.jetbrains.compose.web.css.px
+import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H1
 import org.jetbrains.compose.web.dom.Input
@@ -60,6 +61,10 @@ internal actual class AuthenticationComposableScreen : Screen, JsComposableScree
                     }
                 }
             )
+
+            Button {
+                viewModel.clickOnLogin()
+            }
         }
     }
 
