@@ -18,7 +18,6 @@ import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.network.api.RequestFactory
 import ru.kyamshanov.mission.session_front.api.di.SessionFrontComponent
 import ru.kyamshanov.mission.session_front.api.model.TokenRepository
-import ru.kyamshanov.mission.session_front.api.session.LoggedSession
 
 class RequestFactoryImpl : RequestFactory {
 
@@ -27,6 +26,7 @@ class RequestFactoryImpl : RequestFactory {
             logger = NetworkLogger()
             level = LogLevel.ALL
         }
+
         install(ContentNegotiation) {
             json(Json {
                 ignoreUnknownKeys = true

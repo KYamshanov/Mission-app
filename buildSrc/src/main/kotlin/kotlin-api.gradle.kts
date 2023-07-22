@@ -1,23 +1,30 @@
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.gradle.kotlin.dsl.support.delegates.ProjectDelegate
 
 //see https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
 
 plugins {
-    id("kotlin")
+    id("org.jetbrains.kotlin.multiplatform")
+}
+
+
+kotlin {
+    jvm()
+
+    js(IR) {
+        moduleName = project.getJsModuleName()
+        browser()
+        binaries.executable()
+    }
+
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.napier)
+    commonMainImplementation(libs.kotlinx.coroutines.core)
+    commonMainImplementation(libs.napier)
 }
 
-//For support build kotlin single api module for android target 1.8
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = Versions.TargetJVM
-}
-
-//For support build java single api module for android target 1.8
-tasks.withType<JavaCompile> {
-    targetCompatibility = Versions.TargetJVM
 }

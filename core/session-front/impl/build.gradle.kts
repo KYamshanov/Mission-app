@@ -7,8 +7,8 @@ plugins {
 }
 
 dependencies {
-    api(projects.core.sessionFront.api)
-    api(projects.core.di.common)
-    implementation(projects.core.network.api)
-    implementation(projects.core.base.api)
+    commonMainApi(projects.core.sessionFront.api)
+    commonMainApi(projects.core.di.common)
+    commonMainImplementation(projects.core.network.api)
+    commonMainImplementation(projects.core.base.api)
 }

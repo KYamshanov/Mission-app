@@ -28,7 +28,7 @@ fun main() = application {
     val componentContext = DefaultComponentContext(LifecycleRegistry())
 
     val defaultRootComponent = DefaultRootComponent(
-        initialScreen = requireNotNull(Di.getComponent<SplashScreenComponent>()).composableSplashScreen,
+        initialScreen = requireNotNull(Di.getComponent<SplashScreenComponent>()).splashScreen,
         componentContext = componentContext
     )
 

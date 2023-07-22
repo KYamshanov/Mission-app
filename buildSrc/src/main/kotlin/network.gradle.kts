@@ -9,5 +9,5 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.ktor.serialization.json)
+    commonMainImplementation(libs.ktor.serialization.json)
 }

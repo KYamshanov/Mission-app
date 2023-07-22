@@ -49,7 +49,7 @@ class AppActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val defaultRootComponent = DefaultRootComponent(
-            initialScreen = requireNotNull(Di.getComponent<SplashScreenComponent>()).composableSplashScreen,
+            initialScreen = requireNotNull(Di.getComponent<SplashScreenComponent>()).splashScreen,
             componentContext = defaultComponentContext()
         )
 
