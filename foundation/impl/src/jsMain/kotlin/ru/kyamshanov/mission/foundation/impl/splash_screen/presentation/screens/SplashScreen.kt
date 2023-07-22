@@ -26,21 +26,7 @@ internal actual class SplashScreen : Screen, JsComposableScreen {
 
         Div(attrs = { style { padding(16.px) } }) {
             H1(attrs = { classes(TextStyles.titleText) }) {
-                Text("People In Space")
-            }
-            H2 {
-                Text("Poshel na xer")
-            }
-
-            Div(attrs = {
-                style {
-                    display(DisplayStyle.Flex)
-                    flexDirection(FlexDirection.Row)
-                }
-            }) {
-                H3 {
-                    Text("Волк - заяц")
-                }
+                Text("Загрузка")
             }
         }
     }
