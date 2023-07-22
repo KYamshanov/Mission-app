@@ -54,8 +54,6 @@ kotlin {
                 implementation(projects.foundation.api)
                 implementation(projects.core.platformBase)
                 implementation(libs.decompose.core)
-
-                implementation(devNpm("copy-webpack-plugin", "9.1.0"))
             }
         }
     }

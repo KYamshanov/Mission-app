@@ -12,34 +12,5 @@ kotlin {
                 implementation(projects.core.platformBase)
             }
         }
-
-        val androidMain by getting {
-            dependencies {
-                implementation(libs.sqldelight.android)
-            }
-        }
-
-        val desktopMain by getting {
-            dependencies {
-                implementation(libs.sqldelight.sqlite)
-            }
-        }
-
-        val jsMain by getting {
-            dependencies {
-                implementation(libs.sqldelight.web)
-                implementation(npm("sql.js", "1.6.2"))
-                implementation(devNpm("copy-webpack-plugin", "9.1.0"))
-            }
-        }
-    }
-}
-
-sqldelight {
-    databases {
-        create("MissionDatabase") {
-            packageName.set("ru.kyamshanov.mission.core.database")
-            generateAsync.set(true)
-        }
     }
 }
