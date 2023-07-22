@@ -28,6 +28,7 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(libs.sqldelight.web)
+                implementation(npm("sql.js", "1.6.2"))
                 implementation(devNpm("copy-webpack-plugin", "9.1.0"))
             }
         }

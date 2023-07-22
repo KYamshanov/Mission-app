@@ -4,8 +4,8 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import ru.kyamshanov.mission.core.database.MissionDatabase
 
-actual fun createDriver(): SqlDriver {
+actual suspend fun createDriver(): SqlDriver {
     val driver: SqlDriver = JdbcSqliteDriver("jdbc:sqlite:mission")
-    MissionDatabase.Schema.create(driver)
+    MissionDatabase.Schema.create(driver).await()
     return driver
 }

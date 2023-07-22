@@ -4,7 +4,7 @@ interface MissionPreferences {
 
     suspend fun saveValue(key: String, value: String)
 
-    fun getValue(key: String): String?
+    suspend fun getValue(key: String): String?
 
-    fun remove(key: String)
+    suspend fun remove(key: String)
 }

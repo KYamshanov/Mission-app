@@ -18,7 +18,6 @@ import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.network.api.RequestFactory
 import ru.kyamshanov.mission.session_front.api.di.SessionFrontComponent
 import ru.kyamshanov.mission.session_front.api.model.TokenRepository
-import ru.kyamshanov.mission.session_front.api.session.LoggedSession
 
 class RequestFactoryImpl : RequestFactory {
 
@@ -27,6 +26,7 @@ class RequestFactoryImpl : RequestFactory {
             logger = NetworkLogger()
             level = LogLevel.ALL
         }
+
         install(ContentNegotiation) {
             json(Json {
                 ignoreUnknownKeys = true
@@ -35,8 +35,8 @@ class RequestFactoryImpl : RequestFactory {
         }
 
         defaultRequest {
-            //url("http://192.168.43.29:80/") //mobile internet
-             url("http://10.2.15.91:80/") //wifi
+            url("http://192.168.43.29:80/") //mobile internet
+            // url("http://10.2.15.91:80/") //wifi
             getAuthorizationHeader()?.let { header(HttpHeaders.Authorization, it) }
             getIdTokenHeader()?.let { header(IDENTIFICATION_HEADER, it) }
         }

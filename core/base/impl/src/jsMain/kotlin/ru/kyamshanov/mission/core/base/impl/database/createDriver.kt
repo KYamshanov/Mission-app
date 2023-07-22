@@ -5,12 +5,12 @@ import app.cash.sqldelight.driver.worker.WebWorkerDriver
 import org.w3c.dom.Worker
 import ru.kyamshanov.mission.core.database.MissionDatabase
 
-internal actual fun createDriver(): SqlDriver {
+internal actual suspend fun createDriver(): SqlDriver {
     val driver = WebWorkerDriver(
         Worker(
             js("""new URL("sqldelight-web-worker-driver", import.meta.url)""")
         )
     )
-    MissionDatabase.Schema.create(driver)
+    MissionDatabase.Schema.create(driver).await()
     return driver
 }

@@ -62,9 +62,15 @@ internal actual class AuthenticationComposableScreen : Screen, JsComposableScree
                 }
             )
 
-            Button {
-                viewModel.clickOnLogin()
-            }
+            Button(
+                attrs = {
+                    attr("placeholder", "Введи пароль, идиот")
+                    onClick { viewModel.clickOnLogin() }
+                    style {
+                        padding(4.px)
+                    }
+                }
+            )
         }
     }
 

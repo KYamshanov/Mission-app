@@ -1,4 +1,5 @@
 import org.gradle.accessors.dm.LibrariesForLibs
+import org.gradle.kotlin.dsl.support.delegates.ProjectDelegate
 
 //see https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
@@ -12,9 +13,7 @@ kotlin {
     jvm()
 
     js(IR) {
-        moduleName = project.displayName.toString().split(":").let{
-            "${it[2]}${if(it.size>3) it[3] else "" }"
-        }
+        moduleName = project.getJsModuleName()
         browser()
         binaries.executable()
     }
