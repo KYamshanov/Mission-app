@@ -3,6 +3,9 @@ package ru.kyamshanov.mission
 import org.jetbrains.compose.web.css.StyleSheet
 import org.jetbrains.compose.web.css.color
 import org.jetbrains.compose.web.css.fontSize
+import org.jetbrains.compose.web.css.maxHeight
+import org.jetbrains.compose.web.css.maxWidth
+import org.jetbrains.compose.web.css.percent
 import org.jetbrains.compose.web.css.px
 import org.jetbrains.compose.web.css.rgb
 
@@ -36,4 +39,14 @@ object TextStyles : StyleSheet() {
             "Gotham SSm A,Gotham SSm B,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Droid Sans,Helvetica Neue,Arial,sans-serif"
         )
     }
+}
+
+object ImageStyles : StyleSheet() {
+
+
+    val appIcon by style {
+        maxHeight(10.percent)
+        maxWidth(10.percent)
+    }
+
 }

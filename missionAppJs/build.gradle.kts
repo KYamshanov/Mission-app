@@ -6,7 +6,7 @@ val libs = the<LibrariesForLibs>()
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("org.jetbrains.compose")
-
+    id("dev.icerock.mobile.multiplatform-resources")
 }
 
 
@@ -57,4 +57,9 @@ kotlin {
             }
         }
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "ru.kyamshanov.mission"
+    multiplatformResourcesClassName = "Res"
 }

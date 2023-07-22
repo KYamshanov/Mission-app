@@ -1,5 +1,6 @@
 plugins {
     id("multiplatform-compose")
+    id("dev.icerock.mobile.multiplatform-resources")
 }
 
 android {
@@ -10,6 +11,7 @@ android {
 dependencies {
     //base api
     commonMainApi(projects.core.theme)
+    commonMainApi("dev.icerock.moko:resources:0.23.0")
 }
 
 kotlin {
@@ -22,4 +24,10 @@ kotlin {
             }
         }
     }
+}
+
+
+multiplatformResources {
+    multiplatformResourcesPackage = "ru.kyamshanov.mission.core.ui"
+    multiplatformResourcesClassName = "Res"
 }
