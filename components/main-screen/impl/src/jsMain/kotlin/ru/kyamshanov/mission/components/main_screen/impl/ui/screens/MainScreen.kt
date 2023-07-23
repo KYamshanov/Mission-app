@@ -8,7 +8,7 @@ import org.jetbrains.compose.web.dom.Text
 import ru.kyamshanov.mission.core.navigation.api.Screen
 import ru.kyamshanov.mission.core.navigation.common.JsComposableScreen
 
-internal actual class MainComposableScreen : Screen, JsComposableScreen {
+internal actual class MainScreen : Screen, JsComposableScreen {
 
     @Composable
     override fun Content(componentContext: ComponentContext) {

@@ -9,4 +9,5 @@ dependencies {
     commonMainImplementation(projects.core.sessionFront.impl)
     commonMainImplementation(projects.core.network.impl)
     commonMainImplementation(projects.components.mainScreen.impl)
+    commonMainImplementation(projects.components.project.impl)
 }

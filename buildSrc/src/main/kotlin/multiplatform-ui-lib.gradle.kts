@@ -6,6 +6,7 @@ val libs = the<LibrariesForLibs>()
 plugins {
     id("multiplatform-compose")
     id("dev.icerock.mobile.multiplatform-resources")
+    id("multiplatform-network")
 }
 
 kotlin {

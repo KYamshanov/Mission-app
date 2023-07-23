@@ -46,4 +46,6 @@ include(
 include(
     ":components:main-screen:api",
     ":components:main-screen:impl",
+    ":components:project:api",
+    ":components:project:impl",
 )
