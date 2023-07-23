@@ -13,6 +13,7 @@ koin = "3.4.2"
 napier = "2.6.1"
 decompose = "2.0.0"
 androidx-compose-viewmodel = "2.6.1"
+moko-resources = "0.23.0"
 
 [libraries]
 
@@ -40,6 +41,9 @@ decompose-core = { module = "com.arkivanov.decompose:decompose", version.ref = "
 decompose-compose = { module = "com.arkivanov.decompose:extensions-compose-jetbrains", version.ref = "decompose" }
 decompose-android = { module = "com.arkivanov.decompose:extensions-android", version.ref = "decompose" }
 androidx-compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-compose-viewmodel" }
+moko-resources-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "moko-resources" }
+moko-resources-core = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
+moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
 
 [plugins]
 
@@ -48,3 +52,4 @@ cocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotli
 compose = { id = "org.jetbrains.compose", version.ref = "compose" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resources" }

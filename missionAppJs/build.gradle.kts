@@ -6,7 +6,7 @@ val libs = the<LibrariesForLibs>()
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
     id("org.jetbrains.compose")
-    id("dev.icerock.mobile.multiplatform-resources")
+    use(libs.plugins.moko.resources)
 }
 
 

@@ -1,6 +1,6 @@
 plugins {
     id("multiplatform-compose")
-    id("dev.icerock.mobile.multiplatform-resources")
+    use(libs.plugins.moko.resources)
 }
 
 android {

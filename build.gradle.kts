@@ -3,5 +3,5 @@ plugins {
     use(libs.plugins.compose).apply(false)
     use(libs.plugins.android.application).apply(false)
     use(libs.plugins.kotlinx.serialization).apply(false)
-    id("dev.icerock.mobile.multiplatform-resources").apply(false)
+    use(libs.plugins.moko.resources).apply(false)
 }
