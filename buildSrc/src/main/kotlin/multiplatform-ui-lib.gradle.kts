@@ -5,6 +5,7 @@ val libs = the<LibrariesForLibs>()
 
 plugins {
     id("multiplatform-compose")
+    id("dev.icerock.mobile.multiplatform-resources")
 }
 
 kotlin {
@@ -16,7 +17,26 @@ kotlin {
                 implementation(project(":core:di:common"))
                 implementation(project(":core:navigation:api"))
                 implementation(project(":core:navigation:common"))
+                implementation(libs.moko.resources.core)
+            }
+        }
+
+        val commonUiMain by getting {
+            dependencies {
+                implementation(libs.moko.resources.compose)
+            }
+        }
+
+        val jsMain by getting {
+            dependencies {
+                implementation(libs.moko.resources.compose)
             }
         }
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage =
+        "ru.kyamshanov.mission" + project.path.toString().replace(":", ".").replace("-", "_")
+    multiplatformResourcesClassName = "Res"
 }

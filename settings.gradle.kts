@@ -20,7 +20,7 @@ dependencyResolutionManagement {
 //For enable access to modules as projects.core.ui
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-include(":composeApp",":mission-app-js")
+include(":composeApp", ":missionAppJs")
 include(
     ":core:theme",
     ":core:ui",
