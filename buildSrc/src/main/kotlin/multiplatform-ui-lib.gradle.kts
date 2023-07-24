@@ -19,6 +19,7 @@ kotlin {
                 implementation(project(":core:navigation:api"))
                 implementation(project(":core:navigation:common"))
                 implementation(libs.moko.resources.core)
+                implementation(libs.kotlinx.datetime)
             }
         }
 

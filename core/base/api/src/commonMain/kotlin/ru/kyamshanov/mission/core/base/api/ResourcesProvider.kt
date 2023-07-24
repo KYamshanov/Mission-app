@@ -1,11 +1,14 @@
 package ru.kyamshanov.mission.core.base.api
 
+import dev.icerock.moko.resources.PluralsResource
+import dev.icerock.moko.resources.StringResource
+
 interface ResourcesProvider {
 
-    fun getString(id: Int): String
+    fun getQuantityString(res: PluralsResource, count: Int): String
+    fun getQuantityString(res: PluralsResource, count: Int, vararg formatArgs: Any): String
 
-    fun getString(id: Int, vararg formatArgs: Any): String
+    fun getString(res: StringResource): String
 
-    fun getQuantityString(id: Int, count: Int): String
-    fun getQuantityString(id: Int, count: Int, vararg formatArgs: Any): String
+    fun getString(res: StringResource, vararg formatArgs: Any): String
 }

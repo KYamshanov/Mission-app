@@ -11,11 +11,18 @@ android {
 dependencies {
     //base api
     commonMainApi(projects.core.theme)
-    commonMainApi("dev.icerock.moko:resources:0.23.0")
+    commonMainApi(libs.moko.resources.core)
 }
 
 kotlin {
+
     sourceSets {
+
+        val commonUiMain by getting {
+            dependencies {
+                implementation(libs.moko.resources.compose)
+            }
+        }
 
         val androidMain by getting {
             dependencies {

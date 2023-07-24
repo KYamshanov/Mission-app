@@ -14,6 +14,7 @@ napier = "2.6.1"
 decompose = "2.0.0"
 androidx-compose-viewmodel = "2.6.1"
 moko-resources = "0.23.0"
+kotlinx-datetime = "0.4.0"
 
 [libraries]
 
@@ -44,6 +45,7 @@ androidx-compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-
 moko-resources-generator = { module = "dev.icerock.moko:resources-generator", version.ref = "moko-resources" }
 moko-resources-core = { module = "dev.icerock.moko:resources", version.ref = "moko-resources" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko-resources" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
 [plugins]
 

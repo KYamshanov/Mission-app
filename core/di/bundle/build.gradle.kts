@@ -10,4 +10,5 @@ dependencies {
     commonMainImplementation(projects.core.network.impl)
     commonMainImplementation(projects.components.mainScreen.impl)
     commonMainImplementation(projects.components.project.impl)
+    commonMainImplementation(projects.components.time)
 }
