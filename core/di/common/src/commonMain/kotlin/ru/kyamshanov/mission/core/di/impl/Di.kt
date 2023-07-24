@@ -12,7 +12,7 @@ import kotlin.reflect.cast
 private const val CORE_COMPONENT_KEY = "core"
 
 
-//TODO Сделать анализ DI, выглядит не очень
+//TODO Переписать механизм сохранения Core компонентов
 object Di {
 
     private val builders = mutableMapOf<KClass<*>, ComponentBuilder<*>>()
@@ -64,7 +64,8 @@ object Di {
         Napier.d("Releasing component ${clazz.simpleName} with holderId $holderId")
 
         componentsHolder[clazz]?.let { components ->
-            components.filter { it.key == holderId }.forEach{ onBeforeReleaseComponent(it.key,it.value) }
+            components.filter { it.key == holderId }
+                .forEach { onBeforeReleaseComponent(it.key, it.value) }
             components.remove(holderId)
             if (components.isEmpty()) componentsHolder.remove(clazz)
         }
@@ -80,6 +81,6 @@ object Di {
     }
 
     private fun onBeforeReleaseComponent(id: Any?, component: Any) {
-       if (component is CloseableComponent) component.close()
+        if (component is CloseableComponent) component.close()
     }
 }

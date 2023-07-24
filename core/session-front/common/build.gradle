@@ -1,7 +1,0 @@
-plugins {
-    id("kotlin-api")
-}
-
-dependencies {
-    commonMainApi(projects.core.sessionFront.api)
-}

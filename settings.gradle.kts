@@ -34,7 +34,6 @@ include(
     ":core:network:impl",
     ":core:session-front:api",
     ":core:session-front:impl",
-    ":core:session-front:common",
     ":core:base:api",
     ":core:base:impl",
     ":core:platform-base",
@@ -46,4 +45,7 @@ include(
 include(
     ":components:main-screen:api",
     ":components:main-screen:impl",
+    ":components:project:api",
+    ":components:project:impl",
+    ":components:time",
 )

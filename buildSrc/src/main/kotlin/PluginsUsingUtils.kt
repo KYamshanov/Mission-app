@@ -16,3 +16,6 @@ fun org.gradle.api.Project.getJsModuleName(): String {
     val module = project.path.toString().replace(":", "-")
     return "$prefix$module"
 }
+
+fun org.gradle.api.Project.getModuleNamespace(): String =
+    "ru.kyamshanov.mission" + project.path.toString().replace(":", ".").replace("-", "_")

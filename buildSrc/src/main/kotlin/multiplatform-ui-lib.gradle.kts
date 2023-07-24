@@ -6,6 +6,7 @@ val libs = the<LibrariesForLibs>()
 plugins {
     id("multiplatform-compose")
     id("dev.icerock.mobile.multiplatform-resources")
+    id("multiplatform-network")
 }
 
 kotlin {
@@ -18,6 +19,7 @@ kotlin {
                 implementation(project(":core:navigation:api"))
                 implementation(project(":core:navigation:common"))
                 implementation(libs.moko.resources.core)
+                implementation(libs.kotlinx.datetime)
             }
         }
 

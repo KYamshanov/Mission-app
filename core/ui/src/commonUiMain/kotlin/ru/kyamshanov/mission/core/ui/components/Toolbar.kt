@@ -1,5 +1,7 @@
 package ru.kyamshanov.mission.core.ui.components
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
@@ -15,10 +18,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.painterResource
 import ru.kyamshanov.mission.MissionTheme
+import ru.kyamshanov.mission.core.ui.Res
 import ru.kyamshanov.mission.core.ui.constants.ORIENTATION_PORTRAIT
 import ru.kyamshanov.mission.core.ui.extensions.getOrientation
 import ru.kyamshanov.mission.core.ui.extensions.getStatusBars
@@ -83,17 +92,17 @@ fun TopBar(
         val localDensity = LocalDensity.current
         val iconSizeState = remember { mutableStateOf(IntSize.Zero) }
 
-        /*  Image(
+          Image(
               modifier = Modifier.run {
                   padding(10.dp)
                       .clip(CircleShape)
                       .clickable(onClick = navigationListener)
                       .onSizeChanged { iconSizeState.value = it }
               },
-              painter = painterResource(id = R.drawable.arrow_back),
+              painter = painterResource(Res.images.arrow_back),
               contentDescription = "come back",
               colorFilter = ColorFilter.tint(MissionTheme.colors.primary)
-          )*/
+          )
 
         Box(modifier = Modifier.fillMaxSize().padding(end = with(localDensity) { iconSizeState.value.width.toDp() })) {
             title.invoke(this)
