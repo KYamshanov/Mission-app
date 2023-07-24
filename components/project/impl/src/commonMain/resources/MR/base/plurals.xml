@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
     <plurals name="pv_point_quantity">
-        <item quantity="zero">%d баллов</item>
+        <item quantity="zero">%d items</item>
         <item quantity="one">%d балл</item>
         <item quantity="two">%d балла</item>
         <item quantity="few">%d баллов</item>

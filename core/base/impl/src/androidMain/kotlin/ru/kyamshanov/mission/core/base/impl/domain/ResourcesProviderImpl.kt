@@ -26,7 +26,7 @@ internal actual class ResourcesProviderImpl actual constructor() : ResourcesProv
         res: PluralsResource,
         count: Int,
         vararg formatArgs: Any
-    ): String = StringDesc.PluralFormatted(res, count, formatArgs).toString(context)
+    ): String = StringDesc.PluralFormatted(res, count, *formatArgs).toString(context)
 
     override fun getString(res: StringResource): String =
         StringDesc.Resource(res).toString(context)
@@ -34,5 +34,5 @@ internal actual class ResourcesProviderImpl actual constructor() : ResourcesProv
     override fun getString(
         res: StringResource,
         vararg formatArgs: Any
-    ): String = StringDesc.ResourceFormatted(res, formatArgs).toString(context)
+    ): String = StringDesc.ResourceFormatted(res, *formatArgs).toString(context)
 }
