@@ -1,5 +1,4 @@
 import org.gradle.accessors.dm.LibrariesForLibs
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 //see https://github.com/gradle/gradle/issues/15383
 val libs = the<LibrariesForLibs>()
@@ -10,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace =  project.getModuleNamespace()
+    namespace = project.getModuleNamespace()
     compileSdk = Versions.CompileSDK
 
     defaultConfig {
@@ -28,4 +27,5 @@ android {
     packaging {
         resources.excludes.add("META-INF/**")
     }
+
 }

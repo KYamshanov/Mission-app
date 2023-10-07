@@ -15,6 +15,7 @@ decompose = "2.0.0"
 androidx-compose-viewmodel = "2.6.1"
 moko-resources = "0.23.0"
 kotlinx-datetime = "0.4.0"
+scribejava = "8.3.3"
 
 [libraries]
 

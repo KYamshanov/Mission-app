@@ -1,0 +1,79 @@
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+
+plugins {
+    kotlin("multiplatform")
+    id("org.openjfx.javafxplugin") version "0.0.10"
+    id("org.jetbrains.compose")
+}
+
+group = "com.example.webview"
+version = "1.0.0"
+
+kotlin {
+    jvm {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+            withJava()
+        }
+    }
+
+    sourceSets {
+
+        val commonMain by getting {
+            dependencies {
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.napier)
+                implementation(libs.decompose.core)
+                implementation(projects.core.di.bundle)
+                implementation(projects.core.di.common)
+                implementation(projects.core.navigation.impl)
+                implementation(projects.core.theme)
+                implementation(projects.core.sessionFront.api)
+                implementation(projects.foundation.api)
+                implementation(projects.core.platformBase)
+                implementation(libs.decompose.core)
+            }
+        }
+
+        val jvmMain by getting {
+            dependencies {
+                implementation(compose.foundation)
+                implementation(compose.desktop.common)
+                implementation(compose.desktop.currentOs)
+                implementation(libs.ktor.client.okhttp)
+                implementation(libs.kotlinx.coroutines.swing)
+                implementation(libs.decompose.compose)
+                implementation(compose.material)
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                // testing deps
+            }
+        }
+    }
+}
+
+
+compose.desktop {
+    application {
+        mainClass = "MainKt"
+
+        nativeDistributions {
+            targetFormats(
+                TargetFormat.Dmg,
+                TargetFormat.Msi,
+                TargetFormat.Deb
+            )
+            packageName = "ru.kyamshanov.mission.desktopApp"
+            packageVersion = "1.0.0"
+        }
+    }
+}
+
+javafx {
+    version = "16"
+    modules = listOf("javafx.controls", "javafx.swing", "javafx.web", "javafx.graphics")
+}

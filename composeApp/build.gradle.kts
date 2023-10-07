@@ -57,6 +57,7 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.swing)
                 implementation(libs.decompose.compose)
                 implementation(compose.material)
+                implementation("com.giannivanhoecke.oauth:oauth-desktop:1.0")
             }
         }
     }
@@ -91,6 +92,8 @@ android {
 
         versionCode = Versions.VersionCode
         versionName = Versions.VersionName
+
+        manifestPlaceholders["appAuthRedirectScheme"] = "ru.kts.oauth"
     }
     sourceSets["main"].apply {
         manifest.srcFile("src/androidMain/AndroidManifest.xml")

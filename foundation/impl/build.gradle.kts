@@ -3,6 +3,13 @@ plugins {
 }
 
 dependencies {
+
+    desktopMainImplementation(project(mapOf("path" to ":core:navigation:api")))
+
+    //android oauth
+    androidMainImplementation("net.openid:appauth:0.11.1")
+    androidMainImplementation("androidx.activity:activity-compose:1.7.2")
+
     //base api
     commonMainApi(projects.foundation.api)
 

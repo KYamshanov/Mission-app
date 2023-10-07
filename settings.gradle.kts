@@ -2,6 +2,7 @@ rootProject.name = "Mission-app"
 
 pluginManagement {
     repositories {
+        mavenLocal()
         google()
         gradlePluginPortal()
         mavenCentral()
@@ -11,6 +12,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        mavenLocal()
         google()
         mavenCentral()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
@@ -20,7 +22,7 @@ dependencyResolutionManagement {
 //For enable access to modules as projects.core.ui
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
-include(":composeApp", ":missionAppJs")
+include(":composeApp", ":missionAppDesktop", ":missionAppJs")
 include(
     ":core:theme",
     ":core:ui",
