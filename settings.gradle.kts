@@ -39,6 +39,10 @@ include(
     ":core:base:api",
     ":core:base:impl",
     ":core:platform-base",
+    ":core:oauth2:api",
+    ":core:oauth2:impl",
+    ":core:authorization:api",
+    ":core:authorization:desktop",
 )
 include(
     ":foundation:api",
@@ -50,4 +54,6 @@ include(
     ":components:project:api",
     ":components:project:impl",
     ":components:time",
+    ":components:point:api",
+    ":components:point:impl",
 )

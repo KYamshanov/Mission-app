@@ -58,7 +58,6 @@ import javafx.scene.text.Text as JFXText
 
 @OptIn(ExperimentalDecomposeApi::class)
 fun main() = application {
-    Di.registration(PlatformBaseComponentBuilder())
     DiRegistry.registering()
     Napier.base(DebugAntilog())
 
@@ -89,7 +88,7 @@ fun main() = application {
             exitApplication()
         },
     ) {
-
+        Di.registration(PlatformBaseComponentBuilder(window))
 
         ComposeJFXPanel(
             composeWindow = window,

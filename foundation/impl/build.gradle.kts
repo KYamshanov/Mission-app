@@ -21,4 +21,5 @@ dependencies {
     commonMainImplementation(projects.core.navigation.common)
     commonMainImplementation(projects.core.di.common)
     commonMainImplementation(projects.core.theme)
+    commonMainImplementation(projects.core.authorization.api)
 }

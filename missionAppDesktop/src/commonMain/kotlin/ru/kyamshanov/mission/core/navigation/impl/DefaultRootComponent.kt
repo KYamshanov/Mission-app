@@ -35,5 +35,6 @@ class DefaultRootComponent(
     init {
         requireNotNull(Di.getInternalComponent<NavigationComponent, NavigationComponentImpl>()).navigatorControllerHolder.stackNavigation =
             navigation
+
     }
 }

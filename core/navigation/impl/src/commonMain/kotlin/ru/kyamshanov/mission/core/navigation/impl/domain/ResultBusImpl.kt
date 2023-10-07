@@ -2,13 +2,17 @@ package ru.kyamshanov.mission.core.navigation.impl.domain
 
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
-import ru.kyamshanov.mission.core.navigation.api.ResultProvider
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import ru.kyamshanov.mission.core.navigation.api.ResultBus
 
-internal class ResultProviderImpl constructor(
+internal class ResultBusImpl constructor(
     private val navigatorControllerHolder: NavigatorControllerHolder,
-) : ResultProvider {
+) : ResultBus {
 
     private val deferredMap = mutableMapOf<String, Channel<Any?>>()
+    override val sharedFlow: SharedFlow<Pair<String, Any>> = MutableSharedFlow<Pair<String, Any>>().asSharedFlow()
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> get(key: String, defaultValue: T): T =

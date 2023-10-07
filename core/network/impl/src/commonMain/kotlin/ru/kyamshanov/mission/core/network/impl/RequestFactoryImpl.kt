@@ -35,10 +35,9 @@ class RequestFactoryImpl : RequestFactory {
         }
 
         defaultRequest {
-            url("http://192.168.43.29:80/") //mobile internet
+            url("http://localhost:80/") //mobile internet
             // url("http://10.2.15.91:80/") //wifi
-            getAuthorizationHeader()?.let { header(HttpHeaders.Authorization, it) }
-            getIdTokenHeader()?.let { header(IDENTIFICATION_HEADER, it) }
+            getAuthorizationHeader()?.let { header(HttpHeaders.Authorization, "Bearer $it") }
         }
     }
 
@@ -51,9 +50,6 @@ class RequestFactoryImpl : RequestFactory {
     private fun getAuthorizationHeader(): String? =
         (requireNotNull(Di.getComponent<SessionFrontComponent>()).sessionInfo.session as? TokenRepository)?.accessToken?.value
 
-    private fun getIdTokenHeader(): String? =
-        (requireNotNull(Di.getComponent<SessionFrontComponent>()).sessionInfo.session as? TokenRepository)?.idToken?.value
-
     private inner class NetworkLogger : Logger {
 
         override fun log(message: String) {
@@ -64,7 +60,5 @@ class RequestFactoryImpl : RequestFactory {
     private companion object {
 
         const val LOG_TEG = "Network"
-
-        const val IDENTIFICATION_HEADER = "Mission-id"
     }
 }

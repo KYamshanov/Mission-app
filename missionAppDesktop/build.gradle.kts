@@ -23,6 +23,12 @@ kotlin {
 
         val commonMain by getting {
             dependencies {
+
+            }
+        }
+
+        val jvmMain by getting {
+            dependencies {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.napier)
                 implementation(libs.decompose.core)
@@ -34,11 +40,8 @@ kotlin {
                 implementation(projects.foundation.api)
                 implementation(projects.core.platformBase)
                 implementation(libs.decompose.core)
-            }
-        }
+                implementation(projects.core.oauth2.api)
 
-        val jvmMain by getting {
-            dependencies {
                 implementation(compose.foundation)
                 implementation(compose.desktop.common)
                 implementation(compose.desktop.currentOs)

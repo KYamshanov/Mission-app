@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import androidx.compose.ui.window.Window
@@ -28,7 +29,10 @@ import javafx.concurrent.Worker
 import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
 import javafx.scene.web.WebView
+import kotlinx.coroutines.runBlocking
 import netscape.javascript.JSObject
+import java.awt.BorderLayout
+import javax.swing.JPanel
 import ru.kyamshanov.mission.core.di.bundle.DiRegistry
 import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.navigation.MainContent
@@ -37,12 +41,11 @@ import ru.kyamshanov.mission.core.navigation.impl.DefaultRootComponent
 import ru.kyamshanov.mission.core.navigation.impl.di.NavigationComponentImpl
 import ru.kyamshanov.mission.core.platform_base.di.PlatformBaseComponentBuilder
 import ru.kyamshanov.mission.foundation.api.splash_screen.di.SplashScreenComponent
-import java.awt.BorderLayout
-import javax.swing.JPanel
+
+import ru.kyamshanov.mission.oauth2.api.OAuth2Component
 
 @OptIn(ExperimentalDecomposeApi::class)
 fun main() = application {
-    Di.registration(PlatformBaseComponentBuilder())
     DiRegistry.registering()
     Napier.base(DebugAntilog())
 
@@ -73,51 +76,7 @@ fun main() = application {
             exitApplication()
         },
     ) {
-
-        val visible = rememberSaveable { mutableStateOf(true) }
-        val jfxPanel = remember { JFXPanel() }
-        var jsObject = remember<JSObject?> { null }
-
-        if (visible.value)
-            ComposeJFXPanel(
-                composeWindow = window,
-                jfxPanel = jfxPanel,
-                onCreate = {
-                    Platform.runLater {
-                        val root = WebView()
-
-                        val engine = root.engine
-                        val scene = Scene(root)
-                        root.engine.loadWorker.stateProperty().addListener { _, _, newState ->
-                            if (newState === Worker.State.SUCCEEDED) {
-                                jsObject = root.engine.executeScript("window") as JSObject
-                                // execute other javascript / setup js callbacks fields etc..
-                            }
-                        }
-                        engine.locationProperty().addListener { obs, oldLocation, newLocation ->
-                            println("obs")
-                            println(oldLocation)
-                            println(newLocation)
-                            if (newLocation != null && newLocation.startsWith("http://127.0.0.1:8080/desktop/authorized")) {
-                                visible.value = false
-                            }
-                        }
-                        engine.loadWorker.exceptionProperty().addListener { _, _, newError ->
-                            println("page load error : $newError")
-                        }
-                        jfxPanel.scene = scene
-                        engine.load("http://localhost:9000/oauth2/authorize?response_type=code&client_id=desktop-client&scope=openid&redirect_uri=http://127.0.0.1:8080/desktop/authorized&code_challenge=MzY1QzQ4REYxMTBGQjY1NDE4RTA0NTNBQTA3OUM3NzUwQUJEOTg5QURFREFCQUQ5MzUyNThERkNBRThERkNFRA==&code_challenge_method=S256") // can be a html document from resources ..
-                        engine.setOnError { error -> println("onError : $error") }
-
-                    }
-                }, onDestroy = {
-                    Platform.runLater {
-                        jsObject?.let { jsObj ->
-                            // clean up code for more complex implementations i.e. removing javascript callbacks etc..
-                        }
-                    }
-                })
-
+        Di.registration(PlatformBaseComponentBuilder(window))
         val windowState = rememberWindowState()
         LifecycleController(lifecycle, windowState)
 

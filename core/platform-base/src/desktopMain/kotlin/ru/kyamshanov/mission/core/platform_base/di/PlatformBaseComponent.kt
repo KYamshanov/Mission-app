@@ -1,3 +1,8 @@
 package ru.kyamshanov.mission.core.platform_base.di
 
-actual interface PlatformBaseComponent
+import androidx.compose.ui.awt.ComposeWindow
+
+actual interface PlatformBaseComponent {
+
+    val mainComposeWindow: ComposeWindow
+}

@@ -1,6 +1,10 @@
 package ru.kyamshanov.mission.core.navigation.api
 
-interface ResultProvider {
+import kotlinx.coroutines.flow.SharedFlow
+
+interface ResultBus {
+
+    val sharedFlow: SharedFlow<Pair<String, Any>>
 
     fun <T : Any?> get(key: String, defaultValue: T): T
 
