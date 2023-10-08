@@ -35,7 +35,7 @@ class OAuthRequestFactoryImpl : RequestFactory {
         }
 
         defaultRequest {
-            url("http://localhost:9000/") //mobile internet
+            url("http://127.0.0.1:3456/") //mobile internet
         }
     }
 

@@ -22,7 +22,7 @@ internal class AuthenticationInteractorImpl(
         val redirectUri = "http://127.0.0.1:8080/desktop/authorized"
         val codeChallenge = generateCodeChallange(codeVerifier)
 
-        append("http://localhost:9000/oauth2/authorize?")
+        append("http://127.0.0.1:6543/oauth2/authorize?")
         append("client_id=$clientId&")
         append("response_type=$responseType&")
         append("scope=$scope&")
