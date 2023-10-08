@@ -1,8 +1,7 @@
 package ru.kyamshanov.mission.core.di.bundle
 
 import ru.kyamshanov.mission.components.main_screen.impl.di.MainScreenComponentBuilder
-import ru.kyamshanov.mission.components.point.impl.editing.di.EditingTaskComponentBuilder
-import ru.kyamshanov.mission.components.point.impl.search.di.SearchTaskComponentBuilder
+import ru.kyamshanov.mission.components.point.impl.di.TaskComponentBuilder
 import ru.kyamshanov.mission.components.project.impl.edit.di.EditProjectComponentBuilder
 import ru.kyamshanov.mission.components.project.impl.search.di.SearchProjectComponentBuilder
 import ru.kyamshanov.mission.core.base.impl.di.BaseCoreComponentBuilder
@@ -29,8 +28,7 @@ object DiRegistry {
         Di.registration(TimeFormatterComponentBuilder())
         Di.registration(EditProjectComponentBuilder())
         Di.registration(OAuth2ComponentBuilder())
-        Di.registration(SearchTaskComponentBuilder())
-        Di.registration(EditingTaskComponentBuilder())
+        Di.registration(TaskComponentBuilder())
 
         PlatformDiRegistering()
     }

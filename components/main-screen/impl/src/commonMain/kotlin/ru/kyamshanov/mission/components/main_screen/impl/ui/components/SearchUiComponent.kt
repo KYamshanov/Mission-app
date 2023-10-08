@@ -12,8 +12,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ru.kyamshanov.mission.components.points.api.editing.di.EditingTaskComponent
-import ru.kyamshanov.mission.components.points.api.search.di.SearchTaskComponent
+import ru.kyamshanov.mission.components.points.api.di.TaskComponent
 import ru.kyamshanov.mission.components.project.api.common.ProjectInfoSlim
 import ru.kyamshanov.mission.components.project.api.editing.di.EditProjectComponent
 import ru.kyamshanov.mission.components.project.api.search.di.SearchProjectComponent
@@ -38,9 +37,8 @@ internal class SearchProjectUiComponent(
         instanceKeeper.getOrCreate(::SearchProjectRetainedInstance)
 
     private val searchProjectComponent: SearchProjectComponent by requireNotNull(instanceKeeper.di())
-    private val searchTasksComponent: SearchTaskComponent by requireNotNull(instanceKeeper.di())
     private val projectComponent: EditProjectComponent by requireNotNull(instanceKeeper.di())
-    private val editingTaskComponent: EditingTaskComponent by requireNotNull(instanceKeeper.di())
+    private val taskComponent: TaskComponent by requireNotNull(instanceKeeper.di())
 
     private inner class SearchProjectRetainedInstance : InstanceKeeper.Instance,
         SearchProjectViewModel {
@@ -60,7 +58,7 @@ internal class SearchProjectUiComponent(
                     .onSuccess {
                         _projectsState.value = it
                     }
-                searchTasksComponent.searchTaskUseCase.getAll()
+                taskComponent.searchTaskUseCase.getAll()
                     .onSuccess {
                         _projectsState.value = it.map { ProjectInfoSlim(it.id, it.title, "") }
                     }
@@ -80,7 +78,7 @@ internal class SearchProjectUiComponent(
         }
 
         override fun openProject(projectId: String) {
-            editingTaskComponent.launcher.launch(projectId)
+            taskComponent.launcher.launchEditing(projectId)
             //projectComponent.launcher.launch(projectId = projectId)
         }
 
