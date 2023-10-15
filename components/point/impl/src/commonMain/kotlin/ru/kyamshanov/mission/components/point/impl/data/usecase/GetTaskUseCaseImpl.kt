@@ -20,5 +20,6 @@ private fun GetTaskRsDto.toDomain(): TaskModel = TaskModel(
     description = description,
     creationTime = creationTime,
     updateTime = updateTime,
-    completionTime = completionTime
+    completionTime = completionTime,
+    type = type.toDomain()
 )

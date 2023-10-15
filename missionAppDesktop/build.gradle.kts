@@ -2,8 +2,8 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
     kotlin("multiplatform")
-    id("org.openjfx.javafxplugin") version "0.0.10"
     id("org.jetbrains.compose")
+    id("org.openjfx.javafxplugin") version "0.0.14"
 }
 
 group = "com.example.webview"
@@ -41,6 +41,7 @@ kotlin {
                 implementation(projects.core.platformBase)
                 implementation(libs.decompose.core)
                 implementation(projects.core.oauth2.api)
+                implementation(projects.core.ui)
 
                 implementation(compose.foundation)
                 implementation(compose.desktop.common)
@@ -49,6 +50,11 @@ kotlin {
                 implementation(libs.kotlinx.coroutines.swing)
                 implementation(libs.decompose.compose)
                 implementation(compose.material)
+                implementation(libs.moko.resources.compose)
+                implementation("org.openjfx:javafx-controls:16")
+                implementation("org.openjfx:javafx-swing:16")
+                implementation("org.openjfx:javafx-web:16")
+                implementation("org.openjfx:javafx-graphics:16")
             }
         }
         val jvmTest by getting {
@@ -68,7 +74,8 @@ compose.desktop {
             targetFormats(
                 TargetFormat.Dmg,
                 TargetFormat.Msi,
-                TargetFormat.Deb
+                TargetFormat.Deb,
+                TargetFormat.Exe
             )
             packageName = "ru.kyamshanov.mission.desktopApp"
             packageVersion = "1.0.0"

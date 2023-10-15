@@ -10,6 +10,7 @@ import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
+import dev.icerock.moko.resources.compose.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import androidx.compose.ui.window.Window
@@ -38,6 +39,7 @@ import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.navigation.MainContent
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 import ru.kyamshanov.mission.core.navigation.impl.DefaultRootComponent
+import ru.kyamshanov.mission.core.ui.Res
 import ru.kyamshanov.mission.core.navigation.impl.di.NavigationComponentImpl
 import ru.kyamshanov.mission.core.platform_base.di.PlatformBaseComponentBuilder
 import ru.kyamshanov.mission.foundation.api.splash_screen.di.SplashScreenComponent
@@ -67,14 +69,16 @@ fun main() = application {
     }
     PlatformImpl.addListener(finishListener)
 
+    val icon = painterResource(Res.images.app_icon)
 
     Window(
         title = "Mission-app",
-        state = rememberWindowState(width = 800.dp, height = 600.dp),
+        state = rememberWindowState(width = 800.dp, height = 900.dp),
         onCloseRequest = {
             PlatformImpl.removeListener(finishListener)
             exitApplication()
         },
+        icon = icon,
     ) {
         Di.registration(PlatformBaseComponentBuilder(window))
         val windowState = rememberWindowState()

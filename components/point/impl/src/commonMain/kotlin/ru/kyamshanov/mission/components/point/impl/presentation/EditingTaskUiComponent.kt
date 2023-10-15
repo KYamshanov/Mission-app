@@ -11,10 +11,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import ru.kyamshanov.mission.components.point.impl.data.model.TaskTypeDto
 import ru.kyamshanov.mission.components.point.impl.di.TaskModuleComponent
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
 import ru.kyamshanov.mission.components.point.impl.domain.usecase.GetTaskUseCase
 import ru.kyamshanov.mission.components.points.api.common.TaskId
+import ru.kyamshanov.mission.components.points.api.common.TaskStatus
+import ru.kyamshanov.mission.components.points.api.common.TaskType
 import ru.kyamshanov.mission.components.points.api.di.TaskComponent
 import ru.kyamshanov.mission.core.navigation.api.Navigator
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
@@ -29,6 +32,15 @@ internal interface EditingTaskViewModel {
 
     fun onBack()
     fun delete()
+    fun todays()
+
+    fun weeks()
+
+    fun completed()
+
+    fun inProgress()
+
+    fun resetStatus()
 
     data class State(
         val title: String,
@@ -83,6 +95,66 @@ internal class EditingTaskUiComponent(
                         navigator.exit()
                     }
                     .onFailure { Napier.e(it, "Editing") { "error in delete task process" } }
+            }
+        }
+
+        override fun todays() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setType(taskId, TaskType.TODAYS)
+                    .onSuccess {
+                        _taskState.update { it.copy(loading = false) }
+                        navigator.exit()
+                    }
+                    .onFailure { Napier.e(it, "Editing") { "error in update type of task process" } }
+            }
+        }
+
+        override fun weeks() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setType(taskId, TaskType.WEEKS)
+                    .onSuccess {
+                        _taskState.update { it.copy(loading = false) }
+                        navigator.exit()
+                    }
+                    .onFailure { Napier.e(it, "Editing") { "error in update type of task process" } }
+            }
+        }
+
+        override fun completed() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setStatus(taskId, TaskStatus.COMPLETED)
+                    .onSuccess {
+                        _taskState.update { it.copy(loading = false) }
+                        navigator.exit()
+                    }
+                    .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
+            }
+        }
+
+        override fun inProgress() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setStatus(taskId, TaskStatus.IN_PROCESSING)
+                    .onSuccess {
+                        _taskState.update { it.copy(loading = false) }
+                        navigator.exit()
+                    }
+                    .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
+            }
+        }
+
+        override fun resetStatus() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setStatus(taskId, TaskStatus.CREATED)
+                    .onSuccess {
+                        _taskState.update { it.copy(loading = false) }
+                        navigator.exit()
+                    }
+                    .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
             }
         }
 

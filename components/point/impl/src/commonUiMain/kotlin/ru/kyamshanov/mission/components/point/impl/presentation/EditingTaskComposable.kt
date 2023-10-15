@@ -1,13 +1,13 @@
 package ru.kyamshanov.mission.components.point.impl.presentation
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import ru.kyamshanov.mission.core.ui.components.AlternativeButton
-import ru.kyamshanov.mission.core.ui.components.Surface
-import ru.kyamshanov.mission.core.ui.components.TextFieldCompose
-import ru.kyamshanov.mission.core.ui.components.TopBar
+import ru.kyamshanov.mission.core.ui.components.*
 
 @Composable
 internal fun EditingTaskComposable(
@@ -24,10 +24,50 @@ internal fun EditingTaskComposable(
             )
         },
         bottomContent = {
-            AlternativeButton(label = "Удалить", onClick = viewModel::delete)
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Column(modifier = Modifier.align(Alignment.TopStart)) {
+                    MainButton(
+                        label = "today`s",
+                        onClick = viewModel::todays
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    MainButton(
+                        label = "week`s",
+                        onClick = viewModel::weeks
+                    )
+                }
+
+                Column(
+                    modifier = Modifier.align(Alignment.Center),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    SecondaryButton(
+                        label = "Готово",
+                        onClick = viewModel::completed
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    AlternativeButton(
+                        label = "Восстановить",
+                        onClick = viewModel::resetStatus
+                    )
+                }
+
+                AlternativeButton(
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                    label = "Удалить",
+                    onClick = viewModel::delete
+                )
+            }
         }
     ) {
         Column {
+            TextFieldCompose(
+                label = "Название",
+                text = state.title,
+                onValueChange = {},
+                editable = false,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
             TextFieldCompose(
                 label = "Описание",
                 text = state.description,
