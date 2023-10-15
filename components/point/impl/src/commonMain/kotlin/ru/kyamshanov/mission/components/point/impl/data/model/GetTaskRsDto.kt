@@ -4,7 +4,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GetTaskRsDto(
+internal data class GetTaskRsDto(
     val id: String? = null,
     val title: String,
     val description: String,
@@ -13,4 +13,5 @@ data class GetTaskRsDto(
     val completionTime: LocalDateTime? = null,
     val priority: TaskPriorityDto? = null,
     val status: TaskStatusDto = TaskStatusDto.CREATED,
+    val type: TaskType?,
 )

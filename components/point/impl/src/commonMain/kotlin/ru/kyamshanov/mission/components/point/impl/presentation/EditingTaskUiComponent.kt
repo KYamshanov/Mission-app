@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import ru.kyamshanov.mission.components.point.impl.data.model.TaskType
 import ru.kyamshanov.mission.components.point.impl.di.TaskModuleComponent
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
 import ru.kyamshanov.mission.components.point.impl.domain.usecase.GetTaskUseCase
@@ -29,6 +30,9 @@ internal interface EditingTaskViewModel {
 
     fun onBack()
     fun delete()
+    fun todays()
+
+    fun weeks()
 
     data class State(
         val title: String,
@@ -83,6 +87,30 @@ internal class EditingTaskUiComponent(
                         navigator.exit()
                     }
                     .onFailure { Napier.e(it, "Editing") { "error in delete task process" } }
+            }
+        }
+
+        override fun todays() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setType(taskId, TaskType.TODAYS)
+                    .onSuccess {
+                        _taskState.update { it.copy(loading = false) }
+                        navigator.exit()
+                    }
+                    .onFailure { Napier.e(it, "Editing") { "error in update type of task process" } }
+            }
+        }
+
+        override fun weeks() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setType(taskId, TaskType.WEEKS)
+                    .onSuccess {
+                        _taskState.update { it.copy(loading = false) }
+                        navigator.exit()
+                    }
+                    .onFailure { Napier.e(it, "Editing") { "error in update type of task process" } }
             }
         }
 

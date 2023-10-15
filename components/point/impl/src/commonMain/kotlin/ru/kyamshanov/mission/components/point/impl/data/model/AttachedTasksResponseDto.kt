@@ -5,17 +5,18 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class AttachedTasksResponseDto(
+internal data class AttachedTasksResponseDto(
     val items: List<Task>
 ) {
 
     @Serializable
-    data class Task(
+    internal data class Task(
         val id: String,
         val title: String,
         val creationTime: LocalDateTime,
         val completionTime: LocalDateTime? = null,
         val priority: TaskPriorityDto? = null,
         val status: TaskStatusDto = TaskStatusDto.CREATED,
+        val type: TaskType? = null,
     )
 }

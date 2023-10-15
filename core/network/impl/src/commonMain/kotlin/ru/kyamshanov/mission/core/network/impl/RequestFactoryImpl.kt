@@ -48,6 +48,9 @@ class RequestFactoryImpl : RequestFactory {
     override suspend fun delete(endpoint: String, block: HttpRequestBuilder.() -> Unit): HttpResponse =
         client.delete(endpoint, block)
 
+    override suspend fun patch(endpoint: String, block: HttpRequestBuilder.() -> Unit): HttpResponse =
+        client.patch(endpoint, block)
+
     private fun getAuthorizationHeader(): String? =
         (requireNotNull(Di.getComponent<SessionFrontComponent>()).sessionInfo.session as? TokenRepository)?.accessToken?.value
 

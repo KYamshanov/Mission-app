@@ -18,8 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import ru.kyamshanov.mission.MissionTheme
+import ru.kyamshanov.mission.components.main_screen.impl.ui.components.FrontViewModel
 import ru.kyamshanov.mission.components.main_screen.impl.ui.components.NavigationBarViewModel
-import ru.kyamshanov.mission.components.main_screen.impl.ui.components.SearchProjectViewModel
+import ru.kyamshanov.mission.components.main_screen.impl.ui.components.SearchViewModel
+import ru.kyamshanov.mission.core.ui.components.Cell
+import ru.kyamshanov.mission.core.ui.components.CellLine
 import ru.kyamshanov.mission.core.ui.components.Search
 import ru.kyamshanov.mission.core.ui.extensions.systemBarsPadding
 
@@ -27,7 +30,8 @@ import ru.kyamshanov.mission.core.ui.extensions.systemBarsPadding
 @Composable
 internal fun MainScreenComposable(
     navigationBarViewModel: NavigationBarViewModel,
-    searchProjectViewModel: SearchProjectViewModel,
+    searchViewModel: SearchViewModel,
+    frontViewModel: FrontViewModel,
 ) {
 
     SideEffect {
@@ -45,7 +49,8 @@ internal fun MainScreenComposable(
     ) {
 
         val searchPhraseState = rememberSaveable { mutableStateOf("") }
-        val projects by searchProjectViewModel.projectsState.subscribeAsState()
+        val searchViewState by searchViewModel.viewState.subscribeAsState()
+        val frontViewState by frontViewModel.viewState.subscribeAsState()
 
         Column(
             Modifier
@@ -56,21 +61,69 @@ internal fun MainScreenComposable(
             Search(
                 value = searchPhraseState.value, onValueChange = {
                     searchPhraseState.value = it
-                    searchProjectViewModel.searchByName(it)
+                    searchViewModel.searchByName(it)
                 })
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            LazyColumn(modifier = Modifier.padding(5.dp)) {
-                projects.forEach { project ->
-                    item {
+            if (searchViewState.isInitialized()) {
+                LazyColumn(modifier = Modifier.padding(5.dp)) {
+                    searchViewState.items.forEach { project ->
+                        item {
+                            Text(
+                                modifier = Modifier.clickable { searchViewModel.openItem(project.id) },
+                                text = project.title,
+                                style = MissionTheme.typography.field
+                            )
+                        }
+                    }
+                }
+            } else if (frontViewState.initialized) {
+                Cell {
+                    Text(
+                        text = "Today`s tasks",
+                        style = MissionTheme.typography.titleSecondary
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    for (task in frontViewState.todaysTasks) {
                         Text(
-                            modifier = Modifier.clickable { searchProjectViewModel.openProject(project.id) },
-                            text = project.title,
+                            modifier = Modifier.clickable { frontViewModel.openItem(task.id) },
+                            text = task.title,
+                            style = MissionTheme.typography.field
+                        )
+                    }
+                    CellLine()
+
+                    Text(
+                        text = "Week`s tasks",
+                        style = MissionTheme.typography.titleSecondary
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    for (task in frontViewState.weeksTasks) {
+                        Text(
+                            modifier = Modifier.clickable { frontViewModel.openItem(task.id) },
+                            text = task.title,
+                            style = MissionTheme.typography.field
+                        )
+                    }
+
+                    CellLine()
+
+                    Text(
+                        text = "Other tasks",
+                        style = MissionTheme.typography.titleSecondary
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    for (task in frontViewState.otherTasks) {
+                        Text(
+                            modifier = Modifier.clickable { frontViewModel.openItem(task.id) },
+                            text = task.title,
                             style = MissionTheme.typography.field
                         )
                     }
                 }
+            } else {
+                Text("Загрузка...")
             }
         }
     }

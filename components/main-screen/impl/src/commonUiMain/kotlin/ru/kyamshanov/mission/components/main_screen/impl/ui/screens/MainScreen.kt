@@ -18,7 +18,8 @@ internal actual class MainScreen : Screen, ComposableScreen {
 
         MainScreenComposable(
             navigationBarViewModel = screenUiComponent.navigationBarViewModel,
-            searchProjectViewModel = screenUiComponent.searchProjectViewModel
+            searchViewModel = screenUiComponent.searchViewModel,
+            screenUiComponent.frontViewModel,
         )
     }
 }
