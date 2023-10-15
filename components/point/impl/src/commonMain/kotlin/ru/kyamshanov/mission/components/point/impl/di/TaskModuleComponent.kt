@@ -1,5 +1,6 @@
 package ru.kyamshanov.mission.components.point.impl.di
 
+import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
 import ru.kyamshanov.mission.components.point.impl.domain.usecase.GetTaskUseCase
 import ru.kyamshanov.mission.components.points.api.di.TaskComponent
 import ru.kyamshanov.mission.components.points.api.domain.SearchTaskUseCase
@@ -11,4 +12,5 @@ internal class TaskModuleComponent : AbstractComponent(), TaskComponent {
     override val launcher: TaskLauncher = resolve()
 
     val getTaskUseCase: GetTaskUseCase = resolve()
+    val interactor: TaskInteractor = resolve()
 }

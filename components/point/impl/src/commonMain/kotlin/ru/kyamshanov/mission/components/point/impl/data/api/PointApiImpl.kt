@@ -6,6 +6,8 @@ import io.ktor.http.contentType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.kyamshanov.mission.components.point.impl.data.model.AttachedTasksResponseDto
+import ru.kyamshanov.mission.components.point.impl.data.model.CreateTaskRequestDto
+import ru.kyamshanov.mission.components.point.impl.data.model.CreateTaskResponseDto
 import ru.kyamshanov.mission.components.point.impl.data.model.GetTaskRsDto
 import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.core.network.api.RequestFactory
@@ -26,6 +28,22 @@ internal class PointApiImpl(
     override suspend fun allProjects(): AttachedTasksResponseDto = withContext(Dispatchers.Default) {
         val response = requestFactory.get("/point/private/attached") {
             contentType(ContentType.Application.Json)
+        }
+        response.retrieveBody()
+    }
+
+    override suspend fun create(rq: CreateTaskRequestDto): CreateTaskResponseDto = withContext(Dispatchers.Default) {
+        val response = requestFactory.post("/point/private/create") {
+            contentType(ContentType.Application.Json)
+            setBody(rq)
+        }
+        response.retrieveBody()
+    }
+
+    override suspend fun delete(taskId: TaskId): Unit = withContext(Dispatchers.Default) {
+        val response = requestFactory.delete("/point/private/delete") {
+            contentType(ContentType.Application.Json)
+            parameter("id", taskId)
         }
         response.retrieveBody()
     }

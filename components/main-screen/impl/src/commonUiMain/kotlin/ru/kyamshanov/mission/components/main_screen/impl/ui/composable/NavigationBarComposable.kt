@@ -39,14 +39,12 @@ internal fun NavigationBarComposable(
             description = stringResource(Res.strings.profile),
             horizontalAlignment = Alignment.CenterEnd,
         )
-        if (navigationBarViewModel.hasManagerFunctionsState.value) {
-            NavigationHorizontalGravityItem(
-                modifier = Modifier.clickable { navigationBarViewModel.openCreatingProjectScreen() },
-                imagePainter = painterResource(Res.images.ic_rounded_plus),
-                description = stringResource(Res.strings.create),
-                horizontalAlignment = Alignment.Center,
-            )
-        }
+        NavigationHorizontalGravityItem(
+            modifier = Modifier.clickable { navigationBarViewModel.openCreationTaskScreen() },
+            imagePainter = painterResource(Res.images.ic_rounded_plus),
+            description = stringResource(Res.strings.create),
+            horizontalAlignment = Alignment.Center,
+        )
     }
 }
 
