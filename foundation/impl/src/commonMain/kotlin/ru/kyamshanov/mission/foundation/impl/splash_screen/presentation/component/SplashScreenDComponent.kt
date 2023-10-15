@@ -8,7 +8,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import ru.kyamshanov.mission.authorization.api.AuthorizationComponent
 import ru.kyamshanov.mission.components.main_screen.api.di.MainScreenComponent
+import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 import ru.kyamshanov.mission.core.navigation.common.utils.di
 import ru.kyamshanov.mission.core.navigation.common.utils.newRootScreen
@@ -47,7 +49,7 @@ class SplashScreenDComponent(
         }
 
         private fun startLogin() {
-            navigator.newRootScreen<AuthenticationComponent>()
+            requireNotNull(Di.getComponent<AuthorizationComponent>()).launcher.launch()
         }
 
         private fun openMainScreen() {

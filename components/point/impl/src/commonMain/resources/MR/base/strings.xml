@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="pv_project_name_title">Название проекта</string>
+    <string name="pv_project_description_title">Описание проекта</string>
+    <string name="pv_stage">Этап</string>
+    <string name="pv_description">Описание</string>
+    <string name="pv_state">Состояние</string>
+    <string name="pv_finished">Завершен</string>
+    <string name="pv_finished_with_points">Завершен с %s</string>
+    <string name="pv_in_progress">В работе</string>
+    <string name="pv_in_progress_with_time">В работе. Завершается %s</string>
+    <string name="pv_wait">Ожидание.</string>
+    <string name="pv_wait_with_time">Ожидание. Начитается %s</string>
+    <string name="pv_participants">Участников %s</string>
+</resources>

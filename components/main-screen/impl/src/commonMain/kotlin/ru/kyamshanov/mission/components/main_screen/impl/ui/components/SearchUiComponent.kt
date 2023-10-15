@@ -12,6 +12,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.kyamshanov.mission.components.points.api.di.TaskComponent
 import ru.kyamshanov.mission.components.project.api.common.ProjectInfoSlim
 import ru.kyamshanov.mission.components.project.api.editing.di.EditProjectComponent
 import ru.kyamshanov.mission.components.project.api.search.di.SearchProjectComponent
@@ -37,6 +38,7 @@ internal class SearchProjectUiComponent(
 
     private val searchProjectComponent: SearchProjectComponent by requireNotNull(instanceKeeper.di())
     private val projectComponent: EditProjectComponent by requireNotNull(instanceKeeper.di())
+    private val taskComponent: TaskComponent by requireNotNull(instanceKeeper.di())
 
     private inner class SearchProjectRetainedInstance : InstanceKeeper.Instance,
         SearchProjectViewModel {
@@ -56,6 +58,10 @@ internal class SearchProjectUiComponent(
                     .onSuccess {
                         _projectsState.value = it
                     }
+                taskComponent.searchTaskUseCase.getAll()
+                    .onSuccess {
+                        _projectsState.value = it.map { ProjectInfoSlim(it.id, it.title, "") }
+                    }
             }
         }
 
@@ -72,7 +78,8 @@ internal class SearchProjectUiComponent(
         }
 
         override fun openProject(projectId: String) {
-            projectComponent.launcher.launch(projectId = projectId)
+            taskComponent.launcher.launchEditing(projectId)
+            //projectComponent.launcher.launch(projectId = projectId)
         }
 
         override fun onDestroy() {

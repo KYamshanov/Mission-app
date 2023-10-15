@@ -1,5 +1,5 @@
 plugins {
-    id("kotlin-api")
+    id("multiplatform-lib")
 }
 
 dependencies {
@@ -11,4 +11,8 @@ dependencies {
     commonMainImplementation(projects.components.mainScreen.impl)
     commonMainImplementation(projects.components.project.impl)
     commonMainImplementation(projects.components.time)
+    commonMainImplementation(projects.core.oauth2.impl)
+    commonMainImplementation(projects.components.point.impl)
+
+    desktopMainImplementation(projects.core.authorization.desktop)
 }

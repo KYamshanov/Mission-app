@@ -7,6 +7,7 @@ import ru.kyamshanov.mission.core.navigation.api.Screen
 import ru.kyamshanov.mission.core.navigation.common.ComposableScreen
 import ru.kyamshanov.mission.foundation.impl.login.presentation.component.AuthenticationUiComponent
 import ru.kyamshanov.mission.foundation.impl.login.presentation.composable.AuthenticationComposable
+/*
 
 @Parcelize
 internal actual class AuthenticationComposableScreen : Screen, ComposableScreen {
@@ -16,4 +17,4 @@ internal actual class AuthenticationComposableScreen : Screen, ComposableScreen 
         val uiComponent = AuthenticationUiComponent(componentContext)
         AuthenticationComposable(viewModel = uiComponent.viewModel)
     }
-}
+}*/

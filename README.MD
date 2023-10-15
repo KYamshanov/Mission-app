@@ -2,7 +2,9 @@
 
 ## Текущий этап разработки: 
 1) ~~разработка архитектуры kotlin multiplatform приложения. Поддержка android, desktop, js~~
-2) миграция функциональности разработанного приложения mission-android
+2) ~~миграция функциональности разработанного приложения mission-android~~
+3) реализация функциональности таск менеджера
+4) поддержка Mission OAuth для android
 
 Приложение должно:
 1) портировать функциональность разработанного приложения mission-android (https://github.com/KYamshanov/mission-android) с поддержкой android/desktop;

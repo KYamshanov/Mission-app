@@ -7,10 +7,8 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.HttpRequestBuilder
-import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.request.post
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
@@ -35,10 +33,9 @@ class RequestFactoryImpl : RequestFactory {
         }
 
         defaultRequest {
-            url("http://192.168.43.29:80/") //mobile internet
+            url("http://localhost:3456/") //mobile internet
             // url("http://10.2.15.91:80/") //wifi
-            getAuthorizationHeader()?.let { header(HttpHeaders.Authorization, it) }
-            getIdTokenHeader()?.let { header(IDENTIFICATION_HEADER, it) }
+            getAuthorizationHeader()?.let { header(HttpHeaders.Authorization, "Bearer $it") }
         }
     }
 
@@ -48,11 +45,11 @@ class RequestFactoryImpl : RequestFactory {
     override suspend fun post(endpoint: String, block: HttpRequestBuilder.() -> Unit) =
         client.post(endpoint, block)
 
+    override suspend fun delete(endpoint: String, block: HttpRequestBuilder.() -> Unit): HttpResponse =
+        client.delete(endpoint, block)
+
     private fun getAuthorizationHeader(): String? =
         (requireNotNull(Di.getComponent<SessionFrontComponent>()).sessionInfo.session as? TokenRepository)?.accessToken?.value
-
-    private fun getIdTokenHeader(): String? =
-        (requireNotNull(Di.getComponent<SessionFrontComponent>()).sessionInfo.session as? TokenRepository)?.idToken?.value
 
     private inner class NetworkLogger : Logger {
 
@@ -64,7 +61,5 @@ class RequestFactoryImpl : RequestFactory {
     private companion object {
 
         const val LOG_TEG = "Network"
-
-        const val IDENTIFICATION_HEADER = "Mission-id"
     }
 }

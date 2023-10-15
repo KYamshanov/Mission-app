@@ -11,4 +11,5 @@ dependencies {
     commonMainApi(projects.core.di.common)
     commonMainImplementation(projects.core.network.api)
     commonMainImplementation(projects.core.base.api)
+    commonMainImplementation(projects.core.oauth2.api)
 }

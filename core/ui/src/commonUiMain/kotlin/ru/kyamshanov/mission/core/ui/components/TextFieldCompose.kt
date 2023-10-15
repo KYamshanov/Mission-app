@@ -2,9 +2,7 @@ package ru.kyamshanov.mission.core.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import ru.kyamshanov.mission.MissionTheme
@@ -45,15 +44,15 @@ fun TextFieldCompose(
                 Image(
                     painter = painterResource(Res.images.close),
                     contentDescription = stringResource(Res.strings.clear),
-                    modifier = Modifier.clickable { onValueChange.invoke("") }
+                    modifier = Modifier.clickable { onValueChange.invoke("") }.size(24.dp)
                 )
             } else {
                 Image(
                     painter = painterResource(Res.images.square_edit_outline),
                     contentDescription = stringResource(Res.strings.edit),
-                    modifier = Modifier.clickable {
-                        editableState = true
-                    }
+                    modifier = Modifier
+                        .clickable { editableState = true }
+                        .size(24.dp)
                 )
             }
         }

@@ -12,7 +12,7 @@ internal class AuthenticationInteractorImpl(
 
     override suspend fun login(login: String, password: CharSequence): Result<Unit> = runCatching {
         withContext(Dispatchers.Default) {
-            sessionFront.openSession(login, password).getOrThrow()
+           TODO("Перейти на Oauth2")
         }
     }
 }

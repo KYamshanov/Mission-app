@@ -3,6 +3,7 @@ package ru.kyamshanov.mission.components.main_screen.impl.ui.components
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import ru.kyamshanov.mission.components.points.api.di.TaskComponent
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 import ru.kyamshanov.mission.core.navigation.common.utils.di
 import ru.kyamshanov.mission.session_front.api.di.SessionFrontComponent
@@ -15,7 +16,7 @@ internal interface NavigationBarViewModel {
 
     fun openProfile()
 
-    fun openCreatingProjectScreen()
+    fun openCreationTaskScreen()
 }
 
 internal class NavigationBarComponentContext(
@@ -24,6 +25,7 @@ internal class NavigationBarComponentContext(
 
     private val navigator = requireNotNull(di<NavigationComponent>()).navigator
     private val sessionInfo = requireNotNull(di<SessionFrontComponent>()).sessionInfo
+    private val taskLauncher = requireNotNull(di<TaskComponent>()).launcher
 
     override val hasManagerFunctionsState: Value<Boolean> =
         MutableValue(
@@ -35,8 +37,12 @@ internal class NavigationBarComponentContext(
         //TODO("Not yet implemented")
     }
 
-    override fun openCreatingProjectScreen() {
-        //TODO("Not yet implemented")
+    override fun openCreationTaskScreen() {
+        taskLauncher.launchCreationTask()
+    }
+
+    fun openCreatingProjectScreen() {
+        TODO("Not yet implemented")
     }
 
 
