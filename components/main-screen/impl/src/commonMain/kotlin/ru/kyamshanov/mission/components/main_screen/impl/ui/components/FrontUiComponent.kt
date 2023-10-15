@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import ru.kyamshanov.mission.components.main_screen.impl.ui.models.SlimItem
 import ru.kyamshanov.mission.components.main_screen.impl.ui.models.TaskInfoSlim
 import ru.kyamshanov.mission.components.points.api.common.TaskSlim
+import ru.kyamshanov.mission.components.points.api.common.TaskStatus
 import ru.kyamshanov.mission.components.points.api.common.TaskType
 import ru.kyamshanov.mission.components.points.api.di.TaskComponent
 import ru.kyamshanov.mission.components.points.api.domain.TaskRepository
@@ -82,11 +83,12 @@ internal class FrontUiComponent(
         private var tasks = emptyList<TaskSlim>()
             set(value) {
                 field = value
+                val sortedList = value.sortedBy { it.status }
                 val todays = mutableListOf<SlimItem>()
                 val weeks = mutableListOf<SlimItem>()
                 val other = mutableListOf<SlimItem>()
-                value.forEach {
-                    val slimItem = TaskInfoSlim(it.id, it.title)
+                sortedList.forEach {
+                    val slimItem = TaskInfoSlim(it.id, it.title, it.status == TaskStatus.COMPLETED)
                     when (it.type) {
                         TaskType.TODAYS -> todays.add(slimItem)
                         TaskType.WEEKS -> weeks.add(slimItem)

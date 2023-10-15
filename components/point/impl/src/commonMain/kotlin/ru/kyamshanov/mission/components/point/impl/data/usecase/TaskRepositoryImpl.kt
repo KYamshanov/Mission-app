@@ -6,7 +6,7 @@ import ru.kyamshanov.mission.components.point.impl.data.model.TaskPriorityDto
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskPriorityDto.*
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskStatusDto
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskStatusDto.*
-import ru.kyamshanov.mission.components.point.impl.data.model.TaskType
+import ru.kyamshanov.mission.components.point.impl.data.model.TaskTypeDto
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskSlim
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
@@ -25,9 +25,9 @@ private fun AttachedTasksResponseDto.toDomain(): List<TaskSlim> = this.items.map
     TaskSlim(it.id, it.title, it.priority.toDomain(), it.status.toDomain(), type = it.type.toDomain())
 }
 
-internal fun TaskType?.toDomain(): ru.kyamshanov.mission.components.points.api.common.TaskType? = when (this) {
-    TaskType.TODAYS -> ru.kyamshanov.mission.components.points.api.common.TaskType.TODAYS
-    TaskType.WEEKS -> ru.kyamshanov.mission.components.points.api.common.TaskType.WEEKS
+internal fun TaskTypeDto?.toDomain(): ru.kyamshanov.mission.components.points.api.common.TaskType? = when (this) {
+    TaskTypeDto.TODAYS -> ru.kyamshanov.mission.components.points.api.common.TaskType.TODAYS
+    TaskTypeDto.WEEKS -> ru.kyamshanov.mission.components.points.api.common.TaskType.WEEKS
     null -> null
 }
 

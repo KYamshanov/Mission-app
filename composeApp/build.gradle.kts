@@ -14,7 +14,6 @@ kotlin {
                 }
             }
         }
-        jvm("desktop")
 
         val commonMain by getting {
 
@@ -47,39 +46,8 @@ kotlin {
                 implementation(compose.material)
             }
         }
-
-        val desktopMain by getting {
-            dependencies {
-                implementation(compose.foundation)
-                implementation(compose.desktop.common)
-                implementation(compose.desktop.currentOs)
-                implementation(libs.ktor.client.okhttp)
-                implementation(libs.kotlinx.coroutines.swing)
-                implementation(libs.decompose.compose)
-                implementation(compose.material)
-                implementation("com.giannivanhoecke.oauth:oauth-desktop:1.0")
-            }
-        }
     }
 }
-
-
-compose.desktop {
-    application {
-        mainClass = "MainKt"
-
-        nativeDistributions {
-            targetFormats(
-                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
-                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi,
-                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb
-            )
-            packageName = "ru.kyamshanov.mission.desktopApp"
-            packageVersion = "1.0.0"
-        }
-    }
-}
-
 
 android {
     namespace = "ru.kyamshanov.mission"

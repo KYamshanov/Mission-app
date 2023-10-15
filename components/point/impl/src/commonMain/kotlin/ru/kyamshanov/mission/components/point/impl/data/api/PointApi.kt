@@ -15,5 +15,7 @@ internal interface PointApi {
 
     suspend fun delete(taskId: TaskId)
 
-    suspend fun setType(taskId: TaskId, taskType: TaskType)
+    suspend fun setType(taskId: TaskId, taskTypeDto: TaskTypeDto)
+
+    suspend fun setStatus(taskId: TaskId, taskStatusDto: TaskStatusDto)
 }

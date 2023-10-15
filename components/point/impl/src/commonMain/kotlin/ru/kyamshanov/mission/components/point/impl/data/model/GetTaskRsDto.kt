@@ -13,5 +13,5 @@ internal data class GetTaskRsDto(
     val completionTime: LocalDateTime? = null,
     val priority: TaskPriorityDto? = null,
     val status: TaskStatusDto = TaskStatusDto.CREATED,
-    val type: TaskType?,
+    val type: TaskTypeDto?,
 )

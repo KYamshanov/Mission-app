@@ -36,6 +36,22 @@ internal fun EditingTaskComposable(
                         onClick = viewModel::weeks
                     )
                 }
+
+                Column(
+                    modifier = Modifier.align(Alignment.Center),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    SecondaryButton(
+                        label = "Готово",
+                        onClick = viewModel::completed
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    AlternativeButton(
+                        label = "Восстановить",
+                        onClick = viewModel::resetStatus
+                    )
+                }
+
                 AlternativeButton(
                     modifier = Modifier.align(Alignment.BottomEnd),
                     label = "Удалить",

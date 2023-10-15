@@ -8,7 +8,7 @@ import kotlinx.coroutines.withContext
 import ru.kyamshanov.mission.components.point.impl.data.model.*
 import ru.kyamshanov.mission.components.point.impl.data.model.CreateTaskRequestDto
 import ru.kyamshanov.mission.components.point.impl.data.model.CreateTaskResponseDto
-import ru.kyamshanov.mission.components.point.impl.data.model.TaskType
+import ru.kyamshanov.mission.components.point.impl.data.model.TaskTypeDto
 import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.core.network.api.RequestFactory
 import ru.kyamshanov.mission.core.network.api.utils.retrieveBody
@@ -48,12 +48,22 @@ internal class PointApiImpl(
         response.retrieveBody()
     }
 
-    override suspend fun setType(taskId: TaskId, taskType: TaskType): Unit = withContext(Dispatchers.Default) {
+    override suspend fun setType(taskId: TaskId, taskTypeDto: TaskTypeDto): Unit = withContext(Dispatchers.Default) {
         val response = requestFactory.patch("/point/private/type") {
             contentType(ContentType.Application.Json)
             parameter("id", taskId)
-            parameter("type", taskType)
+            parameter("type", taskTypeDto)
         }
         response.retrieveBody()
     }
+
+    override suspend fun setStatus(taskId: TaskId, taskStatusDto: TaskStatusDto): Unit =
+        withContext(Dispatchers.Default) {
+            val response = requestFactory.patch("/point/private/status") {
+                contentType(ContentType.Application.Json)
+                parameter("id", taskId)
+                parameter("status", taskStatusDto)
+            }
+            response.retrieveBody()
+        }
 }
