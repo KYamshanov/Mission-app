@@ -41,4 +41,5 @@ private fun TaskStatusDto.toDomain(): TaskStatus = when (this) {
 
 private fun TaskPriorityDto.toDomain(): TaskPriority = when (this) {
     PRIMARY -> TaskPriority.PRIMARY
+    LOW -> TaskPriority.LOW
 }

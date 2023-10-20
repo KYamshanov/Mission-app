@@ -16,6 +16,7 @@ import ru.kyamshanov.mission.components.point.impl.di.TaskModuleComponent
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
 import ru.kyamshanov.mission.components.point.impl.domain.usecase.GetTaskUseCase
 import ru.kyamshanov.mission.components.points.api.common.TaskId
+import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
 import ru.kyamshanov.mission.components.points.api.common.TaskType
 import ru.kyamshanov.mission.components.points.api.di.TaskComponent
@@ -47,17 +48,24 @@ internal interface EditingTaskViewModel {
      */
     fun hardReset()
 
+    fun priority()
+
+    fun medium()
+
+    fun low()
+
     data class State(
         val title: String,
         val description: String,
         val loading: Boolean,
         val type: TaskType?,
-        val status: TaskStatus
+        val status: TaskStatus,
+        val priority: TaskPriority?
     ) {
         fun isInitialized() = this !== Uninitialized
 
         companion object {
-            val Uninitialized = State("", "", false, null, TaskStatus.CREATED)
+            val Uninitialized = State("", "", false, null, TaskStatus.CREATED, null)
         }
     }
 }
@@ -172,6 +180,38 @@ internal class EditingTaskUiComponent(
             }
         }
 
+        override fun priority() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                val priority = TaskPriority.PRIMARY.takeIf { _taskState.value.priority != it }
+                interactor.setPriority(taskId, priority)
+                    .also { _taskState.update { it.copy(loading = false) } }
+                    .onSuccess { _taskState.update { it.copy(priority = priority) } }
+                    .onFailure { Napier.e(it, "Editing") { "error in update priority of task" } }
+            }
+        }
+
+        override fun medium() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setPriority(taskId, null)
+                    .also { _taskState.update { it.copy(loading = false) } }
+                    .onSuccess { _taskState.update { it.copy(priority = null) } }
+                    .onFailure { Napier.e(it, "Editing") { "error in update priority of task" } }
+            }
+        }
+
+        override fun low() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                val priority = TaskPriority.LOW.takeIf { _taskState.value.priority != it }
+                interactor.setPriority(taskId, priority)
+                    .also { _taskState.update { it.copy(loading = false) } }
+                    .onSuccess { _taskState.update { it.copy(priority = priority) } }
+                    .onFailure { Napier.e(it, "Editing") { "error in update priority of task" } }
+            }
+        }
+
         private val _taskState = MutableValue(EditingTaskViewModel.State.Uninitialized)
         private val viewModelScope = CoroutineScope(kotlinx.coroutines.Dispatchers.Main + SupervisorJob())
 
@@ -186,6 +226,7 @@ internal class EditingTaskUiComponent(
                                 description = result.description,
                                 status = result.status,
                                 type = result.type,
+                                priority = result.priority
                             )
                         }
                     }

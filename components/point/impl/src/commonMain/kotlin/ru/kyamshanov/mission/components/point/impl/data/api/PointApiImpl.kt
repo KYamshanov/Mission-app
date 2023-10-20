@@ -66,4 +66,23 @@ internal class PointApiImpl(
             }
             response.retrieveBody()
         }
+
+    override suspend fun setPriority(taskId: TaskId, priority: TaskPriorityDto): Unit =
+        withContext(Dispatchers.Default) {
+            val response = requestFactory.patch("/point/private/priority") {
+                contentType(ContentType.Application.Json)
+                parameter("id", taskId)
+                parameter("value", priority)
+            }
+            response.retrieveBody()
+        }
+
+    override suspend fun removePriority(taskId: TaskId): Unit =
+        withContext(Dispatchers.Default) {
+            val response = requestFactory.delete("/point/private/priority") {
+                contentType(ContentType.Application.Json)
+                parameter("id", taskId)
+            }
+            response.retrieveBody()
+        }
 }

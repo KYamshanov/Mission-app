@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,11 +20,12 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.painterResource
 import ru.kyamshanov.mission.MissionTheme
-import ru.kyamshanov.mission.MissionTypography
 import ru.kyamshanov.mission.components.main_screen.impl.ui.components.FrontViewModel
 import ru.kyamshanov.mission.components.main_screen.impl.ui.components.NavigationBarViewModel
 import ru.kyamshanov.mission.components.main_screen.impl.ui.components.SearchViewModel
 import ru.kyamshanov.mission.components.main_screen.impl.ui.models.SlimItem
+import ru.kyamshanov.mission.components.main_screen.impl.ui.models.TaskInfoSlim
+import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.core.ui.Res
 import ru.kyamshanov.mission.core.ui.components.*
 import ru.kyamshanov.mission.core.ui.extensions.systemBarsPadding
@@ -150,13 +150,42 @@ private fun ComposableItemText(
     item: SlimItem,
     onClick: () -> Unit
 ) {
-    Text(
-        modifier = Modifier.clickable { onClick() },
-        text = item.title,
-        style = MissionTheme.typography.titleSecondary
-            .run {
-                if (item.isCompleted) copy(textDecoration = TextDecoration.LineThrough)
-                else this
-            },
-    )
+    if (item is TaskInfoSlim && (item.isHighPriority || item.isLowPriority)) {
+        Row {
+            Text(
+                modifier = Modifier.clickable { onClick() },
+                text = item.title,
+                style = MissionTheme.typography.titleSecondary
+                    .run {
+                        if (item.isCompleted) copy(textDecoration = TextDecoration.LineThrough)
+                        else this
+                    },
+            )
+            if (item.isHighPriority) {
+                Image(
+                    modifier = Modifier.fillMaxHeight(),
+                    painter = painterResource(Res.images.ic_keyboard_double_arrow_up),
+                    contentDescription = "high priority",
+                    colorFilter = ColorFilter.tint(MissionTheme.colors.wrong)
+                )
+            } else {
+                Image(
+                    modifier = Modifier.fillMaxHeight(),
+                    painter = painterResource(Res.images.ic_keyboard_double_arrow_down),
+                    contentDescription = "low priority",
+                    colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
+                )
+            }
+        }
+    } else {
+        Text(
+            modifier = Modifier.clickable { onClick() },
+            text = item.title,
+            style = MissionTheme.typography.titleSecondary
+                .run {
+                    if (item.isCompleted) copy(textDecoration = TextDecoration.LineThrough)
+                    else this
+                },
+        )
+    }
 }

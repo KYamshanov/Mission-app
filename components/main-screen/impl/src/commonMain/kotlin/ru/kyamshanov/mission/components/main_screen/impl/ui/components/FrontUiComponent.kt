@@ -9,23 +9,18 @@ import com.arkivanov.essenty.instancekeeper.getOrCreate
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.kyamshanov.mission.components.main_screen.impl.ui.models.SlimItem
 import ru.kyamshanov.mission.components.main_screen.impl.ui.models.TaskInfoSlim
+import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskSlim
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
 import ru.kyamshanov.mission.components.points.api.common.TaskType
 import ru.kyamshanov.mission.components.points.api.di.TaskComponent
 import ru.kyamshanov.mission.components.points.api.domain.TaskRepository
 import ru.kyamshanov.mission.components.points.api.presentation.navigation.TaskLauncher
-import ru.kyamshanov.mission.components.project.api.common.ProjectInfoSlim
-import ru.kyamshanov.mission.components.project.api.editing.di.EditProjectComponent
-import ru.kyamshanov.mission.components.project.api.search.di.SearchProjectComponent
-import ru.kyamshanov.mission.components.project.api.search.domain.models.PageIndex
 import ru.kyamshanov.mission.core.navigation.common.utils.di
 import ru.kyamshanov.mission.core.navigation.common.utils.getValue
 
@@ -83,27 +78,41 @@ internal class FrontUiComponent(
         private var tasks = emptyList<TaskSlim>()
             set(value) {
                 field = value
-                val sortedList = value.sortedBy { it.status }
-                val todays = mutableListOf<SlimItem>()
-                val weeks = mutableListOf<SlimItem>()
-                val other = mutableListOf<SlimItem>()
-                sortedList.forEach {
-                    val slimItem = TaskInfoSlim(it.id, it.title, it.status == TaskStatus.COMPLETED)
+                val todays = mutableListOf<TaskInfoSlim>()
+                val weeks = mutableListOf<TaskInfoSlim>()
+                val other = mutableListOf<TaskInfoSlim>()
+                value.forEach {
+                    val slimItem = TaskInfoSlim(
+                        it.id,
+                        it.title,
+                        it.status == TaskStatus.COMPLETED,
+                        isHighPriority = it.priority == TaskPriority.PRIMARY,
+                        isLowPriority = it.priority == TaskPriority.LOW
+                    )
                     when (it.type) {
                         TaskType.TODAYS -> todays.add(slimItem)
                         TaskType.WEEKS -> weeks.add(slimItem)
                         null -> other.add(slimItem)
                     }
                 }
+
+
                 _viewState.update {
                     it.copy(
                         initialized = true,
-                        todaysTasks = todays,
-                        weeksTasks = weeks,
-                        otherTasks = other
+                        todaysTasks = todays.sortTasks(),
+                        weeksTasks = weeks.sortTasks(),
+                        otherTasks = other.sortTasks()
                     )
                 }
             }
+
+        private fun MutableList<TaskInfoSlim>.sortTasks(): List<TaskInfoSlim> {
+            sortWith(compareBy<TaskInfoSlim> {
+                it.isCompleted
+            }.thenByDescending { it.isHighPriority }.thenBy { it.isLowPriority }.thenBy { it.title.lowercase() })
+            return this
+        }
 
         init {
             viewModelScope.launch {
@@ -117,5 +126,11 @@ internal class FrontUiComponent(
             viewModelScope.cancel()
         }
 
+    }
+
+    companion object {
+
+        private const val COMPLETED_GROUP_KEY = "completed"
+        private const val PRIORITY_GROUP_KEY = "priority"
     }
 }

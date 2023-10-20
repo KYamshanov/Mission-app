@@ -4,16 +4,19 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.painterResource
 import ru.kyamshanov.mission.MissionTheme
+import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
 import ru.kyamshanov.mission.components.points.api.common.TaskType
 import ru.kyamshanov.mission.core.ui.Res
@@ -23,7 +26,7 @@ import ru.kyamshanov.mission.core.ui.components.*
 internal fun EditingTaskComposable(
     viewModel: EditingTaskViewModel
 ) {
-    val state by viewModel.viewState.subscribeAsState()
+    val state: EditingTaskViewModel.State by viewModel.viewState.subscribeAsState()
 
     if (state.isInitialized().not()) return
     Surface(
@@ -46,7 +49,7 @@ internal fun EditingTaskComposable(
         },
         bottomContent = {
             Box(modifier = Modifier.fillMaxWidth()) {
-                Column(modifier = Modifier.align(Alignment.TopStart)) {
+                Column(modifier = Modifier.align(Alignment.CenterStart)) {
                     MainButton(
                         label = "today`s",
                         isSoftStyle = state.type != TaskType.TODAYS,
@@ -61,7 +64,7 @@ internal fun EditingTaskComposable(
                 }
 
                 Column(
-                    modifier = Modifier.align(Alignment.BottomEnd),
+                    modifier = Modifier.align(Alignment.CenterEnd),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     if (state.status == TaskStatus.CREATED) {
@@ -74,6 +77,10 @@ internal fun EditingTaskComposable(
                             contentDescription = "done",
                             colorFilter = ColorFilter.tint(MissionTheme.colors.success)
                         )
+                        Text(
+                            "Готово",
+                            style = MissionTheme.typography.inputText.copy(color = MissionTheme.colors.success)
+                        )
                     } else {
                         Image(
                             modifier = Modifier
@@ -84,7 +91,48 @@ internal fun EditingTaskComposable(
                             contentDescription = "reset",
                             colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
                         )
+                        Text(
+                            "Восстановить",
+                            style = MissionTheme.typography.inputText.copy(color = MissionTheme.colors.gray)
+                        )
                     }
+                }
+
+                Column(
+                    modifier = Modifier.align(Alignment.Center),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable { viewModel.priority() }
+                            .size(64.dp),
+                        painter = painterResource(Res.images.ic_keyboard_double_arrow_up),
+                        contentDescription = "to priority",
+                        colorFilter = ColorFilter.tint(
+                            color = if (state.priority == TaskPriority.PRIMARY) MissionTheme.colors.gold else MissionTheme.colors.gray
+                        )
+                    )
+                    Text(
+                        text = when (state.priority) {
+                            TaskPriority.PRIMARY -> "high"
+                            TaskPriority.LOW -> "low"
+                            null -> "medium"
+                        },
+                        textAlign = TextAlign.Justify,
+                        style = MissionTheme.typography.inputHint.copy(color = if (state.priority == null) MissionTheme.colors.gray else MissionTheme.colors.gold)
+                    )
+                    Image(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable { viewModel.low() }
+                            .size(64.dp),
+                        painter = painterResource(Res.images.ic_keyboard_double_arrow_down),
+                        contentDescription = "medium",
+                        colorFilter = ColorFilter.tint(
+                            color = if (state.priority == TaskPriority.LOW) MissionTheme.colors.gold else MissionTheme.colors.gray
+                        )
+                    )
                 }
             }
         }

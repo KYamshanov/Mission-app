@@ -18,4 +18,8 @@ internal interface PointApi {
     suspend fun setType(taskId: TaskId, taskTypeDto: TaskTypeDto)
 
     suspend fun setStatus(taskId: TaskId, taskStatusDto: TaskStatusDto)
+
+    suspend fun setPriority(taskId: TaskId, priority: TaskPriorityDto)
+
+    suspend fun removePriority(taskId: TaskId)
 }
