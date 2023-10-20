@@ -42,15 +42,22 @@ internal interface EditingTaskViewModel {
 
     fun resetStatus()
 
+    /**
+     * Восстановить статус и удалить тип
+     */
+    fun hardReset()
+
     data class State(
         val title: String,
         val description: String,
-        val loading: Boolean
+        val loading: Boolean,
+        val type: TaskType?,
+        val status: TaskStatus
     ) {
-        fun isInitialized() = this != Uninitialized
+        fun isInitialized() = this !== Uninitialized
 
         companion object {
-            val Uninitialized = State("", "", false)
+            val Uninitialized = State("", "", false, null, TaskStatus.CREATED)
         }
     }
 }
@@ -101,24 +108,22 @@ internal class EditingTaskUiComponent(
         override fun todays() {
             viewModelScope.launch {
                 _taskState.update { it.copy(loading = true) }
-                interactor.setType(taskId, TaskType.TODAYS)
-                    .onSuccess {
-                        _taskState.update { it.copy(loading = false) }
-                        navigator.exit()
-                    }
+                val updateType = TaskType.TODAYS.takeIf { _taskState.value.type != it }
+                interactor.setType(taskId, updateType)
+                    .onSuccess { _taskState.update { it.copy(type = updateType) } }
                     .onFailure { Napier.e(it, "Editing") { "error in update type of task process" } }
+                _taskState.update { it.copy(loading = false) }
             }
         }
 
         override fun weeks() {
             viewModelScope.launch {
                 _taskState.update { it.copy(loading = true) }
-                interactor.setType(taskId, TaskType.WEEKS)
-                    .onSuccess {
-                        _taskState.update { it.copy(loading = false) }
-                        navigator.exit()
-                    }
+                val updateType = TaskType.WEEKS.takeIf { _taskState.value.type != it }
+                interactor.setType(taskId, updateType)
+                    .onSuccess { _taskState.update { it.copy(type = updateType) } }
                     .onFailure { Napier.e(it, "Editing") { "error in update type of task process" } }
+                _taskState.update { it.copy(loading = false) }
             }
         }
 
@@ -126,10 +131,8 @@ internal class EditingTaskUiComponent(
             viewModelScope.launch {
                 _taskState.update { it.copy(loading = true) }
                 interactor.setStatus(taskId, TaskStatus.COMPLETED)
-                    .onSuccess {
-                        _taskState.update { it.copy(loading = false) }
-                        navigator.exit()
-                    }
+                    .also { _taskState.update { it.copy(loading = false) } }
+                    .onSuccess { navigator.exit() }
                     .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
             }
         }
@@ -150,11 +153,22 @@ internal class EditingTaskUiComponent(
             viewModelScope.launch {
                 _taskState.update { it.copy(loading = true) }
                 interactor.setStatus(taskId, TaskStatus.CREATED)
-                    .onSuccess {
-                        _taskState.update { it.copy(loading = false) }
-                        navigator.exit()
-                    }
+                    .also { _taskState.update { it.copy(loading = false) } }
+                    .onSuccess { navigator.exit() }
                     .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
+            }
+        }
+
+        override fun hardReset() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setStatus(taskId, TaskStatus.CREATED)
+                    .onSuccess { _taskState.update { it.copy(status = TaskStatus.CREATED) } }
+                    .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
+                interactor.setType(taskId, null)
+                    .onSuccess { _taskState.update { it.copy(type = null) } }
+                    .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
+                _taskState.update { it.copy(loading = false) }
             }
         }
 
@@ -169,7 +183,9 @@ internal class EditingTaskUiComponent(
                         _taskState.update {
                             it.copy(
                                 title = result.title,
-                                description = result.description
+                                description = result.description,
+                                status = result.status,
+                                type = result.type,
                             )
                         }
                     }

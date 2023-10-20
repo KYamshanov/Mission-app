@@ -31,12 +31,14 @@ import ru.kyamshanov.mission.core.ui.Res
 import ru.kyamshanov.mission.core.ui.constants.ORIENTATION_PORTRAIT
 import ru.kyamshanov.mission.core.ui.extensions.getOrientation
 import ru.kyamshanov.mission.core.ui.extensions.getStatusBars
+import kotlin.math.max
 
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,
     title: String,
     navigationListener: () -> Unit,
+    trailingContent: @Composable (() -> Unit)? = null
 ) = TopBar(
     modifier = modifier,
     navigationListener = navigationListener,
@@ -46,7 +48,8 @@ fun TopBar(
             text = title,
             style = MissionTheme.typography.topBarTitle
         )
-    }
+    },
+    trailingContent = trailingContent,
 )
 
 @Composable
@@ -55,6 +58,7 @@ fun TopBar(
     title: String,
     subtitle: String,
     navigationListener: () -> Unit,
+    trailingContent: @Composable (() -> Unit)? = null
 ) = TopBar(
     modifier = modifier,
     navigationListener = navigationListener,
@@ -71,7 +75,8 @@ fun TopBar(
                 style = MissionTheme.typography.topBarSubtitle
             )
         }
-    }
+    },
+    trailingContent = trailingContent,
 )
 
 @Composable
@@ -79,6 +84,7 @@ fun TopBar(
     modifier: Modifier = Modifier,
     title: @Composable BoxScope.() -> Unit,
     navigationListener: () -> Unit,
+    trailingContent: @Composable (() -> Unit)? = null
 ) {
     TopAppBar(
         modifier = modifier,
@@ -91,21 +97,36 @@ fun TopBar(
     ) {
         val localDensity = LocalDensity.current
         val iconSizeState = remember { mutableStateOf(IntSize.Zero) }
+        val trailingContentSizeState = remember { mutableStateOf(IntSize.Zero) }
 
-          Image(
-              modifier = Modifier.run {
-                  padding(10.dp)
-                      .clip(CircleShape)
-                      .clickable(onClick = navigationListener)
-                      .onSizeChanged { iconSizeState.value = it }
-              },
-              painter = painterResource(Res.images.arrow_back),
-              contentDescription = "come back",
-              colorFilter = ColorFilter.tint(MissionTheme.colors.primary)
-          )
+        Image(
+            modifier = Modifier.run {
+                padding(10.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = navigationListener)
+                    .onSizeChanged { iconSizeState.value = it }
+            },
+            painter = painterResource(Res.images.arrow_back),
+            contentDescription = "come back",
+            colorFilter = ColorFilter.tint(MissionTheme.colors.primary)
+        )
 
-        Box(modifier = Modifier.fillMaxSize().padding(end = with(localDensity) { iconSizeState.value.width.toDp() })) {
+        Box(
+            modifier = Modifier.weight(1f, true)
+                .padding(
+                    end = with(localDensity) {
+                        max(0, (iconSizeState.value.width - trailingContentSizeState.value.width))
+                            .toDp()
+                    },
+                )
+        ) {
             title.invoke(this)
+        }
+
+        if (trailingContent != null) {
+            Box(modifier = Modifier.onSizeChanged { trailingContentSizeState.value = it }) {
+                trailingContent.invoke()
+            }
         }
     }
 }

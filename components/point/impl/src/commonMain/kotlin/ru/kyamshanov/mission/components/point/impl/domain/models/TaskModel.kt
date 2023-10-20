@@ -10,9 +10,9 @@ internal data class TaskModel(
     val title: String,
     val description: String,
     val creationTime: LocalDateTime,
-    val updateTime: LocalDateTime? = null,
-    val completionTime: LocalDateTime? = null,
-    val priority: TaskPriority? = null,
-    val status: TaskStatus = TaskStatus.CREATED,
+    val updateTime: LocalDateTime?,
+    val completionTime: LocalDateTime?,
+    val priority: TaskPriority?,
+    val status: TaskStatus,
     val type: TaskType?,
 )

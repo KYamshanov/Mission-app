@@ -15,11 +15,11 @@ internal class AuthenticationInteractorImpl(
 ) : AuthenticationInteractor {
     override fun getCodeVerifier(): String = generateCodeVerifier()
 
-    override fun provideAuthorizationUri(codeVerifier: String): String = buildString {
+    override fun provideAuthorizationUri(codeVerifier: String, callbackPort: Int): String = buildString {
         val responseType = "code"
         val clientId = "desktop-client"
         val scope = "openid"
-        val redirectUri = "http://127.0.0.1:8080/desktop/authorized"
+        val redirectUri = "http://127.0.0.1:${callbackPort}/desktop/authorized"
         val codeChallenge = generateCodeChallange(codeVerifier)
 
         append("http://127.0.0.1:6543/oauth2/authorize?")
@@ -31,9 +31,9 @@ internal class AuthenticationInteractorImpl(
         append("code_challenge_method=S256")
     }
 
-    override suspend fun getToken(authorizationCode: String, codeVerifier: String): TokensInfo =
+    override suspend fun getToken(authorizationCode: String, codeVerifier: String, callbackPort: Int): TokensInfo =
         withContext(Dispatchers.Default) {
-            authenticationApi.token(authorizationCode, codeVerifier).getOrThrow()
+            authenticationApi.token(authorizationCode, codeVerifier, callbackPort).getOrThrow()
                 .let { TokensInfo(it.accessToken, it.refreshToken) }
         }
 

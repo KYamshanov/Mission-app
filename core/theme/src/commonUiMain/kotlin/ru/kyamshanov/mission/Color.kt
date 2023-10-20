@@ -22,6 +22,7 @@ data class MissionColors(
     val primaryContainer: Color,
     val secondary: Color,
     val gold: Color,
+    val softSecondary: Color,
 )
 
 internal val White = Color(0xFFFFFFFF)
@@ -38,6 +39,7 @@ internal val GrayPleasant = Color(0xFFD9D9D9)
 internal val GreenPleasant = Color(0xFF17830E)
 internal val YellowPleasant = Color(0xFFF1EA3E)
 internal val OrangePleasant = Color(0xFFF2994A)
+internal val SoftBlue = Color(0xFFA8C7FE)
 
 internal val DarkColorPalette = MissionColors(
     background = WhitePleasant,
@@ -56,6 +58,7 @@ internal val DarkColorPalette = MissionColors(
     primary = White,
     primaryContainer = WhitePleasant,
     gold = OrangePleasant,
+    softSecondary = SoftBlue
 )
 
 internal val LightColorPalette = MissionColors(
@@ -75,6 +78,7 @@ internal val LightColorPalette = MissionColors(
     primary = White,
     primaryContainer = WhitePleasant,
     gold = OrangePleasant,
+    softSecondary = SoftBlue
 )
 
 internal val LocalExtendedColors = staticCompositionLocalOf {
@@ -95,6 +99,7 @@ internal val LocalExtendedColors = staticCompositionLocalOf {
         primary = Color.Unspecified,
         primaryContainer = Color.Unspecified,
         gold = Color.Unspecified,
+        softSecondary = Color.Unspecified,
     )
 }
 

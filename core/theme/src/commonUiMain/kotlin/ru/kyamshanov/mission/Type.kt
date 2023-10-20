@@ -89,7 +89,7 @@ internal val LocalExtendedTypography = staticCompositionLocalOf {
         yellow = TextStyle.Default,
         blue = TextStyle.Default,
         hugeMedium = TextStyle.Default,
-        gold = TextStyle.Default
+        gold = TextStyle.Default,
     )
 }
 

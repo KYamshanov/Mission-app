@@ -3,10 +3,9 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
-    id("org.openjfx.javafxplugin") version "0.0.14"
 }
 
-group = "com.example.webview"
+group = "ru.kyamshanov.mission"
 version = "1.0.0"
 
 kotlin {
@@ -51,10 +50,6 @@ kotlin {
                 implementation(libs.decompose.compose)
                 implementation(compose.material)
                 implementation(libs.moko.resources.compose)
-                implementation("org.openjfx:javafx-controls:16")
-                implementation("org.openjfx:javafx-swing:16")
-                implementation("org.openjfx:javafx-web:16")
-                implementation("org.openjfx:javafx-graphics:16")
             }
         }
         val jvmTest by getting {
@@ -81,9 +76,4 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
-}
-
-javafx {
-    version = "16"
-    modules = listOf("javafx.controls", "javafx.swing", "javafx.web", "javafx.graphics")
 }

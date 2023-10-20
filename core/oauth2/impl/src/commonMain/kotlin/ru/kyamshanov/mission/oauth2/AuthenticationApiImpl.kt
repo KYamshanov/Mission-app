@@ -16,7 +16,7 @@ internal class AuthenticationApiImpl(
 
     override suspend fun token(
         authorizationCode: String,
-        codeVerifier: String
+        codeVerifier: String, callbackPort: Int
     ): Result<TokensRsDto> = runCatching {
         val response = requestFactory.post("oauth2/token") {
             contentType(ContentType.Application.FormUrlEncoded)
@@ -24,7 +24,7 @@ internal class AuthenticationApiImpl(
                 listOf(
                     "grant_type" to "authorization_code",
                     "code" to authorizationCode,
-                    "redirect_uri" to "http://127.0.0.1:8080/desktop/authorized",
+                    "redirect_uri" to "http://127.0.0.1:$callbackPort/desktop/authorized",
                     "code_verifier" to codeVerifier
                 ).formUrlEncode()
             )

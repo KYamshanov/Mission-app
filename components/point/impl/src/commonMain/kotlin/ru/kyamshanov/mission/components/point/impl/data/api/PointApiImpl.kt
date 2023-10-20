@@ -52,7 +52,7 @@ internal class PointApiImpl(
         val response = requestFactory.patch("/point/private/type") {
             contentType(ContentType.Application.Json)
             parameter("id", taskId)
-            parameter("type", taskTypeDto)
+            parameter("type", taskTypeDto.toString())
         }
         response.retrieveBody()
     }
