@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,7 +35,7 @@ internal fun EditingTaskComposable(
     Surface(
         topContent = {
             TopBar(
-                title = state.title,
+                title = state.toolBarTitle,
                 navigationListener = viewModel::onBack,
                 trailingContent = {
                     Image(
@@ -140,27 +141,30 @@ internal fun EditingTaskComposable(
         }
     ) {
         Cell(modifier = Modifier.fillMaxWidth()) {
-            val editableState = rememberSaveable { mutableStateOf(false) }
-            val descriptionVisible = state.description.isNotBlank() || editableState.value
             TextFieldCompose(
+                modifier = Modifier.fillMaxWidth(),
                 label = "Название",
                 text = state.title,
                 onValueChange = { viewModel.setTitle(it) },
-                editable = state.editingRules.isTitleEditable,
-                editableState = editableState,
-                underlined = descriptionVisible
+                editable = state.isTitleEditing != null,
+                underlined = state.descriptionVisible,
+                onEditingStarted = viewModel::startEditingTitle,
+                editing = state.isTitleEditing == true
             )
 
-            if (descriptionVisible) {
+
+            if (state.descriptionVisible) {
                 Spacer(modifier = Modifier.height(8.dp))
                 TextFieldCompose(
                     modifier = Modifier.fillMaxWidth(),
                     label = "Описание",
                     text = state.description,
                     onValueChange = { viewModel.setDescription(it) },
-                    editable = state.editingRules.isDescriptionEditable,
                     maxLines = 15,
-                    underlined = false
+                    underlined = false,
+                    editable = state.isDescriptionEditing != null,
+                    onEditingStarted = viewModel::startEditingDescription,
+                    editing = state.isDescriptionEditing == true
                 )
             }
         }
@@ -169,7 +173,7 @@ internal fun EditingTaskComposable(
                 content = {
                     Text(
                         text = "Сохранить изменения",
-                        style = MissionTheme.typography.alternativeButtonStyle + MissionTheme.typography.smallMedium
+                        style = MissionTheme.typography.alternativeButtonStyle + MissionTheme.typography.medium
                     )
                 },
                 onClick = viewModel::saveChanges,

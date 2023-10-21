@@ -8,7 +8,9 @@ plugins {
 group = "ru.kyamshanov.mission"
 version = "1.0.0"
 
+
 kotlin {
+
     jvm {
         compilations.all {
             kotlinOptions {
@@ -72,7 +74,7 @@ compose.desktop {
                 TargetFormat.Deb,
                 TargetFormat.Exe
             )
-            packageName = "ru.kyamshanov.mission.desktopApp"
+            packageName = "MissionApp"
             packageVersion = "1.0.0"
         }
     }

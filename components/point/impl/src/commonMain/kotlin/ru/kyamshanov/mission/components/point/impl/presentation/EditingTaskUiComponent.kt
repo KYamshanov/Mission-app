@@ -62,21 +62,28 @@ internal interface EditingTaskViewModel {
 
     fun saveChanges()
 
+    fun startEditingTitle()
+
+    fun startEditingDescription()
+
 
     data class State(
+        val toolBarTitle: String,
         val title: String,
         val description: String,
         val loading: Boolean,
         val type: TaskType?,
         val status: TaskStatus,
         val priority: TaskPriority?,
-        val editingRules: TaskEditingRules,
-        val saveChangesButtonAvailable: Boolean
+        val saveChangesButtonAvailable: Boolean,
+        val isTitleEditing: Boolean?,
+        val isDescriptionEditing: Boolean?,
+        val descriptionVisible: Boolean
     ) {
         fun isInitialized() = this !== Uninitialized
 
         companion object {
-            val Uninitialized = State("", "", false, null, TaskStatus.CREATED, null, TaskEditingRules(), false)
+            val Uninitialized = State("", "", "", false, null, TaskStatus.CREATED, null, false, false, false, false)
         }
     }
 }
@@ -111,6 +118,7 @@ internal class EditingTaskUiComponent(
 
         private var initialTitle: String? = null
         private var initialDescription: String? = null
+        private var taskPrefix: String? = null
 
         override fun onBack() {
             navigator.exit()
@@ -246,7 +254,17 @@ internal class EditingTaskUiComponent(
                 val description = _taskState.value.description.takeIf { it != initialTitle }
                 interactor.changeTask(taskId, title, description)
                     .also { _taskState.update { it.copy(saveChangesButtonAvailable = false) } }
+                    .onSuccess { onChangesSaved() }
             }
+        }
+
+        override fun startEditingTitle() {
+            val newTitle = initialTitle ?: return
+            _taskState.update { it.copy(title = newTitle, descriptionVisible = true, isTitleEditing = true) }
+        }
+
+        override fun startEditingDescription() {
+            _taskState.update { it.copy(isDescriptionEditing = true) }
         }
 
         private val _taskState = MutableValue(EditingTaskViewModel.State.Uninitialized)
@@ -259,14 +277,19 @@ internal class EditingTaskUiComponent(
                     .onSuccess { result ->
                         initialTitle = result.title
                         initialDescription = result.description
+                        val slitTitle = result.title.split(PREFIX_SEPARATOR, limit = 2)
+                        taskPrefix = slitTitle.takeIf { it.size == 2 }?.get(0)
                         _taskState.update {
                             it.copy(
-                                title = result.title,
+                                toolBarTitle = slitTitle[0],
+                                title = (slitTitle.getOrNull(1) ?: result.title).trim(),
                                 description = result.description,
                                 status = result.status,
                                 type = result.type,
                                 priority = result.priority,
-                                editingRules = result.editingRules
+                                isDescriptionEditing = if (result.editingRules.isDescriptionEditable) false else null,
+                                isTitleEditing = if (result.editingRules.isTitleEditable) false else null,
+                                descriptionVisible = result.description.isNotEmpty()
                             )
                         }
                     }
@@ -275,10 +298,31 @@ internal class EditingTaskUiComponent(
         }
 
 
+        private fun onChangesSaved() {
+            val taskState = _taskState.value
+            initialTitle = taskState.title
+            initialDescription = taskState.description
+            val slitTitle = taskState.title.split(PREFIX_SEPARATOR, limit = 2)
+            taskPrefix = slitTitle.takeIf { it.size == 2 }?.get(0)
+            _taskState.update {
+                it.copy(
+                    toolBarTitle = slitTitle[0],
+                    title = (slitTitle.getOrNull(1) ?: taskState.title).trim(),
+                    isDescriptionEditing = false.takeIf { taskState.isDescriptionEditing != null },
+                    isTitleEditing = false.takeIf { taskState.isTitleEditing != null },
+                    descriptionVisible = taskState.description.isNotEmpty()
+                )
+            }
+        }
+
+
         override fun onDestroy() {
             viewModelScope.cancel()
         }
 
+        companion object {
 
+            private const val PREFIX_SEPARATOR = ":"
+        }
     }
 }

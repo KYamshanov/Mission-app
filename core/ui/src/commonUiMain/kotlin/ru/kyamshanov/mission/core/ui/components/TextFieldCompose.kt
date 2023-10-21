@@ -19,7 +19,6 @@ import dev.icerock.moko.resources.compose.stringResource
 import ru.kyamshanov.mission.MissionTheme
 import ru.kyamshanov.mission.core.ui.Res
 
-
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun TextFieldCompose(
@@ -32,12 +31,36 @@ fun TextFieldCompose(
     suffix: String? = null,
     editableState: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
     onValueChange: (String) -> Unit,
+) = TextFieldCompose(
+    modifier = modifier,
+    text = text,
+    label = label,
+    maxLines = maxLines,
+    editable = editable,
+    underlined = underlined,
+    suffix = suffix, editing = editableState.value,
+    onValueChange = onValueChange,
+    onEditingStarted = { editableState.value = true }
+)
+
+@Composable
+fun TextFieldCompose(
+    modifier: Modifier = Modifier,
+    text: String,
+    label: String? = null,
+    maxLines: Int = 1,
+    editable: Boolean,
+    underlined: Boolean = true,
+    suffix: String? = null,
+    editing: Boolean,
+    onValueChange: (String) -> Unit,
+    onEditingStarted: () -> Unit
 ) {
 
 
     val rightIconComposable: (@Composable () -> Unit)? = if (editable) {
         {
-            if (editableState.value) {
+            if (editing) {
                 Image(
                     painter = painterResource(Res.images.close),
                     contentDescription = stringResource(Res.strings.clear),
@@ -48,7 +71,7 @@ fun TextFieldCompose(
                     painter = painterResource(Res.images.square_edit_outline),
                     contentDescription = stringResource(Res.strings.edit),
                     modifier = Modifier
-                        .clickable { editableState.value = true }
+                        .clickable { onEditingStarted.invoke() }
                         .size(24.dp)
                 )
             }
@@ -62,7 +85,7 @@ fun TextFieldCompose(
         maxLines = maxLines,
         rightIcon = rightIconComposable,
         onValueChange = onValueChange,
-        editable = editableState.value,
+        editable = editing,
         underlined = underlined,
         suffix = suffix
     )
