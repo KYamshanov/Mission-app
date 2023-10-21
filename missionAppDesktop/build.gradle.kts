@@ -8,27 +8,18 @@ plugins {
 group = "ru.kyamshanov.mission"
 version = "1.0.0"
 
-
 kotlin {
-
-    jvm {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
-            withJava()
-        }
-    }
+    jvm("desktop")
 
     sourceSets {
 
         val commonMain by getting {
             dependencies {
-
+                implementation(libs.decompose.core)
             }
         }
 
-        val jvmMain by getting {
+        val desktopMain by getting {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.napier)
@@ -54,11 +45,6 @@ kotlin {
                 implementation(libs.moko.resources.compose)
             }
         }
-        val jvmTest by getting {
-            dependencies {
-                // testing deps
-            }
-        }
     }
 }
 
@@ -76,6 +62,16 @@ compose.desktop {
             )
             packageName = "MissionApp"
             packageVersion = "1.0.0"
+            description = "Mission application"
+            copyright = "© 2023 KYamshanov. All rights reserved."
+
+            windows {
+                iconFile.set(project.file("icons/app_icon.ico"))
+            }
+        }
+
+        buildTypes.release.proguard {
+            configurationFiles.from(project.file("compose-desktop-rules.pro"))
         }
     }
 }
