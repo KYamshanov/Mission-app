@@ -33,7 +33,8 @@ class RequestFactoryImpl : RequestFactory {
         }
 
         defaultRequest {
-            url("http://localhost:3456/") //mobile internet
+            url("http://192.168.3.6:3456/")
+            // url("http://localhost:3456/") //mobile internet
             // url("http://10.2.15.91:80/") //wifi
             getAuthorizationHeader()?.let { header(HttpHeaders.Authorization, "Bearer $it") }
         }

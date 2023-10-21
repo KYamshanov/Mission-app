@@ -14,5 +14,5 @@ dependencies {
     commonMainImplementation(projects.core.oauth2.impl)
     commonMainImplementation(projects.components.point.impl)
 
-    desktopMainImplementation(projects.core.authorization.desktop)
+    commonMainImplementation(projects.core.authorization.desktop)
 }

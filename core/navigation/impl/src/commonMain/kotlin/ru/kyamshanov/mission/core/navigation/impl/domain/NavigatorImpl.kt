@@ -40,6 +40,7 @@ internal class NavigatorImpl(
     }
 
     override fun dismissAlert() {
+        println("Dismiss")
         alertNavigation.dismiss()
     }
 
