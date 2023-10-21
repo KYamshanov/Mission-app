@@ -5,12 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -34,13 +30,14 @@ fun TextFieldCompose(
     editable: Boolean,
     underlined: Boolean = true,
     suffix: String? = null,
+    editableState: MutableState<Boolean> = rememberSaveable { mutableStateOf(false) },
     onValueChange: (String) -> Unit,
 ) {
-    var editableState by rememberSaveable { mutableStateOf(false) }
+
 
     val rightIconComposable: (@Composable () -> Unit)? = if (editable) {
         {
-            if (editableState) {
+            if (editableState.value) {
                 Image(
                     painter = painterResource(Res.images.close),
                     contentDescription = stringResource(Res.strings.clear),
@@ -51,7 +48,7 @@ fun TextFieldCompose(
                     painter = painterResource(Res.images.square_edit_outline),
                     contentDescription = stringResource(Res.strings.edit),
                     modifier = Modifier
-                        .clickable { editableState = true }
+                        .clickable { editableState.value = true }
                         .size(24.dp)
                 )
             }
@@ -65,7 +62,7 @@ fun TextFieldCompose(
         maxLines = maxLines,
         rightIcon = rightIconComposable,
         onValueChange = onValueChange,
-        editable = editableState,
+        editable = editableState.value,
         underlined = underlined,
         suffix = suffix
     )

@@ -1,10 +1,13 @@
 package ru.kyamshanov.mission.core.navigation.impl
 
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.router.slot.SlotNavigation
+import com.arkivanov.decompose.router.slot.childSlot
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.*
 import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.navigation.api.Screen
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
@@ -14,10 +17,11 @@ import ru.kyamshanov.mission.core.navigation.impl.domain.ScreenConfig
 
 class DefaultRootComponent(
     initialScreen: Screen,
-    componentContext: ComponentContext,
+    componentContext: ComponentContext
 ) : RootComponent, ComponentContext by componentContext {
 
     private val navigation = StackNavigation<ScreenConfig>()
+    private val alertNavigation = SlotNavigation<ScreenConfig>()
 
     private val stack =
         childStack(
@@ -25,16 +29,38 @@ class DefaultRootComponent(
             initialStack = { listOf(ScreenConfig(initialScreen)) },
             handleBackButton = true,
             childFactory = { config, componentContext ->
+                val prefix = config.screen::class.simpleName.toString()
+                componentContext.lifecycle.doOnDestroy { println("$prefix doOnDestroy") }
+                componentContext.lifecycle.doOnStop { println("$prefix doOnStop") }
+                componentContext.lifecycle.doOnStart { println("$prefix doOnStart") }
+                componentContext.lifecycle.doOnCreate { println("$prefix doOnCreate") }
+                componentContext.lifecycle.doOnResume { println("$prefix doOnResume") }
+                componentContext.lifecycle.doOnPause { println("$prefix doOnPause") }
+
                 RootComponent.ScreenWithContext(config.screen, componentContext)
             },
         )
 
+    private val alert =
+        childSlot(
+            source = alertNavigation,
+            persistent = true,
+            handleBackButton = false,
+        ) { config, childComponentContext ->
+
+            RootComponent.ScreenWithContext(config.screen, childComponentContext)
+        }
+
     override val childStack: Value<ChildStack<*, RootComponent.ScreenWithContext>> =
         stack
+    override val alertSlot = alert
 
     init {
         requireNotNull(Di.getInternalComponent<NavigationComponent, NavigationComponentImpl>()).navigatorControllerHolder.stackNavigation =
             navigation
+
+        requireNotNull(Di.getInternalComponent<NavigationComponent, NavigationComponentImpl>()).navigatorControllerHolder.alertNavigation =
+            alertNavigation
 
     }
 }

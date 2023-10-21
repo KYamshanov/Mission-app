@@ -22,4 +22,8 @@ internal interface PointApi {
     suspend fun setPriority(taskId: TaskId, priority: TaskPriorityDto)
 
     suspend fun removePriority(taskId: TaskId)
+
+    suspend fun search(phrase: String): AttachedTasksResponseDto
+
+    suspend fun edit(data: EditTaskRsDto)
 }

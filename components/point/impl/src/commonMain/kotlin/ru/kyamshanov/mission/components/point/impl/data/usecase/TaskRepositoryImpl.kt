@@ -17,6 +17,10 @@ internal class TaskRepositoryImpl(
     override suspend fun getAll(): Result<List<TaskSlim>> = runCatching {
         pointApi.allProjects().toDomain()
     }
+
+    override suspend fun search(phrase: String): Result<List<TaskSlim>> = runCatching {
+        pointApi.search(phrase).toDomain()
+    }
 }
 
 private fun AttachedTasksResponseDto.toDomain(): List<TaskSlim> = this.items.map {

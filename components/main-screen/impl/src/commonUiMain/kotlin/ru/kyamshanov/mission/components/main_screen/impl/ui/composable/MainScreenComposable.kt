@@ -59,32 +59,48 @@ internal fun MainScreenComposable(
                         searchPhraseState.value = it
                         searchViewModel.searchByName(it)
                     }, trailingIcon = {
-                        Image(
-                            painter = painterResource(Res.images.ic_search),
-                            contentDescription = "Поиск",
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .clip(CircleShape)
-                                .clickable { searchViewModel.searchByName(searchPhraseState.value) }
-                                .size(32.dp),
-                            colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
-                        )
+                        if (searchPhraseState.value.isEmpty()) {
+                            Image(
+                                painter = painterResource(Res.images.ic_search),
+                                contentDescription = "Поиск",
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(32.dp),
+                                colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
+                            )
+                        } else {
+                            Image(
+                                painter = painterResource(Res.images.close),
+                                contentDescription = "clear",
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        searchPhraseState.value = ""
+                                        searchViewModel.clear()
+                                    }
+                                    .size(32.dp),
+                                colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
+                            )
+                        }
                     })
 
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            if (searchViewState.isInitialized()) {
-                LazyColumn(modifier = Modifier.padding(5.dp)) {
-                    searchViewState.items.forEach { project ->
-                        item {
-                            Text(
-                                modifier = Modifier.clickable { searchViewModel.openItem(project.id) },
-                                text = project.title,
-                                style = MissionTheme.typography.field
-                            )
-                        }
+            if (searchViewState.items != null) {
+                Column(modifier = Modifier.padding(5.dp)) {
+                    searchViewState.items?.takeIf { it.isNotEmpty() }?.forEach { project ->
+                        Text(
+                            modifier = Modifier.clickable { searchViewModel.openItem(project.id) },
+                            text = project.title,
+                            style = MissionTheme.typography.field
+                        )
+                    } ?: run {
+                        Text(
+                            text = "--Not found--",
+                            style = MissionTheme.typography.field,
+                        )
                     }
                 }
             } else if (frontViewState.initialized) {

@@ -1,5 +1,7 @@
 package ru.kyamshanov.mission.core.navigation.impl.domain
 
+import com.arkivanov.decompose.router.slot.activate
+import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.replaceAll
@@ -15,6 +17,7 @@ internal class NavigatorImpl(
 ) : Navigator {
 
     private val stackNavigation get() = requireNotNull(controllerHolder.stackNavigation) { "StackNavigation cannot be null" }
+    private val alertNavigation get() = requireNotNull(controllerHolder.alertNavigation) { "AlertNavigation cannot be null" }
 
     override fun navigateTo(screen: Screen) {
         stackNavigation.push(ScreenConfig(screen))
@@ -30,6 +33,14 @@ internal class NavigatorImpl(
 
     override fun exit() {
         stackNavigation.pop()
+    }
+
+    override fun alert(screen: Screen) {
+        alertNavigation.activate(ScreenConfig(screen))
+    }
+
+    override fun dismissAlert() {
+        alertNavigation.dismiss()
     }
 
     override fun <ReturnDataType : NavigationBoundaryData?> backWithResult(

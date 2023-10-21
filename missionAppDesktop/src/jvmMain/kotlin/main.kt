@@ -15,6 +15,7 @@ import ru.kyamshanov.mission.core.navigation.MainContent
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 import ru.kyamshanov.mission.core.navigation.impl.DefaultRootComponent
 import ru.kyamshanov.mission.core.navigation.impl.di.NavigationComponentImpl
+import ru.kyamshanov.mission.core.navigation.runOnUiThread
 import ru.kyamshanov.mission.core.platform_base.di.PlatformBaseComponentBuilder
 import ru.kyamshanov.mission.core.ui.Res
 import ru.kyamshanov.mission.foundation.api.splash_screen.di.SplashScreenComponent
@@ -26,12 +27,13 @@ fun main() = application {
 
 
     val lifecycle = LifecycleRegistry()
-    val componentContext = DefaultComponentContext(LifecycleRegistry())
 
-    val defaultRootComponent = DefaultRootComponent(
-        initialScreen = requireNotNull(Di.getComponent<SplashScreenComponent>()).splashScreen,
-        componentContext = componentContext
-    )
+    val defaultRootComponent = runOnUiThread {
+        DefaultRootComponent(
+            initialScreen = requireNotNull(Di.getComponent<SplashScreenComponent>()).splashScreen,
+            componentContext = DefaultComponentContext(lifecycle)
+        )
+    }
 
     requireNotNull(Di.getInternalComponent<NavigationComponent, NavigationComponentImpl>())
         .navigatorControllerHolder.rootComponent = defaultRootComponent

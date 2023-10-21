@@ -1,5 +1,6 @@
 package ru.kyamshanov.mission.authorization.impl.presentation.composable
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
@@ -10,6 +11,9 @@ import androidx.compose.ui.Modifier
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import ru.kyamshanov.mission.MissionTheme
+import ru.kyamshanov.mission.core.navigation.api.Navigator
 import ru.kyamshanov.mission.oauth2.api.AuthenticationInteractor
 import ru.kyamshanov.mission.session_front.api.SessionFront
 import ru.kyamshanov.mission.session_front.api.model.AccessData
@@ -24,9 +28,10 @@ import java.net.URI
 @Composable
 fun LoginComposable(
     authenticationInteractor: AuthenticationInteractor,
-    sessionFront: SessionFront
+    sessionFront: SessionFront,
+    navigator: Navigator,
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize().background(color = MissionTheme.colors.background)) {
         Text(modifier = Modifier.align(Alignment.Center), text = "Авторизация через браузер")
 
         LaunchedEffect(true) {
@@ -56,6 +61,9 @@ fun LoginComposable(
                     authenticationInteractor.getToken(authorizationCode, codeVerifier, serverSocket.getLocalPort())
                 val accessData = AccessData(Token(token.accessToken), Token(token.refreshToken), emptyList())
                 sessionFront.openSession(accessData)
+                    .onSuccess {
+                        withContext(Dispatchers.Main) { navigator.dismissAlert() }
+                    }
                 serverSocket.close()
             }
 

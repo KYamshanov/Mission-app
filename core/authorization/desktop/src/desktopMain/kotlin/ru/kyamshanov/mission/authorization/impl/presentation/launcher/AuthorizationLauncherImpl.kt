@@ -10,6 +10,6 @@ internal class AuthorizationLauncherImpl(
 ) : AuthorizationLauncher {
 
     override fun launch() {
-        navigator.newRootScreen(LoginScreen())
+        navigator.alert(LoginScreen())
     }
 }

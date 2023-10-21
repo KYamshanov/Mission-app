@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.arkivanov.essenty.lifecycle.doOnStart
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,14 +50,19 @@ internal class FrontUiComponent(
     private val context: ComponentContext
 ) : ComponentContext by context {
 
-    val uiComponent: FrontViewModel =
-        instanceKeeper.getOrCreate {
-            val taskComponent: TaskComponent by requireNotNull(instanceKeeper.di())
-            SearchRetainedInstance(
-                taskComponent.taskRepository,
-                taskComponent.launcher
-            )
-        }
+    val uiComponent: FrontViewModel get() = _uiComponent
+
+    private val _uiComponent = instanceKeeper.getOrCreate {
+        val taskComponent: TaskComponent by requireNotNull(instanceKeeper.di())
+        SearchRetainedInstance(
+            taskComponent.taskRepository,
+            taskComponent.launcher
+        )
+    }
+
+    init {
+        lifecycle.doOnStart { _uiComponent.fetchTasks() }
+    }
 
     private class SearchRetainedInstance(
         private val taskRepository: TaskRepository,
@@ -114,7 +120,7 @@ internal class FrontUiComponent(
             return this
         }
 
-        init {
+        fun fetchTasks() {
             viewModelScope.launch {
                 taskRepository.getAll()
                     .onSuccess { tasks = it }

@@ -30,7 +30,8 @@ private fun GetTaskRsDto.toDomain(): TaskModel = TaskModel(
     completionTime = completionTime,
     type = type.toDomain(),
     status = status.toDomain(),
-    priority = priority?.toDomain()
+    priority = priority?.toDomain(),
+    editingRules = this.editingRules.toDomain()
 )
 
 private fun TaskStatusDto.toDomain(): TaskStatus = when (this) {

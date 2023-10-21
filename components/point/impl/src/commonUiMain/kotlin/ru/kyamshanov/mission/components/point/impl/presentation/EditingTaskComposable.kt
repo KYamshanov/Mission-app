@@ -7,6 +7,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -137,20 +139,40 @@ internal fun EditingTaskComposable(
             }
         }
     ) {
-        Column {
+        Cell(modifier = Modifier.fillMaxWidth()) {
+            val editableState = rememberSaveable { mutableStateOf(false) }
+            val descriptionVisible = state.description.isNotBlank() || editableState.value
             TextFieldCompose(
                 label = "Название",
                 text = state.title,
-                onValueChange = {},
-                editable = false,
+                onValueChange = { viewModel.setTitle(it) },
+                editable = state.editingRules.isTitleEditable,
+                editableState = editableState,
+                underlined = descriptionVisible
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextFieldCompose(
-                label = "Описание",
-                text = state.description,
-                onValueChange = {},
-                editable = false,
-                maxLines = 15
+
+            if (descriptionVisible) {
+                Spacer(modifier = Modifier.height(8.dp))
+                TextFieldCompose(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "Описание",
+                    text = state.description,
+                    onValueChange = { viewModel.setDescription(it) },
+                    editable = state.editingRules.isDescriptionEditable,
+                    maxLines = 15,
+                    underlined = false
+                )
+            }
+        }
+        if (state.saveChangesButtonAvailable) {
+            AlternativeButton(
+                content = {
+                    Text(
+                        text = "Сохранить изменения",
+                        style = MissionTheme.typography.alternativeButtonStyle + MissionTheme.typography.smallMedium
+                    )
+                },
+                onClick = viewModel::saveChanges,
             )
         }
     }

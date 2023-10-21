@@ -11,9 +11,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import ru.kyamshanov.mission.components.point.impl.data.model.EditingRulesDto
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskTypeDto
 import ru.kyamshanov.mission.components.point.impl.di.TaskModuleComponent
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
+import ru.kyamshanov.mission.components.point.impl.domain.models.TaskEditingRules
 import ru.kyamshanov.mission.components.point.impl.domain.usecase.GetTaskUseCase
 import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
@@ -54,18 +56,27 @@ internal interface EditingTaskViewModel {
 
     fun low()
 
+    fun setTitle(title: String)
+
+    fun setDescription(description: String)
+
+    fun saveChanges()
+
+
     data class State(
         val title: String,
         val description: String,
         val loading: Boolean,
         val type: TaskType?,
         val status: TaskStatus,
-        val priority: TaskPriority?
+        val priority: TaskPriority?,
+        val editingRules: TaskEditingRules,
+        val saveChangesButtonAvailable: Boolean
     ) {
         fun isInitialized() = this !== Uninitialized
 
         companion object {
-            val Uninitialized = State("", "", false, null, TaskStatus.CREATED, null)
+            val Uninitialized = State("", "", false, null, TaskStatus.CREATED, null, TaskEditingRules(), false)
         }
     }
 }
@@ -97,6 +108,10 @@ internal class EditingTaskUiComponent(
         EditingTaskViewModel {
 
         override val viewState: Value<EditingTaskViewModel.State> get() = _taskState
+
+        private var initialTitle: String? = null
+        private var initialDescription: String? = null
+
         override fun onBack() {
             navigator.exit()
         }
@@ -212,6 +227,28 @@ internal class EditingTaskUiComponent(
             }
         }
 
+        override fun setTitle(title: String) {
+            _taskState.update { it.copy(title = title, saveChangesButtonAvailable = title != initialTitle) }
+        }
+
+        override fun setDescription(description: String) {
+            _taskState.update {
+                it.copy(
+                    description = description,
+                    saveChangesButtonAvailable = description != initialDescription
+                )
+            }
+        }
+
+        override fun saveChanges() {
+            viewModelScope.launch {
+                val title = _taskState.value.title.takeIf { it != initialTitle }
+                val description = _taskState.value.description.takeIf { it != initialTitle }
+                interactor.changeTask(taskId, title, description)
+                    .also { _taskState.update { it.copy(saveChangesButtonAvailable = false) } }
+            }
+        }
+
         private val _taskState = MutableValue(EditingTaskViewModel.State.Uninitialized)
         private val viewModelScope = CoroutineScope(kotlinx.coroutines.Dispatchers.Main + SupervisorJob())
 
@@ -220,13 +257,16 @@ internal class EditingTaskUiComponent(
             viewModelScope.launch {
                 getTaskUseCase.fetch(taskId)
                     .onSuccess { result ->
+                        initialTitle = result.title
+                        initialDescription = result.description
                         _taskState.update {
                             it.copy(
                                 title = result.title,
                                 description = result.description,
                                 status = result.status,
                                 type = result.type,
-                                priority = result.priority
+                                priority = result.priority,
+                                editingRules = result.editingRules
                             )
                         }
                     }

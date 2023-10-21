@@ -17,4 +17,6 @@ internal interface TaskInteractor {
     suspend fun setStatus(taskId: TaskId, taskStatus: TaskStatus): Result<Unit>
 
     suspend fun setPriority(taskId: TaskId, priority: TaskPriority?): Result<Unit>
+
+    suspend fun changeTask(taskId: TaskId, title: String?, description: String?): Result<Unit>
 }

@@ -34,6 +34,11 @@ internal class TaskInteractorImpl(
         if (priority != null) api.setPriority(taskId, priority.toDto())
         else api.removePriority(taskId)
     }
+
+    override suspend fun changeTask(taskId: TaskId, title: String?, description: String?): Result<Unit> =
+        runCatching {
+            api.edit(EditTaskRsDto(id = taskId, title = title, description = description))
+        }
 }
 
 private fun TaskPriority.toDto(): TaskPriorityDto = when (this) {
