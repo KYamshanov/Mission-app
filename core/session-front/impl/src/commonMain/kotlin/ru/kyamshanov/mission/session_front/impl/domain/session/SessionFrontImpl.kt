@@ -1,11 +1,14 @@
 package ru.kyamshanov.mission.session_front.impl.domain.session
 
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import ru.kyamshanov.mission.authorization.api.AuthorizationLauncher
 import ru.kyamshanov.mission.core.base.api.MissionPreferences
 import ru.kyamshanov.mission.oauth2.api.AuthenticationInteractor
 import ru.kyamshanov.mission.session_front.api.SessionFront
@@ -24,8 +27,11 @@ import ru.kyamshanov.mission.session_front.impl.domain.usecase.IdentifyUserUseCa
 internal class SessionFrontImpl constructor(
     private val missionPreferences: MissionPreferences,
     private val sessionInfoImpl: SessionInfoImpl,
+/*
     private val identifyUserUseCase: IdentifyUserUseCase,
-    private val authenticationInteractor: AuthenticationInteractor
+*/
+    private val authenticationInteractor: AuthenticationInteractor,
+    private val authorizationLauncher: AuthorizationLauncher
 ) : SessionFront {
 
     private var sessionLifecycleScope: CoroutineScope? = null
@@ -38,6 +44,11 @@ internal class SessionFrontImpl constructor(
         val scope = CoroutineScope(Job())
         //TODO Легаси. Переисать
         scope.launch {
+            /*  refreshSession()
+                  .onFailure {
+                      Napier.e(throwable = it, tag = "SessionFront") { "RefreshSession exception" }
+                      makeUnauthorizedSession(it)
+                  }*/
             /* refreshSession()
                  .onSuccess {
                      startAutoRefreshing()
@@ -60,10 +71,19 @@ internal class SessionFrontImpl constructor(
         val session =
             createSession(login, accessData)
         sessionInfoImpl.session = session
-        startAutoRefreshing()
         session
     }.onFailure {
         it.printStackTrace()
+    }
+
+    override suspend fun refreshToken(): Result<Session> = runCatching {
+        println("Refresh")
+        refreshSession().getOrElse {
+            authorizationLauncher.launch()
+            println("Loggin")
+            sessionInfoImpl.session = LoggingSessionImpl()
+            sessionInfoImpl.sessionState.first()
+        }
     }
 
     override suspend fun destroySession() {
@@ -88,18 +108,6 @@ internal class SessionFrontImpl constructor(
 
     private fun makeUnauthorizedSession(reason: Throwable) {
         sessionInfoImpl.session = UnauthorizedSession(reason)
-    }
-
-    private fun startAutoRefreshing() {
-        sessionLifecycleScope = CoroutineScope(Job())
-
-        sessionLifecycleScope?.launch {
-            while (isActive) {
-                delay(AUTO_REFRESHING_DELAY_MS)
-                refreshSession()
-                    .onFailure { breakSession() }
-            }
-        }
     }
 
     private suspend fun refreshSession(): Result<Session> = runCatching {

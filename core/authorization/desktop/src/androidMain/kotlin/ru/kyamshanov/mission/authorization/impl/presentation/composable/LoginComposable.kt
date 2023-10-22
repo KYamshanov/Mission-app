@@ -58,8 +58,9 @@ fun LoginComposable(
                                     sessionFront.openSession(accessData)
                                     navigator.dismissAlert()
                                 }
+                                return true
                             }
-                            return true
+                            return false
                         }
                     }
                     loadUrl(mUrl)
