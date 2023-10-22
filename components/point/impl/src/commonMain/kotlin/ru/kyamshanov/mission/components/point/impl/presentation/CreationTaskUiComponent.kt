@@ -13,6 +13,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import ru.kyamshanov.mission.components.point.impl.di.TaskModuleComponent
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
+import ru.kyamshanov.mission.components.point.impl.presentation.screens.EditingTaskScreen
 import ru.kyamshanov.mission.components.points.api.di.TaskComponent
 import ru.kyamshanov.mission.core.navigation.api.Navigator
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
@@ -79,9 +80,9 @@ internal class CreationTaskUiComponent(
             viewModelScope.launch {
                 _viewState.update { it.copy(loading = true) }
                 interactor.create(value.title, value.description)
+                    .also { _viewState.update { it.copy(loading = false) } }
                     .onSuccess {
-                        _viewState.update { it.copy(loading = false) }
-                        navigator.exit()
+                        navigator.replaceTo(EditingTaskScreen(it))
                     }
                     .onFailure { Napier.e(it, "Creation") { "error in creation process" } }
             }

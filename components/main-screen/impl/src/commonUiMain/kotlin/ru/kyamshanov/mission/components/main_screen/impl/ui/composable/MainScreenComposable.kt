@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,11 +20,12 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.painterResource
 import ru.kyamshanov.mission.MissionTheme
-import ru.kyamshanov.mission.MissionTypography
 import ru.kyamshanov.mission.components.main_screen.impl.ui.components.FrontViewModel
 import ru.kyamshanov.mission.components.main_screen.impl.ui.components.NavigationBarViewModel
 import ru.kyamshanov.mission.components.main_screen.impl.ui.components.SearchViewModel
 import ru.kyamshanov.mission.components.main_screen.impl.ui.models.SlimItem
+import ru.kyamshanov.mission.components.main_screen.impl.ui.models.TaskInfoSlim
+import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.core.ui.Res
 import ru.kyamshanov.mission.core.ui.components.*
 import ru.kyamshanov.mission.core.ui.extensions.systemBarsPadding
@@ -59,32 +59,48 @@ internal fun MainScreenComposable(
                         searchPhraseState.value = it
                         searchViewModel.searchByName(it)
                     }, trailingIcon = {
-                        Image(
-                            painter = painterResource(Res.images.ic_search),
-                            contentDescription = "Поиск",
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .clip(CircleShape)
-                                .clickable { searchViewModel.searchByName(searchPhraseState.value) }
-                                .size(32.dp),
-                            colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
-                        )
+                        if (searchPhraseState.value.isEmpty()) {
+                            Image(
+                                painter = painterResource(Res.images.ic_search),
+                                contentDescription = "Поиск",
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .size(32.dp),
+                                colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
+                            )
+                        } else {
+                            Image(
+                                painter = painterResource(Res.images.close),
+                                contentDescription = "clear",
+                                modifier = Modifier
+                                    .clip(CircleShape)
+                                    .clickable {
+                                        searchPhraseState.value = ""
+                                        searchViewModel.clear()
+                                    }
+                                    .size(32.dp),
+                                colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
+                            )
+                        }
                     })
 
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            if (searchViewState.isInitialized()) {
-                LazyColumn(modifier = Modifier.padding(5.dp)) {
-                    searchViewState.items.forEach { project ->
-                        item {
-                            Text(
-                                modifier = Modifier.clickable { searchViewModel.openItem(project.id) },
-                                text = project.title,
-                                style = MissionTheme.typography.field
-                            )
-                        }
+            if (searchViewState.items != null) {
+                Column(modifier = Modifier.padding(5.dp)) {
+                    searchViewState.items?.takeIf { it.isNotEmpty() }?.forEach { project ->
+                        Text(
+                            modifier = Modifier.clickable { searchViewModel.openItem(project.id) },
+                            text = project.title,
+                            style = MissionTheme.typography.field
+                        )
+                    } ?: run {
+                        Text(
+                            text = "--Not found--",
+                            style = MissionTheme.typography.field,
+                        )
                     }
                 }
             } else if (frontViewState.initialized) {
@@ -150,13 +166,42 @@ private fun ComposableItemText(
     item: SlimItem,
     onClick: () -> Unit
 ) {
-    Text(
-        modifier = Modifier.clickable { onClick() },
-        text = item.title,
-        style = MissionTheme.typography.titleSecondary
-            .run {
-                if (item.isCompleted) copy(textDecoration = TextDecoration.LineThrough)
-                else this
-            },
-    )
+    if (item is TaskInfoSlim && (item.isHighPriority || item.isLowPriority)) {
+        Row {
+            Text(
+                modifier = Modifier.clickable { onClick() },
+                text = item.title,
+                style = MissionTheme.typography.titleSecondary
+                    .run {
+                        if (item.isCompleted) copy(textDecoration = TextDecoration.LineThrough)
+                        else this
+                    },
+            )
+            if (item.isHighPriority) {
+                Image(
+                    modifier = Modifier.fillMaxHeight(),
+                    painter = painterResource(Res.images.ic_keyboard_double_arrow_up),
+                    contentDescription = "high priority",
+                    colorFilter = ColorFilter.tint(MissionTheme.colors.wrong)
+                )
+            } else {
+                Image(
+                    modifier = Modifier.fillMaxHeight(),
+                    painter = painterResource(Res.images.ic_keyboard_double_arrow_down),
+                    contentDescription = "low priority",
+                    colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
+                )
+            }
+        }
+    } else {
+        Text(
+            modifier = Modifier.clickable { onClick() },
+            text = item.title,
+            style = MissionTheme.typography.titleSecondary
+                .run {
+                    if (item.isCompleted) copy(textDecoration = TextDecoration.LineThrough)
+                    else this
+                },
+        )
+    }
 }

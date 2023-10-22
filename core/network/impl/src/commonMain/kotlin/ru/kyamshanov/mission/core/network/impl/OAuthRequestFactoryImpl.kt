@@ -7,9 +7,12 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.HttpHeaders
+import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.delete
+import io.ktor.client.request.get
+import io.ktor.client.request.patch
+import io.ktor.client.request.post
+import io.ktor.client.statement.HttpResponse
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import ru.kyamshanov.mission.core.di.impl.Di
@@ -33,7 +36,8 @@ class OAuthRequestFactoryImpl : RequestFactory {
         }
 
         defaultRequest {
-            url("http://127.0.0.1:3456/") //mobile internet
+            // url("http://127.0.0.1:3456/") //mobile internet
+            url("http://192.168.3.6:3456/")
         }
     }
 
@@ -43,10 +47,16 @@ class OAuthRequestFactoryImpl : RequestFactory {
     override suspend fun post(endpoint: String, block: HttpRequestBuilder.() -> Unit) =
         client.post(endpoint, block)
 
-    override suspend fun delete(endpoint: String, block: HttpRequestBuilder.() -> Unit): HttpResponse =
+    override suspend fun delete(
+        endpoint: String,
+        block: HttpRequestBuilder.() -> Unit
+    ): HttpResponse =
         client.delete(endpoint, block)
 
-    override suspend fun patch(endpoint: String, block: HttpRequestBuilder.() -> Unit): HttpResponse =
+    override suspend fun patch(
+        endpoint: String,
+        block: HttpRequestBuilder.() -> Unit
+    ): HttpResponse =
         client.patch(endpoint, block)
 
     private fun getAuthorizationHeader(): String? =

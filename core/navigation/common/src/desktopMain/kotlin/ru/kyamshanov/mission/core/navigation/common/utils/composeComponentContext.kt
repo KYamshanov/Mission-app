@@ -7,4 +7,4 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 
 @Composable
 actual fun composeComponentContext(sourceComponentContext: ComponentContext?): DefaultComponentContext =
-    DefaultComponentContext(lifecycle = LifecycleRegistry())
+    DefaultComponentContext(lifecycle = sourceComponentContext?.lifecycle ?: LifecycleRegistry())

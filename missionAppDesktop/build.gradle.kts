@@ -3,31 +3,23 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
-    id("org.openjfx.javafxplugin") version "0.0.14"
 }
 
-group = "com.example.webview"
+group = "ru.kyamshanov.mission"
 version = "1.0.0"
 
 kotlin {
-    jvm {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
-            withJava()
-        }
-    }
+    jvm("desktop")
 
     sourceSets {
 
         val commonMain by getting {
             dependencies {
-
+                implementation(libs.decompose.core)
             }
         }
 
-        val jvmMain by getting {
+        val desktopMain by getting {
             dependencies {
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.napier)
@@ -51,15 +43,6 @@ kotlin {
                 implementation(libs.decompose.compose)
                 implementation(compose.material)
                 implementation(libs.moko.resources.compose)
-                implementation("org.openjfx:javafx-controls:16")
-                implementation("org.openjfx:javafx-swing:16")
-                implementation("org.openjfx:javafx-web:16")
-                implementation("org.openjfx:javafx-graphics:16")
-            }
-        }
-        val jvmTest by getting {
-            dependencies {
-                // testing deps
             }
         }
     }
@@ -77,13 +60,18 @@ compose.desktop {
                 TargetFormat.Deb,
                 TargetFormat.Exe
             )
-            packageName = "ru.kyamshanov.mission.desktopApp"
+            packageName = "MissionApp"
             packageVersion = "1.0.0"
+            description = "Mission application"
+            copyright = "© 2023 KYamshanov. All rights reserved."
+
+            windows {
+                iconFile.set(project.file("icons/app_icon.ico"))
+            }
+        }
+
+        buildTypes.release.proguard {
+            configurationFiles.from(project.file("compose-desktop-rules.pro"))
         }
     }
-}
-
-javafx {
-    version = "16"
-    modules = listOf("javafx.controls", "javafx.swing", "javafx.web", "javafx.graphics")
 }

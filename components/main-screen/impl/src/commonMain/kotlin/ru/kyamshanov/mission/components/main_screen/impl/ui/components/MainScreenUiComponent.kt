@@ -17,11 +17,11 @@ internal class MainScreenUiComponentImpl(
 ) : MainScreenUiComponent, ComponentContext by componentContext {
 
     override val searchViewModel: SearchViewModel =
-        SearchProjectUiComponent(childContext(key = "Search")).uiComponent
+        SearchProjectUiComponent(this).viewModel
 
     override val navigationBarViewModel: NavigationBarViewModel =
-        NavigationBarComponentContext(childContext(key = "NavBar"))
+        NavigationBarComponentContext(this)
 
     override val frontViewModel: FrontViewModel =
-        FrontUiComponent(childContext(key = "Front")).uiComponent
+        FrontUiComponent(this).uiComponent
 }

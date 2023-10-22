@@ -52,7 +52,7 @@ internal class PointApiImpl(
         val response = requestFactory.patch("/point/private/type") {
             contentType(ContentType.Application.Json)
             parameter("id", taskId)
-            parameter("type", taskTypeDto)
+            parameter("type", taskTypeDto.toString())
         }
         response.retrieveBody()
     }
@@ -66,4 +66,39 @@ internal class PointApiImpl(
             }
             response.retrieveBody()
         }
+
+    override suspend fun setPriority(taskId: TaskId, priority: TaskPriorityDto): Unit =
+        withContext(Dispatchers.Default) {
+            val response = requestFactory.patch("/point/private/priority") {
+                contentType(ContentType.Application.Json)
+                parameter("id", taskId)
+                parameter("value", priority)
+            }
+            response.retrieveBody()
+        }
+
+    override suspend fun removePriority(taskId: TaskId): Unit =
+        withContext(Dispatchers.Default) {
+            val response = requestFactory.delete("/point/private/priority") {
+                contentType(ContentType.Application.Json)
+                parameter("id", taskId)
+            }
+            response.retrieveBody()
+        }
+
+    override suspend fun search(phrase: String): AttachedTasksResponseDto = withContext(Dispatchers.Default) {
+        val response = requestFactory.get("/point/private/search") {
+            contentType(ContentType.Application.Json)
+            parameter("value", phrase)
+        }
+        response.retrieveBody()
+    }
+
+    override suspend fun edit(data: EditTaskRsDto): Unit = withContext(Dispatchers.Default) {
+        val response = requestFactory.patch("/point/private/edit") {
+            contentType(ContentType.Application.Json)
+            setBody(data)
+        }
+        response.retrieveBody()
+    }
 }

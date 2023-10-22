@@ -7,6 +7,13 @@ sealed interface SlimItem {
     val isCompleted: Boolean
 }
 
-data class ProjectInfoSlim(override val id: String, override val title: String, override val isCompleted: Boolean) : SlimItem
+data class ProjectInfoSlim(override val id: String, override val title: String, override val isCompleted: Boolean) :
+    SlimItem
 
-data class TaskInfoSlim(override val id: String, override val title: String, override val isCompleted: Boolean) : SlimItem
+data class TaskInfoSlim(
+    override val id: String,
+    override val title: String,
+    override val isCompleted: Boolean,
+    val isHighPriority: Boolean,
+    val isLowPriority: Boolean
+) : SlimItem

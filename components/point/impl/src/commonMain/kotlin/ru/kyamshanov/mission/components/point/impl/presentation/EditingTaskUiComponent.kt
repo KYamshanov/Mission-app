@@ -11,11 +11,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import ru.kyamshanov.mission.components.point.impl.data.model.EditingRulesDto
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskTypeDto
 import ru.kyamshanov.mission.components.point.impl.di.TaskModuleComponent
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
+import ru.kyamshanov.mission.components.point.impl.domain.models.TaskEditingRules
 import ru.kyamshanov.mission.components.point.impl.domain.usecase.GetTaskUseCase
 import ru.kyamshanov.mission.components.points.api.common.TaskId
+import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
 import ru.kyamshanov.mission.components.points.api.common.TaskType
 import ru.kyamshanov.mission.components.points.api.di.TaskComponent
@@ -42,15 +45,45 @@ internal interface EditingTaskViewModel {
 
     fun resetStatus()
 
+    /**
+     * Восстановить статус и удалить тип
+     */
+    fun hardReset()
+
+    fun priority()
+
+    fun medium()
+
+    fun low()
+
+    fun setTitle(title: String)
+
+    fun setDescription(description: String)
+
+    fun saveChanges()
+
+    fun startEditingTitle()
+
+    fun startEditingDescription()
+
+
     data class State(
+        val toolBarTitle: String,
         val title: String,
         val description: String,
-        val loading: Boolean
+        val loading: Boolean,
+        val type: TaskType?,
+        val status: TaskStatus,
+        val priority: TaskPriority?,
+        val saveChangesButtonAvailable: Boolean,
+        val isTitleEditing: Boolean?,
+        val isDescriptionEditing: Boolean?,
+        val descriptionVisible: Boolean
     ) {
-        fun isInitialized() = this != Uninitialized
+        fun isInitialized() = this !== Uninitialized
 
         companion object {
-            val Uninitialized = State("", "", false)
+            val Uninitialized = State("", "", "", false, null, TaskStatus.CREATED, null, false, false, false, false)
         }
     }
 }
@@ -82,6 +115,11 @@ internal class EditingTaskUiComponent(
         EditingTaskViewModel {
 
         override val viewState: Value<EditingTaskViewModel.State> get() = _taskState
+
+        private var initialTitle: String? = null
+        private var initialDescription: String? = null
+        private var taskPrefix: String? = null
+
         override fun onBack() {
             navigator.exit()
         }
@@ -101,24 +139,22 @@ internal class EditingTaskUiComponent(
         override fun todays() {
             viewModelScope.launch {
                 _taskState.update { it.copy(loading = true) }
-                interactor.setType(taskId, TaskType.TODAYS)
-                    .onSuccess {
-                        _taskState.update { it.copy(loading = false) }
-                        navigator.exit()
-                    }
+                val updateType = TaskType.TODAYS.takeIf { _taskState.value.type != it }
+                interactor.setType(taskId, updateType)
+                    .onSuccess { _taskState.update { it.copy(type = updateType) } }
                     .onFailure { Napier.e(it, "Editing") { "error in update type of task process" } }
+                _taskState.update { it.copy(loading = false) }
             }
         }
 
         override fun weeks() {
             viewModelScope.launch {
                 _taskState.update { it.copy(loading = true) }
-                interactor.setType(taskId, TaskType.WEEKS)
-                    .onSuccess {
-                        _taskState.update { it.copy(loading = false) }
-                        navigator.exit()
-                    }
+                val updateType = TaskType.WEEKS.takeIf { _taskState.value.type != it }
+                interactor.setType(taskId, updateType)
+                    .onSuccess { _taskState.update { it.copy(type = updateType) } }
                     .onFailure { Napier.e(it, "Editing") { "error in update type of task process" } }
+                _taskState.update { it.copy(loading = false) }
             }
         }
 
@@ -126,10 +162,8 @@ internal class EditingTaskUiComponent(
             viewModelScope.launch {
                 _taskState.update { it.copy(loading = true) }
                 interactor.setStatus(taskId, TaskStatus.COMPLETED)
-                    .onSuccess {
-                        _taskState.update { it.copy(loading = false) }
-                        navigator.exit()
-                    }
+                    .also { _taskState.update { it.copy(loading = false) } }
+                    .onSuccess { navigator.exit() }
                     .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
             }
         }
@@ -150,12 +184,87 @@ internal class EditingTaskUiComponent(
             viewModelScope.launch {
                 _taskState.update { it.copy(loading = true) }
                 interactor.setStatus(taskId, TaskStatus.CREATED)
-                    .onSuccess {
-                        _taskState.update { it.copy(loading = false) }
-                        navigator.exit()
-                    }
+                    .also { _taskState.update { it.copy(loading = false) } }
+                    .onSuccess { navigator.exit() }
                     .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
             }
+        }
+
+        override fun hardReset() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setStatus(taskId, TaskStatus.CREATED)
+                    .onSuccess { _taskState.update { it.copy(status = TaskStatus.CREATED) } }
+                    .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
+                interactor.setType(taskId, null)
+                    .onSuccess { _taskState.update { it.copy(type = null) } }
+                    .onFailure { Napier.e(it, "Editing") { "error in update status of task process" } }
+                _taskState.update { it.copy(loading = false) }
+            }
+        }
+
+        override fun priority() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                val priority = TaskPriority.PRIMARY.takeIf { _taskState.value.priority != it }
+                interactor.setPriority(taskId, priority)
+                    .also { _taskState.update { it.copy(loading = false) } }
+                    .onSuccess { _taskState.update { it.copy(priority = priority) } }
+                    .onFailure { Napier.e(it, "Editing") { "error in update priority of task" } }
+            }
+        }
+
+        override fun medium() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                interactor.setPriority(taskId, null)
+                    .also { _taskState.update { it.copy(loading = false) } }
+                    .onSuccess { _taskState.update { it.copy(priority = null) } }
+                    .onFailure { Napier.e(it, "Editing") { "error in update priority of task" } }
+            }
+        }
+
+        override fun low() {
+            viewModelScope.launch {
+                _taskState.update { it.copy(loading = true) }
+                val priority = TaskPriority.LOW.takeIf { _taskState.value.priority != it }
+                interactor.setPriority(taskId, priority)
+                    .also { _taskState.update { it.copy(loading = false) } }
+                    .onSuccess { _taskState.update { it.copy(priority = priority) } }
+                    .onFailure { Napier.e(it, "Editing") { "error in update priority of task" } }
+            }
+        }
+
+        override fun setTitle(title: String) {
+            _taskState.update { it.copy(title = title, saveChangesButtonAvailable = title != initialTitle) }
+        }
+
+        override fun setDescription(description: String) {
+            _taskState.update {
+                it.copy(
+                    description = description,
+                    saveChangesButtonAvailable = description != initialDescription
+                )
+            }
+        }
+
+        override fun saveChanges() {
+            viewModelScope.launch {
+                val title = _taskState.value.title.takeIf { it != initialTitle }
+                val description = _taskState.value.description.takeIf { it != initialTitle }
+                interactor.changeTask(taskId, title, description)
+                    .also { _taskState.update { it.copy(saveChangesButtonAvailable = false) } }
+                    .onSuccess { onChangesSaved() }
+            }
+        }
+
+        override fun startEditingTitle() {
+            val newTitle = initialTitle ?: return
+            _taskState.update { it.copy(title = newTitle, descriptionVisible = true, isTitleEditing = true) }
+        }
+
+        override fun startEditingDescription() {
+            _taskState.update { it.copy(isDescriptionEditing = true) }
         }
 
         private val _taskState = MutableValue(EditingTaskViewModel.State.Uninitialized)
@@ -166,10 +275,21 @@ internal class EditingTaskUiComponent(
             viewModelScope.launch {
                 getTaskUseCase.fetch(taskId)
                     .onSuccess { result ->
+                        initialTitle = result.title
+                        initialDescription = result.description
+                        val slitTitle = result.title.split(PREFIX_SEPARATOR, limit = 2)
+                        taskPrefix = slitTitle.takeIf { it.size == 2 }?.get(0)
                         _taskState.update {
                             it.copy(
-                                title = result.title,
-                                description = result.description
+                                toolBarTitle = slitTitle[0],
+                                title = (slitTitle.getOrNull(1) ?: result.title).trim(),
+                                description = result.description,
+                                status = result.status,
+                                type = result.type,
+                                priority = result.priority,
+                                isDescriptionEditing = if (result.editingRules.isDescriptionEditable) false else null,
+                                isTitleEditing = if (result.editingRules.isTitleEditable) false else null,
+                                descriptionVisible = result.description.isNotEmpty()
                             )
                         }
                     }
@@ -178,10 +298,31 @@ internal class EditingTaskUiComponent(
         }
 
 
+        private fun onChangesSaved() {
+            val taskState = _taskState.value
+            initialTitle = taskState.title
+            initialDescription = taskState.description
+            val slitTitle = taskState.title.split(PREFIX_SEPARATOR, limit = 2)
+            taskPrefix = slitTitle.takeIf { it.size == 2 }?.get(0)
+            _taskState.update {
+                it.copy(
+                    toolBarTitle = slitTitle[0],
+                    title = (slitTitle.getOrNull(1) ?: taskState.title).trim(),
+                    isDescriptionEditing = false.takeIf { taskState.isDescriptionEditing != null },
+                    isTitleEditing = false.takeIf { taskState.isTitleEditing != null },
+                    descriptionVisible = taskState.description.isNotEmpty()
+                )
+            }
+        }
+
+
         override fun onDestroy() {
             viewModelScope.cancel()
         }
 
+        companion object {
 
+            private const val PREFIX_SEPARATOR = ":"
+        }
     }
 }

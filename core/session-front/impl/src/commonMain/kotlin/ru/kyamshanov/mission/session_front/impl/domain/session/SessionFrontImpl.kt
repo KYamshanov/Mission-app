@@ -1,6 +1,5 @@
 package ru.kyamshanov.mission.session_front.impl.domain.session
 
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
@@ -9,15 +8,14 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import ru.kyamshanov.mission.core.base.api.MissionPreferences
 import ru.kyamshanov.mission.oauth2.api.AuthenticationInteractor
-import ru.kyamshanov.mission.oauth2.api.OAuth2Component
 import ru.kyamshanov.mission.session_front.api.SessionFront
+import ru.kyamshanov.mission.session_front.api.model.AccessData
 import ru.kyamshanov.mission.session_front.api.model.Token
 import ru.kyamshanov.mission.session_front.api.model.UserInfo
 import ru.kyamshanov.mission.session_front.api.model.UserRole
 import ru.kyamshanov.mission.session_front.api.session.LoggedSession
 import ru.kyamshanov.mission.session_front.api.session.Session
 import ru.kyamshanov.mission.session_front.api.session.UnauthorizedSession
-import ru.kyamshanov.mission.session_front.api.model.AccessData
 import ru.kyamshanov.mission.session_front.impl.domain.model.PREFERENCES_ACCESS_KEY
 import ru.kyamshanov.mission.session_front.impl.domain.model.PREFERENCES_REFRESH_KEY
 import ru.kyamshanov.mission.session_front.impl.domain.model.PREFERENCES_SESSION_LOGIN_KEY
@@ -40,14 +38,15 @@ internal class SessionFrontImpl constructor(
         val scope = CoroutineScope(Job())
         //TODO Легаси. Переисать
         scope.launch {
-            refreshSession()
-                .onSuccess {
-                    startAutoRefreshing()
-                }
-                .onFailure {
-                    Napier.e(throwable = it, tag = "SessionFront") { "RefreshSession exception" }
-                    makeUnauthorizedSession(it)
-                }
+            /* refreshSession()
+                 .onSuccess {
+                     startAutoRefreshing()
+                 }
+                 .onFailure {
+                     Napier.e(throwable = it, tag = "SessionFront") { "RefreshSession exception" }
+                     makeUnauthorizedSession(it)
+                 }*/
+            makeUnauthorizedSession(NullPointerException())
             scope.cancel()
         }
     }
@@ -115,13 +114,19 @@ internal class SessionFrontImpl constructor(
             mLogin = missionPreferences.getValue(PREFERENCES_SESSION_LOGIN_KEY)
         }
 
-        val refreshToken = requireNotNull(mRefreshToken) { "Refresh token has not found in shared preferences" }
+        val refreshToken =
+            requireNotNull(mRefreshToken) { "Refresh token has not found in shared preferences" }
         val login = requireNotNull(mLogin) { "Login has not found in shared preferences" }
 
         authenticationInteractor.refresh(refreshToken).getOrThrow().also {
             missionPreferences.saveValue(PREFERENCES_ACCESS_KEY, it.accessToken)
             missionPreferences.saveValue(PREFERENCES_REFRESH_KEY, it.refreshToken)
-        }.let { createSession(login, AccessData(Token(it.accessToken), Token(it.refreshToken), emptyList())) }
+        }.let {
+            createSession(
+                login,
+                AccessData(Token(it.accessToken), Token(it.refreshToken), emptyList())
+            )
+        }
             .also { sessionInfoImpl.session = it }
     }
 

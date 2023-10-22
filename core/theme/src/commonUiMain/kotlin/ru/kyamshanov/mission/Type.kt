@@ -41,7 +41,7 @@ data class MissionTypography(
 
     val titleSecondary = mainAppearance + large + blackContainer
 
-    val inputHint = mainAppearance + smallMedium + black
+    val inputHint = mainAppearance + smallMedium + gray
     val inputText = mainAppearance + medium + black
 
     val topBarTitle = mainAppearance + hugeMedium + white
@@ -89,7 +89,7 @@ internal val LocalExtendedTypography = staticCompositionLocalOf {
         yellow = TextStyle.Default,
         blue = TextStyle.Default,
         hugeMedium = TextStyle.Default,
-        gold = TextStyle.Default
+        gold = TextStyle.Default,
     )
 }
 

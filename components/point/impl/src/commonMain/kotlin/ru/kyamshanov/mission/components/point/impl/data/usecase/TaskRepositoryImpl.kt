@@ -1,12 +1,10 @@
 package ru.kyamshanov.mission.components.point.impl.data.usecase
 
 import ru.kyamshanov.mission.components.point.impl.data.api.PointApi
+import ru.kyamshanov.mission.components.point.impl.data.model.*
 import ru.kyamshanov.mission.components.point.impl.data.model.AttachedTasksResponseDto
-import ru.kyamshanov.mission.components.point.impl.data.model.TaskPriorityDto
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskPriorityDto.*
-import ru.kyamshanov.mission.components.point.impl.data.model.TaskStatusDto
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskStatusDto.*
-import ru.kyamshanov.mission.components.point.impl.data.model.TaskTypeDto
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskSlim
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
@@ -19,16 +17,14 @@ internal class TaskRepositoryImpl(
     override suspend fun getAll(): Result<List<TaskSlim>> = runCatching {
         pointApi.allProjects().toDomain()
     }
+
+    override suspend fun search(phrase: String): Result<List<TaskSlim>> = runCatching {
+        pointApi.search(phrase).toDomain()
+    }
 }
 
 private fun AttachedTasksResponseDto.toDomain(): List<TaskSlim> = this.items.map {
     TaskSlim(it.id, it.title, it.priority.toDomain(), it.status.toDomain(), type = it.type.toDomain())
-}
-
-internal fun TaskTypeDto?.toDomain(): ru.kyamshanov.mission.components.points.api.common.TaskType? = when (this) {
-    TaskTypeDto.TODAYS -> ru.kyamshanov.mission.components.points.api.common.TaskType.TODAYS
-    TaskTypeDto.WEEKS -> ru.kyamshanov.mission.components.points.api.common.TaskType.WEEKS
-    null -> null
 }
 
 private fun TaskStatusDto.toDomain(): TaskStatus = when (this) {
@@ -40,4 +36,5 @@ private fun TaskStatusDto.toDomain(): TaskStatus = when (this) {
 private fun TaskPriorityDto?.toDomain(): TaskPriority? = when (this) {
     PRIMARY -> TaskPriority.PRIMARY
     null -> null
+    LOW -> TaskPriority.LOW
 }

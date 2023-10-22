@@ -1,5 +1,6 @@
 package ru.kyamshanov.mission.core.navigation.impl.di
 
+import com.arkivanov.decompose.router.slot.SlotNavigation
 import com.arkivanov.decompose.router.stack.StackNavigation
 import org.koin.dsl.module
 import ru.kyamshanov.mission.core.navigation.api.Navigator
@@ -15,8 +16,8 @@ internal val navigationModule = module {
     single<ResultBus> { ResultBusImpl(get()) }
     single<NavigatorControllerHolder> {
         object : NavigatorControllerHolder {
-            override var stackNavigation: StackNavigation<ScreenConfig>? =
-                null
+            override var stackNavigation: StackNavigation<ScreenConfig>? = null
+            override var alertNavigation: SlotNavigation<ScreenConfig>? = null
             override var rootComponent: RootComponent? = null
         }
     }
