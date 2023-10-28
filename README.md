@@ -1,5 +1,9 @@
-![plot](./images/logo.png)
-# Приложение для организации проектной деятельности, таск менеджер. 
+# Mission-app
+Приложение для организации проектной деятельности, таск менеджер.
+
+> ![application logo](./images/logo.png)
+> 
+> _Non-commercial KYamshanov`s project for self management_
 
 ## Текущий этап разработки: 
 1) ~~разработка архитектуры kotlin multiplatform приложения. Поддержка android, desktop, js~~
@@ -19,15 +23,15 @@
 
 Главный экран:
 
-![plot](./images/main-screen.png)
+![main screen](./images/main-screen.png)
 
 Экран создания:
 
-![plot](./images/main-screen.png)
+![creation screen](./images/creation.png)
 
 Экран редактирования:
 
-![plot](./images/editing.png)
+![editing screen](./images/editing.png)
 
 ## Requirements
 на 28.10.2023 число необходимо использование backend запускаемый в локальном докере. Репозиторий: https://github.com/KYamshanov/Mission-backend  
