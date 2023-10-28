@@ -17,6 +17,10 @@ internal val SessionFrontModule = module {
     single { SessionInfoImpl() } bind SessionInfo::class
     single<AuthenticationApi> { AuthenticationApiImpl(get()) }
     single { SessionFrontImpl(get(), get(), get(), get()) } bind SessionFront::class
+/*
     single<IdentifyApi> { IdentifyApiImpl(get()) }
+*/
+/*
     single<IdentifyUserUseCase> { IdentifyUserUseCaseImpl(get()) }
+*/
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ProvidedValue
 
 object MissionTheme {
 
@@ -20,6 +21,8 @@ object MissionTheme {
         get() = LocalExtendedShape.current
 }
 
+expect fun providedValueConfig() : List<ProvidedValue<*>>
+
 @Composable
 fun MissionTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colors = if (darkTheme) DarkColorPalette else LightColorPalette
@@ -28,6 +31,7 @@ fun MissionTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composabl
         LocalExtendedColors provides colors,
         LocalExtendedShape provides Shapes,
         LocalTextSelectionColors provides MissionTextSelectionColors,
+        *providedValueConfig().toTypedArray()
     ) {
         ProvideTypography(content)
     }

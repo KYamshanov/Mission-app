@@ -61,7 +61,9 @@ internal class FrontUiComponent(
     }
 
     init {
-        lifecycle.doOnStart { _uiComponent.fetchTasks() }
+        lifecycle.doOnStart(isOneTime = true) {
+            _uiComponent.fetchTasks()
+        }
     }
 
     private class SearchRetainedInstance(

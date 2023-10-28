@@ -14,6 +14,7 @@ kotlin {
                 implementation(libs.ktor.core)
                 implementation(libs.ktor.client.negotiation)
                 implementation(libs.ktor.client.logging)
+                implementation(libs.ktor.client.auth)
             }
         }
 

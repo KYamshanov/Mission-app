@@ -14,13 +14,9 @@ import ru.kyamshanov.mission.core.di.impl.Di
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 import ru.kyamshanov.mission.core.navigation.common.utils.di
 import ru.kyamshanov.mission.core.navigation.common.utils.newRootScreen
-import ru.kyamshanov.mission.foundation.api.login.di.AuthenticationComponent
 import ru.kyamshanov.mission.session_front.api.SessionInfo
 import ru.kyamshanov.mission.session_front.api.di.SessionFrontComponent
-import ru.kyamshanov.mission.session_front.api.session.LoggedSession
-import ru.kyamshanov.mission.session_front.api.session.LoggingSession
-import ru.kyamshanov.mission.session_front.api.session.UnauthorizedSession
-import ru.kyamshanov.mission.session_front.api.session.UnidentifiedSession
+import ru.kyamshanov.mission.session_front.api.session.*
 
 class SplashScreenDComponent(
     componentContext: ComponentContext,

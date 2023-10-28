@@ -1,6 +1,5 @@
 package ru.kyamshanov.mission.session_front.api.session
 
-import ru.kyamshanov.mission.session_front.api.model.Token
 import ru.kyamshanov.mission.session_front.api.model.TokenRepository
 import ru.kyamshanov.mission.session_front.api.model.UserInfo
 
