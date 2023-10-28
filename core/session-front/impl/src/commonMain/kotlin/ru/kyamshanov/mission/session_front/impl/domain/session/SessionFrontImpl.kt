@@ -1,13 +1,9 @@
 package ru.kyamshanov.mission.session_front.impl.domain.session
 
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import ru.kyamshanov.mission.authorization.api.AuthorizationLauncher
 import ru.kyamshanov.mission.core.base.api.MissionPreferences
 import ru.kyamshanov.mission.oauth2.api.AuthenticationInteractor
@@ -22,14 +18,10 @@ import ru.kyamshanov.mission.session_front.api.session.UnauthorizedSession
 import ru.kyamshanov.mission.session_front.impl.domain.model.PREFERENCES_ACCESS_KEY
 import ru.kyamshanov.mission.session_front.impl.domain.model.PREFERENCES_REFRESH_KEY
 import ru.kyamshanov.mission.session_front.impl.domain.model.PREFERENCES_SESSION_LOGIN_KEY
-import ru.kyamshanov.mission.session_front.impl.domain.usecase.IdentifyUserUseCase
 
 internal class SessionFrontImpl constructor(
     private val missionPreferences: MissionPreferences,
     private val sessionInfoImpl: SessionInfoImpl,
-/*
-    private val identifyUserUseCase: IdentifyUserUseCase,
-*/
     private val authenticationInteractor: AuthenticationInteractor,
     private val authorizationLauncher: AuthorizationLauncher
 ) : SessionFront {
@@ -42,22 +34,12 @@ internal class SessionFrontImpl constructor(
 
     init {
         val scope = CoroutineScope(Job())
-        //TODO Легаси. Переисать
         scope.launch {
-            /*  refreshSession()
-                  .onFailure {
-                      Napier.e(throwable = it, tag = "SessionFront") { "RefreshSession exception" }
-                      makeUnauthorizedSession(it)
-                  }*/
-            /* refreshSession()
-                 .onSuccess {
-                     startAutoRefreshing()
-                 }
-                 .onFailure {
-                     Napier.e(throwable = it, tag = "SessionFront") { "RefreshSession exception" }
-                     makeUnauthorizedSession(it)
-                 }*/
-            makeUnauthorizedSession(NullPointerException())
+            refreshSession()
+                .onFailure {
+                    Napier.e(throwable = it, tag = "SessionFront") { "RefreshSession exception" }
+                    makeUnauthorizedSession(it)
+                }
             scope.cancel()
         }
     }
@@ -77,12 +59,12 @@ internal class SessionFrontImpl constructor(
     }
 
     override suspend fun refreshToken(): Result<Session> = runCatching {
-        println("Refresh")
         refreshSession().getOrElse {
-            authorizationLauncher.launch()
-            println("Loggin")
+            withContext(Dispatchers.Main) { authorizationLauncher.launch() }
             sessionInfoImpl.session = LoggingSessionImpl()
-            sessionInfoImpl.sessionState.first()
+            sessionInfoImpl.sessionState
+                .filter { it !is LoggingSessionImpl }
+                .first()
         }
     }
 
@@ -150,10 +132,5 @@ internal class SessionFrontImpl constructor(
             accessToken = data.accessToken,
             refreshToken = data.refreshToken,
         )
-    }
-
-    private companion object {
-
-        const val AUTO_REFRESHING_DELAY_MS = 5 * 60 * 1000L
     }
 }
