@@ -26,3 +26,6 @@
 Экран редактирования:
 
 ![plot](./images/editing.png)
+
+
+на 28.10.2023 число необходимо использование backend. Репозиторий: https://github.com/KYamshanov/Mission-backend  
