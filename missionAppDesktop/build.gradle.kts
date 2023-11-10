@@ -66,6 +66,7 @@ compose.desktop {
             copyright = "© 2023 KYamshanov. All rights reserved."
 
             windows {
+                menu = true
                 iconFile.set(project.file("icons/app_icon.ico"))
             }
         }

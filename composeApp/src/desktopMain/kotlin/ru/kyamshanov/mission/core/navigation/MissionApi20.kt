@@ -11,11 +11,11 @@ class MissionApi20 constructor() : DefaultApi20() {
 
 
     override fun getAccessTokenEndpoint(): java.lang.String? {
-        return "http://localhost:9000/oauth/token"
+        return "http://127.0.0.1:9000/oauth/token"
     }
 
     override fun getAuthorizationBaseUrl(): java.lang.String? {
-        return "http://localhost:9000/oauth/authorize"
+        return "http://127.0.0.1:9000/oauth/authorize"
     }
 
     override fun getAccessTokenExtractor(): TokenExtractor<OAuth2AccessToken> {

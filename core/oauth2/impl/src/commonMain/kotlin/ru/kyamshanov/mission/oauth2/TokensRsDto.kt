@@ -10,8 +10,6 @@ data class TokensRsDto(
     @SerialName("refresh_token")
     val refreshToken: String,
     val scope: String,
-    @SerialName("id_token")
-    val idToken: String,
     @SerialName("token_type")
     val tokenType: String,
     @SerialName("expires_in")

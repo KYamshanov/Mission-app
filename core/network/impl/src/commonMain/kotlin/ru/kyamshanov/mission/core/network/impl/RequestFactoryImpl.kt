@@ -56,7 +56,7 @@ class RequestFactoryImpl(isAuthModule: Boolean = false) : RequestFactory {
             }
 
         defaultRequest {
-            url("http://localhost:3456/") //wifi
+            url("http://127.0.0.1:3456/") //wifi
         }
     }
 

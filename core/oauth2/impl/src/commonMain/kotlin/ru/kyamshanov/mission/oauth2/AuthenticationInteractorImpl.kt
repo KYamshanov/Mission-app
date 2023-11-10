@@ -18,11 +18,11 @@ internal class AuthenticationInteractorImpl(
     override fun provideAuthorizationUri(codeVerifier: String, callbackPort: Int): String = buildString {
         val responseType = "code"
         val clientId = "desktop-client"
-        val scope = "openid"
+        val scope = "point"
         val redirectUri = "http://127.0.0.1:${callbackPort}/desktop/authorized"
         val codeChallenge = generateCodeChallange(codeVerifier)
 
-          append("http://localhost:6543/oauth2/authorize?")
+          append("http://127.0.0.1:6543/oauth2/authorize?")
      //   append("http://192.168.43.29:6543/oauth2/authorize?")
         append("client_id=$clientId&")
         append("response_type=$responseType&")
