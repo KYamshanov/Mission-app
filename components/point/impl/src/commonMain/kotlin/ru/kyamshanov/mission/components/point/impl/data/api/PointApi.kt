@@ -26,4 +26,5 @@ internal interface PointApi {
     suspend fun search(phrase: String): AttachedTasksResponseDto
 
     suspend fun edit(data: EditTaskRsDto)
+    suspend fun setPosition(body: RequestOrderTaskDto)
 }

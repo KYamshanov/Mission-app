@@ -30,6 +30,8 @@ internal interface FrontViewModel {
     val viewState: Value<State>
 
     fun openItem(itemId: String)
+    fun lowerItem(id: String)
+    fun raiseItem(id: String)
 
     data class State(
         val initialized: Boolean,
@@ -81,6 +83,37 @@ internal class FrontUiComponent(
             }
         }
 
+        override fun lowerItem(id: String) {
+            viewModelScope.launch {
+                val tasks = _viewState.value.todaysTasks
+                val index = tasks.indexOfFirst { it.id == id }
+                val task = tasks[index]
+                val updatedTasks = tasks.toMutableList().apply {
+                    removeAt(index)
+                    add(index + 1, task)
+                }
+                updatedTasks.getOrNull(index + 2)?.id
+                    ?.let { taskRepository.setPosition(id, it) }
+                    ?: taskRepository.tailPosition(id)
+                _viewState.update { it.copy(todaysTasks = updatedTasks) }
+            }
+        }
+
+        override fun raiseItem(id: String) {
+            viewModelScope.launch {
+                val tasks = _viewState.value.todaysTasks
+                val index = tasks.indexOfFirst { it.id == id }
+                if (index == 0) return@launch
+                val task = tasks[index]
+                val updatedTasks = tasks.toMutableList().apply {
+                    removeAt(index)
+                    add(index - 1, task)
+                }
+                taskRepository.setPosition(id, updatedTasks[index].id)
+                _viewState.update { it.copy(todaysTasks = updatedTasks) }
+            }
+        }
+
         private val _viewState = MutableValue(FrontViewModel.State.Uninitialized)
 
         private var tasks = emptyList<TaskSlim>()
@@ -118,7 +151,7 @@ internal class FrontUiComponent(
         private fun MutableList<TaskInfoSlim>.sortTasks(): List<TaskInfoSlim> {
             sortWith(compareBy<TaskInfoSlim> {
                 it.isCompleted
-            }.thenByDescending { it.isHighPriority }.thenBy { it.isLowPriority }.thenBy { it.title.lowercase() })
+            }.thenByDescending { it.isHighPriority }.thenBy { it.isLowPriority })
             return this
         }
 

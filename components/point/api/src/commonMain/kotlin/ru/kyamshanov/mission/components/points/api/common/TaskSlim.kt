@@ -5,5 +5,6 @@ data class TaskSlim(
     val title: String,
     val priority: TaskPriority? = null,
     val status: TaskStatus = TaskStatus.CREATED,
-    val type: TaskType?
+    val type: TaskType?,
+    val offset: Int
 )

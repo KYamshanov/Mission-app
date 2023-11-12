@@ -5,6 +5,7 @@ import ru.kyamshanov.mission.components.point.impl.data.model.*
 import ru.kyamshanov.mission.components.point.impl.data.model.AttachedTasksResponseDto
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskPriorityDto.*
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskStatusDto.*
+import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskSlim
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
@@ -21,10 +22,18 @@ internal class TaskRepositoryImpl(
     override suspend fun search(phrase: String): Result<List<TaskSlim>> = runCatching {
         pointApi.search(phrase).toDomain()
     }
+
+    override suspend fun setPosition(taskId: TaskId, placeBefore: TaskId): Result<Unit> = runCatching {
+        pointApi.setPosition(RequestOrderTaskDto(taskId, placeBefore))
+    }
+
+    override suspend fun tailPosition(taskId: TaskId): Result<Unit>  = runCatching {
+        pointApi.setPosition(RequestOrderTaskDto(taskId, null))
+    }
 }
 
 private fun AttachedTasksResponseDto.toDomain(): List<TaskSlim> = this.items.map {
-    TaskSlim(it.id, it.title, it.priority.toDomain(), it.status.toDomain(), type = it.type.toDomain())
+    TaskSlim(it.id, it.title, it.priority.toDomain(), it.status.toDomain(), type = it.type.toDomain(), offset = 0)
 }
 
 private fun TaskStatusDto.toDomain(): TaskStatus = when (this) {

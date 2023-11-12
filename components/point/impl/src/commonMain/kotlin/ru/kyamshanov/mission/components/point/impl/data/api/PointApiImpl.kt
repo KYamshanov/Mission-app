@@ -101,4 +101,12 @@ internal class PointApiImpl(
         }
         response.retrieveBody()
     }
+
+    override suspend fun setPosition(body: RequestOrderTaskDto): Unit = withContext(Dispatchers.Default) {
+        val response = requestFactory.post("/point/private/order") {
+            contentType(ContentType.Application.Json)
+            setBody(body)
+        }
+        response.retrieveBody()
+    }
 }

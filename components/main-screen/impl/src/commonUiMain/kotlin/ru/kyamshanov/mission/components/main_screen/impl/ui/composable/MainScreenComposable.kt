@@ -2,19 +2,21 @@ package ru.kyamshanov.mission.components.main_screen.impl.ui.composable
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
@@ -114,7 +116,7 @@ internal fun MainScreenComposable(
                             )
                             Spacer(modifier = Modifier.height(5.dp))
                             for (task in frontViewState.todaysTasks) {
-                                ComposableItemText(task) { frontViewModel.openItem(task.id) }
+                                ComposableItemText(task, frontViewModel) { frontViewModel.openItem(task.id) }
                                 Spacer(modifier = Modifier.height(2.dp))
                             }
                         }
@@ -129,7 +131,7 @@ internal fun MainScreenComposable(
                             )
                             Spacer(modifier = Modifier.height(5.dp))
                             for (task in frontViewState.weeksTasks) {
-                                ComposableItemText(task) { frontViewModel.openItem(task.id) }
+                                ComposableItemText(task, frontViewModel) { frontViewModel.openItem(task.id) }
                                 Spacer(modifier = Modifier.height(2.dp))
                             }
                         }
@@ -145,7 +147,7 @@ internal fun MainScreenComposable(
                             )
                             Spacer(modifier = Modifier.height(5.dp))
                             for (task in frontViewState.otherTasks) {
-                                ComposableItemText(task) { frontViewModel.openItem(task.id) }
+                                ComposableItemText(task, frontViewModel) { frontViewModel.openItem(task.id) }
                                 Spacer(modifier = Modifier.height(2.dp))
                             }
                         }
@@ -164,6 +166,7 @@ internal fun MainScreenComposable(
 @Composable
 private fun ComposableItemText(
     item: SlimItem,
+    frontViewModel: FrontViewModel,
     onClick: () -> Unit
 ) {
     if (item is TaskInfoSlim && (item.isHighPriority || item.isLowPriority)) {
@@ -194,8 +197,37 @@ private fun ComposableItemText(
             }
         }
     } else {
+        val density = LocalDensity.current
+        var offsetY by remember { mutableStateOf(0f) }
+        var movingAvailable by remember { mutableStateOf(true) }
+        LaunchedEffect(item) {
+            movingAvailable = true
+            offsetY = 0f
+        }
+
+
         Text(
-            modifier = Modifier.clickable { onClick() },
+            modifier = Modifier
+                .offset(0.dp, (offsetY / density.density).dp)
+                .clickable { onClick() }
+                .run {
+                    if (movingAvailable) pointerInput(item) {
+                        detectDragGestures { change, dragAmount ->
+                            change.consume()
+                            offsetY += dragAmount.y
+                            println("Offset: ${(offsetY / density.density).dp}")
+                            if ((offsetY / density.density).dp > 10.dp) {
+                                println("Exec ${item.id}  ${item.title}")
+                                movingAvailable = false
+                                frontViewModel.lowerItem(item.id)
+                            } else if ((offsetY / density.density).dp < -10.dp) {
+                                println("Exec")
+                                movingAvailable = false
+                                frontViewModel.raiseItem(item.id)
+                            }
+                        }
+                    } else this
+                },
             text = item.title,
             style = MissionTheme.typography.titleSecondary
                 .run {
