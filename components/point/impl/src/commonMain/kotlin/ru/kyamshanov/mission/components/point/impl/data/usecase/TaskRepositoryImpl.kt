@@ -23,13 +23,10 @@ internal class TaskRepositoryImpl(
         pointApi.search(phrase).toDomain()
     }
 
-    override suspend fun setPosition(taskId: TaskId, placeBefore: TaskId): Result<Unit> = runCatching {
-        pointApi.setPosition(RequestOrderTaskDto(taskId, placeBefore))
-    }
-
-    override suspend fun tailPosition(taskId: TaskId): Result<Unit>  = runCatching {
-        pointApi.setPosition(RequestOrderTaskDto(taskId, null))
-    }
+    override suspend fun setPosition(taskId: TaskId, oldPlaceBefore: TaskId?, newPlaceBefore: TaskId?): Result<Unit> =
+        runCatching {
+            pointApi.setPosition(RequestOrderTaskDto(taskId, oldPlaceBefore, newPlaceBefore))
+        }
 }
 
 private fun AttachedTasksResponseDto.toDomain(): List<TaskSlim> = this.items.map {

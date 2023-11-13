@@ -87,15 +87,15 @@ internal class FrontUiComponent(
             viewModelScope.launch {
                 val tasks = _viewState.value.todaysTasks
                 val index = tasks.indexOfFirst { it.id == id }
+                val nextTask = tasks.getOrNull(index + 1)
                 val task = tasks[index]
                 val updatedTasks = tasks.toMutableList().apply {
                     removeAt(index)
                     add(index + 1, task)
                 }
-                updatedTasks.getOrNull(index + 2)?.id
-                    ?.let { taskRepository.setPosition(id, it) }
-                    ?: taskRepository.tailPosition(id)
-                _viewState.update { it.copy(todaysTasks = updatedTasks) }
+                taskRepository.setPosition(id, nextTask?.id, updatedTasks.getOrNull(index + 2)?.id)
+                    .onSuccess { _viewState.update { it.copy(todaysTasks = updatedTasks) } }
+                    .onFailure { it.printStackTrace() }
             }
         }
 
@@ -104,13 +104,15 @@ internal class FrontUiComponent(
                 val tasks = _viewState.value.todaysTasks
                 val index = tasks.indexOfFirst { it.id == id }
                 if (index == 0) return@launch
+                val nextTask = tasks.getOrNull(index + 1)
                 val task = tasks[index]
                 val updatedTasks = tasks.toMutableList().apply {
                     removeAt(index)
                     add(index - 1, task)
                 }
-                taskRepository.setPosition(id, updatedTasks[index].id)
-                _viewState.update { it.copy(todaysTasks = updatedTasks) }
+                taskRepository.setPosition(id, nextTask?.id, updatedTasks[index].id)
+                    .onSuccess { _viewState.update { it.copy(todaysTasks = updatedTasks) } }
+                    .onFailure { it.printStackTrace() }
             }
         }
 
