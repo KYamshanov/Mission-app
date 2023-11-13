@@ -10,5 +10,11 @@ interface TaskRepository {
 
     suspend fun search(phrase: String): Result<List<TaskSlim>>
 
-    suspend fun setPosition(taskId: TaskId, oldPlaceBefore: TaskId?, newPlaceBefore: TaskId?): Result<Unit>
+    suspend fun setPosition(
+        taskId: String,
+        putBefore: String?,
+        newTaskBefore: String?,
+        oldBeforeTask: String?,
+        oldAfterTask: String?,
+    ): Result<Unit>
 }

@@ -85,34 +85,66 @@ internal class FrontUiComponent(
 
         override fun lowerItem(id: String) {
             viewModelScope.launch {
-                val tasks = _viewState.value.todaysTasks
-                val index = tasks.indexOfFirst { it.id == id }
-                val nextTask = tasks.getOrNull(index + 1)
-                val task = tasks[index]
-                val updatedTasks = tasks.toMutableList().apply {
-                    removeAt(index)
-                    add(index + 1, task)
+                val func = tasks.find { it.id == id }.let {
+                    when (it?.type) {
+                        TaskType.TODAYS -> ::modifyTodaysTasks
+                        TaskType.WEEKS -> ::modifyWeekTasks
+                        null -> ::modifyOtherTasks
+                    }
                 }
-                taskRepository.setPosition(id, nextTask?.id, updatedTasks.getOrNull(index + 2)?.id)
-                    .onSuccess { _viewState.update { it.copy(todaysTasks = updatedTasks) } }
-                    .onFailure { it.printStackTrace() }
+                func.invoke { tasks ->
+                    val index = tasks.indexOfFirst { it.id == id }
+                    val oldAfterTask = tasks.getOrNull(index + 1)
+                    val oldBeforeTask = tasks.getOrNull(index - 1)
+                    val task = tasks[index]
+                    val updatedTasks = tasks.toMutableList().apply {
+                        removeAt(index)
+                        add(index + 1, task)
+                    }
+                    if (taskRepository.setPosition(
+                            id,
+                            updatedTasks.getOrNull(index + 2)?.id,
+                            updatedTasks.getOrNull(index)?.id,
+                            oldBeforeTask?.id,
+                            oldAfterTask?.id
+                        )
+                            .onFailure { it.printStackTrace() }
+                            .isSuccess
+                    ) updatedTasks else tasks
+                }
             }
         }
 
         override fun raiseItem(id: String) {
             viewModelScope.launch {
-                val tasks = _viewState.value.todaysTasks
-                val index = tasks.indexOfFirst { it.id == id }
-                if (index == 0) return@launch
-                val nextTask = tasks.getOrNull(index + 1)
-                val task = tasks[index]
-                val updatedTasks = tasks.toMutableList().apply {
-                    removeAt(index)
-                    add(index - 1, task)
+                val func = tasks.find { it.id == id }.let {
+                    when (it?.type) {
+                        TaskType.TODAYS -> ::modifyTodaysTasks
+                        TaskType.WEEKS -> ::modifyWeekTasks
+                        null -> ::modifyOtherTasks
+                    }
                 }
-                taskRepository.setPosition(id, nextTask?.id, updatedTasks[index].id)
-                    .onSuccess { _viewState.update { it.copy(todaysTasks = updatedTasks) } }
-                    .onFailure { it.printStackTrace() }
+                func.invoke { tasks ->
+                    val index = tasks.indexOfFirst { it.id == id }
+                    if (index == 0) return@invoke tasks
+                    val task = tasks[index]
+                    val oldAfterTask = tasks.getOrNull(index + 1)
+                    val oldBeforeTask = tasks.getOrNull(index - 1)
+                    val updatedTasks = tasks.toMutableList().apply {
+                        removeAt(index)
+                        add(index - 1, task)
+                    }
+                    if (taskRepository.setPosition(
+                            id,
+                            updatedTasks.getOrNull(index)?.id,
+                            updatedTasks.getOrNull(index - 2)?.id,
+                            oldBeforeTask?.id,
+                            oldAfterTask?.id
+                        )
+                            .onFailure { it.printStackTrace() }
+                            .isSuccess
+                    ) updatedTasks else tasks
+                }
             }
         }
 
@@ -143,18 +175,26 @@ internal class FrontUiComponent(
                 _viewState.update {
                     it.copy(
                         initialized = true,
-                        todaysTasks = todays.sortTasks(),
-                        weeksTasks = weeks.sortTasks(),
-                        otherTasks = other.sortTasks()
+                        todaysTasks = todays,
+                        weeksTasks = weeks,
+                        otherTasks = other
                     )
                 }
             }
 
-        private fun MutableList<TaskInfoSlim>.sortTasks(): List<TaskInfoSlim> {
-            sortWith(compareBy<TaskInfoSlim> {
-                it.isCompleted
-            }.thenByDescending { it.isHighPriority }.thenBy { it.isLowPriority })
-            return this
+        private suspend fun modifyTodaysTasks(block: suspend ((List<SlimItem>) -> List<SlimItem>)) {
+            val updated = block.invoke(_viewState.value.todaysTasks)
+            _viewState.update { it.copy(todaysTasks = updated) }
+        }
+
+        private suspend fun modifyWeekTasks(block: suspend ((List<SlimItem>) -> List<SlimItem>)) {
+            val updated = block.invoke(_viewState.value.weeksTasks)
+            _viewState.update { it.copy(weeksTasks = updated) }
+        }
+
+        private suspend fun modifyOtherTasks(block: suspend ((List<SlimItem>) -> List<SlimItem>)) {
+            val updated = block.invoke(_viewState.value.otherTasks)
+            _viewState.update { it.copy(otherTasks = updated) }
         }
 
         fun fetchTasks() {

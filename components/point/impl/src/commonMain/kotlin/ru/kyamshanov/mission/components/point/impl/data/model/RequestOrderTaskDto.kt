@@ -5,6 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class RequestOrderTaskDto(
     val taskId: String,
-    val oldPlaceBefore: String?,
-    val newPlaceBefore: String?
+    val putBefore: String?,
+    val newTaskBefore: String?,
+    val oldBeforeTask: String?,
+    val oldAfterTask: String?,
 )

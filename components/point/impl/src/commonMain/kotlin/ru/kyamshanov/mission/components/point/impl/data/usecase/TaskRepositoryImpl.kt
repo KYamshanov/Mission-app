@@ -23,9 +23,23 @@ internal class TaskRepositoryImpl(
         pointApi.search(phrase).toDomain()
     }
 
-    override suspend fun setPosition(taskId: TaskId, oldPlaceBefore: TaskId?, newPlaceBefore: TaskId?): Result<Unit> =
+    override suspend fun setPosition(
+        taskId: String,
+        putBefore: String?,
+        newTaskBefore: String?,
+        oldBeforeTask: String?,
+        oldAfterTask: String?,
+    ): Result<Unit> =
         runCatching {
-            pointApi.setPosition(RequestOrderTaskDto(taskId, oldPlaceBefore, newPlaceBefore))
+            pointApi.setPosition(
+                RequestOrderTaskDto(
+                    taskId = taskId,
+                    putBefore = putBefore,
+                    newTaskBefore = newTaskBefore,
+                    oldBeforeTask = oldBeforeTask,
+                    oldAfterTask = oldAfterTask
+                )
+            )
         }
 }
 
