@@ -37,6 +37,7 @@ fun LoginComposable(
         LaunchedEffect(true) {
 
             val codeVerifier = authenticationInteractor.getCodeVerifier()
+            val requestState = authenticationInteractor.getCodeVerifier()
 
             val serverSocket: java.net.ServerSocket = java.net.ServerSocket(0)
             launch(Dispatchers.Default) {
@@ -45,7 +46,13 @@ fun LoginComposable(
                 val input = socket.getInputStream()
                 val reader = BufferedReader(InputStreamReader(input))
                 val line: String = reader.readLine()
-                val authorizationCode = line.split("/desktop/authorized?code=")[1].split(" ")[0]
+
+                val authorizationCode =
+                    requireNotNull(authenticationInteractor.obtainAuthorizationCode(line)) { "authorizationCode required" }
+                val state = requireNotNull(authenticationInteractor.obtainState(line)) { "obtainState required" }
+
+                if (state != requestState) throw IllegalStateException("State is not matched")
+
                 val wtr = PrintWriter(socket.getOutputStream())
                 wtr.print(
                     """
@@ -67,7 +74,13 @@ fun LoginComposable(
                 serverSocket.close()
             }
 
-            openBrowser(authenticationInteractor.provideAuthorizationUri(codeVerifier, serverSocket.getLocalPort()))
+            openBrowser(
+                authenticationInteractor.provideAuthorizationUri(
+                    codeVerifier,
+                    serverSocket.getLocalPort(),
+                    requestState
+                )
+            )
         }
     }
 }
