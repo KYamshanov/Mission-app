@@ -12,6 +12,7 @@ import androidx.compose.ui.unit.sp
 @Immutable
 data class MissionTypography(
     val mainAppearance: TextStyle,
+    val labelAppearance: TextStyle,
     val huge: TextStyle,
     val hugeMedium: TextStyle,
     val large: TextStyle,
@@ -35,6 +36,8 @@ data class MissionTypography(
 
     val alternativeButtonStyle = mainAppearance + large + blue
 
+    val labelButtonStyle = labelAppearance + smallMedium + white
+
     val title = mainAppearance + large + black
 
     val field = mainAppearance + huge + blackContainer
@@ -54,6 +57,10 @@ internal fun typographyComposable() = MissionTypography(
     mainAppearance = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Normal,
+    ),
+    labelAppearance = TextStyle(
+        fontFamily = FontFamily.Monospace,
+        fontWeight = FontWeight(550),
     ),
     huge = TextStyle(fontSize = 24.sp),
     hugeMedium = TextStyle(fontSize = 20.sp),
@@ -90,6 +97,7 @@ internal val LocalExtendedTypography = staticCompositionLocalOf {
         blue = TextStyle.Default,
         hugeMedium = TextStyle.Default,
         gold = TextStyle.Default,
+        labelAppearance = TextStyle.Default,
     )
 }
 

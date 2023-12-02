@@ -1,6 +1,6 @@
 package ru.kyamshanov.mission.components.point.impl.domain.interactor
 
-import ru.kyamshanov.mission.components.point.impl.data.model.TaskTypeDto
+import ru.kyamshanov.mission.components.point.impl.domain.models.LabelModel
 import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
@@ -19,4 +19,5 @@ internal interface TaskInteractor {
     suspend fun setPriority(taskId: TaskId, priority: TaskPriority?): Result<Unit>
 
     suspend fun changeTask(taskId: TaskId, title: String?, description: String?): Result<Unit>
+    suspend fun updateLabels(taskId: TaskId, labels: List<LabelModel>): Result<Unit>
 }

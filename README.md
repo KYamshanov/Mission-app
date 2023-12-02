@@ -35,6 +35,7 @@
 Экран редактирования:
 
 ![editing screen](./images/editing.png)
+![editing screen-2](./images/editing-new.png)
 
 ## Requirements
 на 28.10.2023 число необходимо использование backend запускаемый в локальном докере. Репозиторий: https://github.com/KYamshanov/Mission-backend  

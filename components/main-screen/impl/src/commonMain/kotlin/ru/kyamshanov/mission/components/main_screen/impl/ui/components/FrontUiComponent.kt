@@ -13,14 +13,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import ru.kyamshanov.mission.components.main_screen.impl.ui.models.ProjectInfoSlim
 import ru.kyamshanov.mission.components.main_screen.impl.ui.models.SlimItem
 import ru.kyamshanov.mission.components.main_screen.impl.ui.models.TaskInfoSlim
-import ru.kyamshanov.mission.components.points.api.common.TaskPriority
-import ru.kyamshanov.mission.components.points.api.common.TaskSlim
-import ru.kyamshanov.mission.components.points.api.common.TaskStatus
-import ru.kyamshanov.mission.components.points.api.common.TaskType
+import ru.kyamshanov.mission.components.points.api.common.*
 import ru.kyamshanov.mission.components.points.api.di.TaskComponent
+import ru.kyamshanov.mission.components.points.api.domain.ProjectsRepository
 import ru.kyamshanov.mission.components.points.api.domain.TaskRepository
+import ru.kyamshanov.mission.components.points.api.presentation.navigation.ProjectLauncher
 import ru.kyamshanov.mission.components.points.api.presentation.navigation.TaskLauncher
 import ru.kyamshanov.mission.core.navigation.common.utils.di
 import ru.kyamshanov.mission.core.navigation.common.utils.getValue
@@ -33,16 +33,19 @@ internal interface FrontViewModel {
     fun lowerItem(id: String)
     fun raiseItem(id: String)
 
+    fun createProject()
+
     data class State(
         val initialized: Boolean,
         val todaysTasks: List<SlimItem>,
         val weeksTasks: List<SlimItem>,
         val otherTasks: List<SlimItem>,
+        val projects: List<SlimItem>,
     ) {
 
         companion object {
 
-            val Uninitialized = State(false, emptyList(), emptyList(), emptyList())
+            val Uninitialized = State(false, emptyList(), emptyList(), emptyList(), emptyList())
         }
 
     }
@@ -58,19 +61,24 @@ internal class FrontUiComponent(
         val taskComponent: TaskComponent by requireNotNull(instanceKeeper.di())
         SearchRetainedInstance(
             taskComponent.taskRepository,
-            taskComponent.launcher
+            taskComponent.launcher,
+            taskComponent.projectsRepository,
+            taskComponent.projectLauncher
         )
     }
 
     init {
         lifecycle.doOnStart(isOneTime = true) {
             _uiComponent.fetchTasks()
+            _uiComponent.fetchProjects()
         }
     }
 
     private class SearchRetainedInstance(
         private val taskRepository: TaskRepository,
         private val taskLauncher: TaskLauncher,
+        private val projectsRepository: ProjectsRepository,
+        private val projectLauncher: ProjectLauncher,
     ) : InstanceKeeper.Instance,
         FrontViewModel {
 
@@ -80,6 +88,8 @@ internal class FrontUiComponent(
         override fun openItem(itemId: String) {
             if (tasks.find { it.id == itemId } != null) {
                 taskLauncher.launchEditing(itemId)
+            }else if (projects.find { it.id == itemId } != null) {
+                projectLauncher.launchEditing(itemId)
             }
         }
 
@@ -148,6 +158,10 @@ internal class FrontUiComponent(
             }
         }
 
+        override fun createProject() {
+            projectLauncher.launchCreation()
+        }
+
         private val _viewState = MutableValue(FrontViewModel.State.Uninitialized)
 
         private var tasks = emptyList<TaskSlim>()
@@ -182,6 +196,16 @@ internal class FrontUiComponent(
                 }
             }
 
+        private var projects = emptyList<ProjectSlim>()
+            set(value) {
+                field = value
+                _viewState.update {
+                    it.copy(
+                        projects = value.map { ProjectInfoSlim(it.id, it.title, false) }
+                    )
+                }
+            }
+
         private suspend fun modifyTodaysTasks(block: suspend ((List<SlimItem>) -> List<SlimItem>)) {
             val updated = block.invoke(_viewState.value.todaysTasks)
             _viewState.update { it.copy(todaysTasks = updated) }
@@ -201,6 +225,14 @@ internal class FrontUiComponent(
             viewModelScope.launch {
                 taskRepository.getAll()
                     .onSuccess { tasks = it }
+                    .onFailure { Napier.e(it, "FrontUI") { "Error in getting tasks" } }
+            }
+        }
+
+        fun fetchProjects() {
+            viewModelScope.launch {
+                projectsRepository.getAll()
+                    .onSuccess { projects = it }
                     .onFailure { Napier.e(it, "FrontUI") { "Error in getting tasks" } }
             }
         }

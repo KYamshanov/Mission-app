@@ -5,7 +5,6 @@ import ru.kyamshanov.mission.components.point.impl.data.model.*
 import ru.kyamshanov.mission.components.point.impl.data.model.AttachedTasksResponseDto
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskPriorityDto.*
 import ru.kyamshanov.mission.components.point.impl.data.model.TaskStatusDto.*
-import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskSlim
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
@@ -16,7 +15,7 @@ internal class TaskRepositoryImpl(
 ) : TaskRepository {
 
     override suspend fun getAll(): Result<List<TaskSlim>> = runCatching {
-        pointApi.allProjects().toDomain()
+        pointApi.allTasks().toDomain()
     }
 
     override suspend fun search(phrase: String): Result<List<TaskSlim>> = runCatching {

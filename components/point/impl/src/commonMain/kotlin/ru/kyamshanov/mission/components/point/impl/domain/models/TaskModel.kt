@@ -15,5 +15,6 @@ internal data class TaskModel(
     val priority: TaskPriority?,
     val status: TaskStatus,
     val type: TaskType?,
-    val editingRules: TaskEditingRules
+    val editingRules: TaskEditingRules,
+    val labels: List<LabelModel>,
 )

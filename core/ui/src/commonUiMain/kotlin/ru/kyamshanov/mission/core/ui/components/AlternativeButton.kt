@@ -1,9 +1,11 @@
 package ru.kyamshanov.mission.core.ui.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -33,6 +35,7 @@ fun AlternativeButton(
     modifier: Modifier = Modifier,
     content: @Composable (RowScope.() -> Unit),
     onClick: () -> Unit,
+    contentPadding: PaddingValues = ButtonDefaults.ContentPadding,
 ) =
     Button(
         modifier = modifier,
@@ -45,5 +48,6 @@ fun AlternativeButton(
             disabledContentColor = Color.Transparent,
         ),
         elevation = null,
-        shape = MissionTheme.shapes.large
+        shape = MissionTheme.shapes.large,
+        contentPadding = contentPadding
     )

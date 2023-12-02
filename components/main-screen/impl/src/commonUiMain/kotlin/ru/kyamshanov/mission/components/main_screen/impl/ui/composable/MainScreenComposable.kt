@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -106,22 +107,64 @@ internal fun MainScreenComposable(
                     }
                 }
             } else if (frontViewState.initialized) {
-                ComplexCell {
-                    item {
-                        Column {
+                Cell(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = "Today`s tasks",
+                        style = MissionTheme.typography.field,
+                        color = MissionTheme.colors.success,
+                    )
+                    Spacer(modifier = Modifier.height(5.dp))
+                    for (task in frontViewState.todaysTasks) {
+                        ComposableItemText(task, frontViewModel) { frontViewModel.openItem(task.id) }
+                        Spacer(modifier = Modifier.height(2.dp))
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(5.dp))
+                Cell(modifier = Modifier.fillMaxWidth()) {
+                    if (frontViewState.projects.isEmpty()) {
+                        Text(
+                            text = "Projects",
+                            style = MissionTheme.typography.field,
+                            color = MissionTheme.colors.secondary,
+                        )
+                        AlternativeButton(
+                            content = {
+                                Text(
+                                    text = "Ещё нет проектов. Создать проект?",
+                                    style = MissionTheme.typography.alternativeButtonStyle + MissionTheme.typography.medium
+                                )
+                            },
+                            onClick = { frontViewModel.createProject() },
+                            contentPadding = PaddingValues(3.dp)
+                        )
+                    } else {
+                        Row {
                             Text(
-                                text = "Today`s tasks",
+                                text = "Projects",
                                 style = MissionTheme.typography.field,
-                                color = MissionTheme.colors.success,
+                                color = MissionTheme.colors.secondary,
                             )
-                            Spacer(modifier = Modifier.height(5.dp))
-                            for (task in frontViewState.todaysTasks) {
-                                ComposableItemText(task, frontViewModel) { frontViewModel.openItem(task.id) }
-                                Spacer(modifier = Modifier.height(2.dp))
-                            }
+                            Spacer(modifier = Modifier.weight(1f))
+                            Image(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(15))
+                                    .clickable { frontViewModel.createProject() }
+                                    .fillMaxHeight(),
+                                painter = painterResource(Res.images.ic_note_add),
+                                contentDescription = "create new project",
+                                colorFilter = ColorFilter.tint(MissionTheme.colors.secondary)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                        for (task in frontViewState.projects) {
+                            ComposableItemText(task, frontViewModel) { frontViewModel.openItem(task.id) }
+                            Spacer(modifier = Modifier.height(2.dp))
                         }
                     }
-
+                }
+                Spacer(modifier = Modifier.height(5.dp))
+                ComplexCell {
                     item {
                         Column {
                             Text(

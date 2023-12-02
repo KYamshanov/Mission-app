@@ -5,6 +5,7 @@ import ru.kyamshanov.mission.components.point.impl.data.model.*
 import ru.kyamshanov.mission.components.point.impl.data.model.CreateTaskRequestDto
 import ru.kyamshanov.mission.components.point.impl.data.model.toDto
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
+import ru.kyamshanov.mission.components.point.impl.domain.models.LabelModel
 import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority.*
@@ -39,6 +40,10 @@ internal class TaskInteractorImpl(
         runCatching {
             api.edit(EditTaskRsDto(id = taskId, title = title, description = description))
         }
+
+    override suspend fun updateLabels(taskId: TaskId, labels: List<LabelModel>): Result<Unit> = runCatching {
+        api.setLabels(SetLabelRqDto(taskId, labels.map { it.id }))
+    }
 }
 
 private fun TaskPriority.toDto(): TaskPriorityDto = when (this) {

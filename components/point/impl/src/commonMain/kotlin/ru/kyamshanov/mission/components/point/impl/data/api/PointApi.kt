@@ -9,7 +9,7 @@ internal interface PointApi {
 
     suspend fun get(taskId: TaskId): GetTaskRsDto
 
-    suspend fun allProjects(): AttachedTasksResponseDto
+    suspend fun allTasks(): AttachedTasksResponseDto
 
     suspend fun create(rq: CreateTaskRequestDto): CreateTaskResponseDto
 
@@ -27,4 +27,16 @@ internal interface PointApi {
 
     suspend fun edit(data: EditTaskRsDto)
     suspend fun setPosition(body: RequestOrderTaskDto)
+
+    suspend fun allProjects(): AllProjectsRsDto
+
+    suspend fun createProject(rq: CreateProjectsRqDto): CreateProjectsRsDto
+
+    suspend fun getProject(taskId: TaskId): GetProjectRsDto
+
+    suspend fun allLabels(): LabelRsDto
+
+
+    suspend fun setLabels(rq: SetLabelRqDto)
+
 }

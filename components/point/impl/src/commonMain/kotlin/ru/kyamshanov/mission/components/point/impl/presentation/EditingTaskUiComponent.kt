@@ -7,15 +7,11 @@ import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
-import ru.kyamshanov.mission.components.point.impl.data.model.EditingRulesDto
-import ru.kyamshanov.mission.components.point.impl.data.model.TaskTypeDto
+import kotlinx.coroutines.*
 import ru.kyamshanov.mission.components.point.impl.di.TaskModuleComponent
+import ru.kyamshanov.mission.components.point.impl.domain.interactor.LabelInteractor
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
-import ru.kyamshanov.mission.components.point.impl.domain.models.TaskEditingRules
+import ru.kyamshanov.mission.components.point.impl.domain.models.LabelModel
 import ru.kyamshanov.mission.components.point.impl.domain.usecase.GetTaskUseCase
 import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
@@ -66,6 +62,11 @@ internal interface EditingTaskViewModel {
 
     fun startEditingDescription()
 
+    fun selectLabel(labelId: String)
+
+    fun startEditingLabels()
+
+    fun saveLabels()
 
     data class State(
         val toolBarTitle: String,
@@ -78,12 +79,33 @@ internal interface EditingTaskViewModel {
         val saveChangesButtonAvailable: Boolean,
         val isTitleEditing: Boolean?,
         val isDescriptionEditing: Boolean?,
-        val descriptionVisible: Boolean
+        val descriptionVisible: Boolean,
+        val selectedLabels: List<LabelModel>,
+        val labels: Map<LabelModel, Boolean>,
+        val isSaveLabelsAvailable: Boolean,
+        val isSettingLabelsAvailable: Boolean,
     ) {
         fun isInitialized() = this !== Uninitialized
 
         companion object {
-            val Uninitialized = State("", "", "", false, null, TaskStatus.CREATED, null, false, false, false, false)
+            val Uninitialized =
+                State(
+                    toolBarTitle = "",
+                    title = "",
+                    description = "",
+                    loading = false,
+                    type = null,
+                    status = TaskStatus.CREATED,
+                    priority = null,
+                    saveChangesButtonAvailable = false,
+                    isTitleEditing = false,
+                    isDescriptionEditing = false,
+                    descriptionVisible = false,
+                    selectedLabels = emptyList(),
+                    labels = emptyMap(),
+                    isSaveLabelsAvailable = false,
+                    isSettingLabelsAvailable = true
+                )
         }
     }
 }
@@ -103,6 +125,7 @@ internal class EditingTaskUiComponent(
                 navigator = navigationComponent.navigator,
                 getTaskUseCase = internalApi.getTaskUseCase,
                 internalApi.interactor,
+                labelInteractor = internalApi.labelInteractor
             )
         }
 
@@ -111,6 +134,7 @@ internal class EditingTaskUiComponent(
         private val navigator: Navigator,
         private val getTaskUseCase: GetTaskUseCase,
         private val interactor: TaskInteractor,
+        private val labelInteractor: LabelInteractor
     ) : InstanceKeeper.Instance,
         EditingTaskViewModel {
 
@@ -118,6 +142,13 @@ internal class EditingTaskUiComponent(
 
         private var initialTitle: String? = null
         private var initialDescription: String? = null
+        private var initialLabels: Map<LabelModel, Boolean>? = null
+            set(value) {
+                field = value
+                _taskState.update {
+                    it.copy(selectedLabels = value?.mapNotNull { if (it.value) it.key else null }.orEmpty())
+                }
+            }
         private var taskPrefix: String? = null
 
         override fun onBack() {
@@ -267,6 +298,46 @@ internal class EditingTaskUiComponent(
             _taskState.update { it.copy(isDescriptionEditing = true) }
         }
 
+        override fun selectLabel(labelId: String) {
+            val labels = _taskState.value.labels.toMutableMap()
+            val label = labels.entries.first { it.key.id == labelId }
+            labels[label.key] = !label.value
+            _taskState.update { it.copy(labels = labels) }
+        }
+
+        override fun startEditingLabels() {
+            if (initialLabels != null) {
+                _taskState.update {
+                    it.copy(
+                        labels = initialLabels.orEmpty(),
+                        isSettingLabelsAvailable = false,
+                        isSaveLabelsAvailable = true
+                    )
+                }
+            }
+        }
+
+        override fun saveLabels() {
+            viewModelScope.launch {
+                val labels = _taskState.value.labels
+                interactor.updateLabels(
+                    taskId = taskId,
+                    labels = labels.mapNotNull { if (it.value) it.key else null }
+                )
+                    .onSuccess {
+                        initialLabels = labels
+                        _taskState.update {
+                            it.copy(
+                                labels = emptyMap(),
+                                isSettingLabelsAvailable = true,
+                                saveChangesButtonAvailable = false
+                            )
+                        }
+                    }
+                    .onFailure { Napier.e(it) { "Updating labels error" } }
+            }
+        }
+
         private val _taskState = MutableValue(EditingTaskViewModel.State.Uninitialized)
         private val viewModelScope = CoroutineScope(kotlinx.coroutines.Dispatchers.Main + SupervisorJob())
 
@@ -275,6 +346,14 @@ internal class EditingTaskUiComponent(
             viewModelScope.launch {
                 getTaskUseCase.fetch(taskId)
                     .onSuccess { result ->
+                        val labels =
+                            labelInteractor.getAll().getOrElse { emptyList() }.associateWith { false }.toMutableMap()
+                        result.labels.forEach {m ->
+                           labels.entries.find { it.key.id == m.id}?.key?.also {
+                               labels[it] = true
+                           }
+                        }
+                        initialLabels = labels
                         initialTitle = result.title
                         initialDescription = result.description
                         val slitTitle = result.title.split(PREFIX_SEPARATOR, limit = 2)
@@ -289,7 +368,7 @@ internal class EditingTaskUiComponent(
                                 priority = result.priority,
                                 isDescriptionEditing = if (result.editingRules.isDescriptionEditable) false else null,
                                 isTitleEditing = if (result.editingRules.isTitleEditable) false else null,
-                                descriptionVisible = result.description.isNotEmpty()
+                                descriptionVisible = result.description.isNotEmpty(),
                             )
                         }
                     }

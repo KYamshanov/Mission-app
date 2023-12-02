@@ -14,5 +14,6 @@ internal data class GetTaskRsDto(
     val priority: TaskPriorityDto? = null,
     val status: TaskStatusDto = TaskStatusDto.CREATED,
     val type: TaskTypeDto,
-    val editingRules: EditingRulesDto?
+    val editingRules: EditingRulesDto?,
+    val labels: List<LabelDto>
 )
