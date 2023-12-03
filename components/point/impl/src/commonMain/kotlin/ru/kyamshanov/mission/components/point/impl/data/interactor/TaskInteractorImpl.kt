@@ -5,7 +5,7 @@ import ru.kyamshanov.mission.components.point.impl.data.model.*
 import ru.kyamshanov.mission.components.point.impl.data.model.CreateTaskRequestDto
 import ru.kyamshanov.mission.components.point.impl.data.model.toDto
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
-import ru.kyamshanov.mission.components.point.impl.domain.models.LabelModel
+import ru.kyamshanov.mission.components.points.api.common.LabelModel
 import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority.*
@@ -15,8 +15,8 @@ import ru.kyamshanov.mission.components.points.api.common.TaskType
 internal class TaskInteractorImpl(
     private val api: PointApi
 ) : TaskInteractor {
-    override suspend fun create(title: String, description: String): Result<TaskId> = runCatching {
-        api.create(CreateTaskRequestDto(title, description)).id
+    override suspend fun create(title: String, description: String, label: String?): Result<TaskId> = runCatching {
+        api.create(CreateTaskRequestDto(title, description, null, label)).id
     }
 
     override suspend fun delete(taskId: TaskId): Result<Unit> = runCatching {

@@ -26,15 +26,19 @@ fun LabelButton(
     modifier: Modifier = Modifier,
     label: String,
     color: Long,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)? = null,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     Text(
         modifier = modifier
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null
-            ) { onClick.invoke() }
+            .run {
+                if (onClick != null) {
+                    clickable(
+                        interactionSource = interactionSource,
+                        indication = null,
+                    ) { onClick.invoke() }
+                } else this
+            }
             .background(Color(color), RoundedCornerShape(50))
             .padding(horizontal = 5.dp, vertical = 2.dp),
         text = label,

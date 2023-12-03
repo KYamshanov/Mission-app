@@ -13,9 +13,12 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import ru.kyamshanov.mission.components.point.impl.di.TaskModuleComponent
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.ProjectInteractor
-import ru.kyamshanov.mission.components.point.impl.domain.models.LabelModel
+import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
+import ru.kyamshanov.mission.components.points.api.common.LabelModel
 import ru.kyamshanov.mission.components.points.api.common.*
 import ru.kyamshanov.mission.components.points.api.di.TaskComponent
+import ru.kyamshanov.mission.components.points.api.domain.SearchInteractor
+import ru.kyamshanov.mission.components.points.api.presentation.navigation.TaskLauncher
 import ru.kyamshanov.mission.core.navigation.api.Navigator
 import ru.kyamshanov.mission.core.navigation.api.di.NavigationComponent
 import ru.kyamshanov.mission.core.navigation.common.utils.di
@@ -38,6 +41,11 @@ internal interface EditingProjectViewModel {
     fun startEditingDescription()
     fun startEditingTitle()
 
+    fun setNexTaskTitle(value: String)
+
+    fun createNewTask()
+
+    fun openTask(taskSlim: TaskSlim)
 
     data class State(
         val title: String,
@@ -46,12 +54,14 @@ internal interface EditingProjectViewModel {
         val saveChangesButtonAvailable: Boolean,
         val isTitleEditing: Boolean?,
         val isDescriptionEditing: Boolean?,
-        val labels: List<LabelModel>
+        val labels: List<LabelModel>,
+        val newTaskTitle: String,
+        val tasks: List<TaskSlim>
     ) {
         fun isInitialized() = this !== Uninitialized
 
         companion object {
-            val Uninitialized = State("", "", false, false, null, null, emptyList())
+            val Uninitialized = State("", "", false, false, null, null, emptyList(), "", emptyList())
         }
     }
 }
@@ -70,6 +80,9 @@ internal class EditingProjectUiComponent(
                 projectId = taskId,
                 navigator = navigationComponent.navigator,
                 internalApi.projectInteractor,
+                internalApi.interactor,
+                internalApi.searchInteractor,
+                internalApi.launcher
             )
         }
 
@@ -77,6 +90,9 @@ internal class EditingProjectUiComponent(
         private val projectId: ProjectId,
         private val navigator: Navigator,
         private val interactor: ProjectInteractor,
+        private val taskInteractor: TaskInteractor,
+        private val searchInteractor: SearchInteractor,
+        private val taskLauncher: TaskLauncher,
     ) : InstanceKeeper.Instance,
         EditingProjectViewModel {
 
@@ -132,6 +148,32 @@ internal class EditingProjectUiComponent(
             _projectState.update { it.copy(isTitleEditing = true) }
         }
 
+        override fun setNexTaskTitle(value: String) {
+            _projectState.update { it.copy(newTaskTitle = value) }
+        }
+
+        override fun createNewTask() {
+            viewModelScope.launch {
+                val title = _projectState.value.newTaskTitle.trim()
+                val label = _projectState.value.labels.first()
+                require(title.isNotBlank()) { "Title cannot be black at task title " }
+                taskInteractor.create(title, "", label.id)
+                    .onSuccess { taskId ->
+                        _projectState.update {
+                            it.copy(
+                                newTaskTitle = "",
+                                tasks = it.tasks + listOf(TaskSlim(taskId, title, null, TaskStatus.CREATED, null, 0))
+                            )
+                        }
+                    }
+                    .onFailure { Napier.e(it) { "Error creation new task for project" } }
+            }
+        }
+
+        override fun openTask(taskSlim: TaskSlim) {
+            taskLauncher.launchEditing(taskSlim.id)
+        }
+
         private val _projectState = MutableValue(EditingProjectViewModel.State.Uninitialized)
         private val viewModelScope = CoroutineScope(kotlinx.coroutines.Dispatchers.Main + SupervisorJob())
 
@@ -140,6 +182,9 @@ internal class EditingProjectUiComponent(
             viewModelScope.launch {
                 interactor.fetchProject(projectId)
                     .onSuccess { result ->
+                        val tasks =
+                            searchInteractor.search("", listOf(result.labels.first())).getOrNull()?.tasks.orEmpty()
+
                         initialTitle = result.title
                         initialDescription = result.description
                         _projectState.update {
@@ -148,7 +193,8 @@ internal class EditingProjectUiComponent(
                                 description = result.description,
                                 isDescriptionEditing = if (result.editingRules.isDescriptionEditable) false else null,
                                 isTitleEditing = if (result.editingRules.isTitleEditable) false else null,
-                                labels = result.labels
+                                labels = result.labels,
+                                tasks = tasks
                             )
                         }
                     }

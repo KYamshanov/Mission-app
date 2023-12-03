@@ -87,10 +87,18 @@ internal class PointApiImpl(
             response.retrieveBody()
         }
 
-    override suspend fun search(phrase: String): AttachedTasksResponseDto = withContext(Dispatchers.Default) {
+    override suspend fun search(phrase: String): SearchRsDto = withContext(Dispatchers.Default) {
         val response = requestFactory.get("/point/private/search") {
             contentType(ContentType.Application.Json)
             parameter("value", phrase)
+        }
+        response.retrieveBody()
+    }
+
+    override suspend fun search(searchRqDto: SearchRqDto): SearchRsDto = withContext(Dispatchers.Default) {
+        val response = requestFactory.post("/point/private/search") {
+            contentType(ContentType.Application.Json)
+            setBody(searchRqDto)
         }
         response.retrieveBody()
     }

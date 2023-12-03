@@ -23,7 +23,7 @@ internal interface PointApi {
 
     suspend fun removePriority(taskId: TaskId)
 
-    suspend fun search(phrase: String): AttachedTasksResponseDto
+    suspend fun search(phrase: String): SearchRsDto
 
     suspend fun edit(data: EditTaskRsDto)
     suspend fun setPosition(body: RequestOrderTaskDto)
@@ -36,7 +36,8 @@ internal interface PointApi {
 
     suspend fun allLabels(): LabelRsDto
 
-
     suspend fun setLabels(rq: SetLabelRqDto)
+
+    suspend fun search(searchRqDto: SearchRqDto): SearchRsDto
 
 }

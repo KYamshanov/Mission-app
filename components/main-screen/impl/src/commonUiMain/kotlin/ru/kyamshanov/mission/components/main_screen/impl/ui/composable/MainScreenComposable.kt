@@ -1,21 +1,24 @@
 package ru.kyamshanov.mission.components.main_screen.impl.ui.composable
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextDecoration
@@ -28,7 +31,7 @@ import ru.kyamshanov.mission.components.main_screen.impl.ui.components.Navigatio
 import ru.kyamshanov.mission.components.main_screen.impl.ui.components.SearchViewModel
 import ru.kyamshanov.mission.components.main_screen.impl.ui.models.SlimItem
 import ru.kyamshanov.mission.components.main_screen.impl.ui.models.TaskInfoSlim
-import ru.kyamshanov.mission.components.points.api.common.TaskPriority
+import ru.kyamshanov.mission.components.points.api.common.LabelModel
 import ru.kyamshanov.mission.core.ui.Res
 import ru.kyamshanov.mission.core.ui.components.*
 import ru.kyamshanov.mission.core.ui.extensions.systemBarsPadding
@@ -44,7 +47,6 @@ internal fun MainScreenComposable(
         modifier = Modifier.systemBarsPadding(),
     ) {
 
-        val searchPhraseState = rememberSaveable { mutableStateOf("") }
         val searchViewState by searchViewModel.viewState.subscribeAsState()
         val frontViewState by frontViewModel.viewState.subscribeAsState()
 
@@ -58,11 +60,10 @@ internal fun MainScreenComposable(
             Row {
 
                 Search(
-                    value = searchPhraseState.value, onValueChange = {
-                        searchPhraseState.value = it
-                        searchViewModel.searchByName(it)
+                    value = searchViewState.searchPhrase, onValueChange = {
+                        searchViewModel.setSearchPhrase(it)
                     }, trailingIcon = {
-                        if (searchPhraseState.value.isEmpty()) {
+                        if (searchViewState.searchPhrase.isEmpty() && searchViewState.selectedLabel == SearchViewModel.State.DefaultLabelModel) {
                             Image(
                                 painter = painterResource(Res.images.ic_search),
                                 contentDescription = "Поиск",
@@ -78,28 +79,70 @@ internal fun MainScreenComposable(
                                 modifier = Modifier
                                     .clip(CircleShape)
                                     .clickable {
-                                        searchPhraseState.value = ""
                                         searchViewModel.clear()
                                     }
                                     .size(32.dp),
                                 colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
                             )
                         }
-                    })
+                    },
+                    leadingIcon = {
+                        Box(modifier = Modifier.padding(horizontal = 5.dp)) {
+                            val label = searchViewState.selectedLabel
+                            LabelButton(label = label.title, color = label.color) { searchViewModel.clickOnLabels() }
+                            DropdownMenu(
+                                expanded = searchViewState.availableLabels.isNotEmpty(),
+                                onDismissRequest = { searchViewModel.clickOnLabels() },
+                            ) {
+                                for (labelModel in searchViewState.availableLabels) {
+                                    DropdownMenuItem({ searchViewModel.setSearchLabel(labelModel) }) {
+                                        LabelRadioButton(labelModel, labelModel == searchViewState.selectedLabel)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                )
 
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            if (searchViewState.items != null) {
+            if (searchViewState.tasks != null && searchViewState.projects != null) {
                 Column(modifier = Modifier.padding(5.dp)) {
-                    searchViewState.items?.takeIf { it.isNotEmpty() }?.forEach { project ->
-                        Text(
-                            modifier = Modifier.clickable { searchViewModel.openItem(project.id) },
-                            text = project.title,
-                            style = MissionTheme.typography.field
-                        )
-                    } ?: run {
+                    val tasks = searchViewState.tasks?.takeIf { it.isNotEmpty() }
+                    val projects = searchViewState.projects?.takeIf { it.isNotEmpty() }
+
+                    if (tasks != null) {
+                        Cell(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = "Tasks",
+                                style = MissionTheme.typography.field,
+                                color = MissionTheme.colors.success,
+                            )
+                            Spacer(modifier = Modifier.height(5.dp))
+                            for (task in tasks) {
+                                ComposableItemText(task, frontViewModel) { frontViewModel.openItem(task.id) }
+                                Spacer(modifier = Modifier.height(2.dp))
+                            }
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                    }
+                    if (projects != null) {
+                        Cell(modifier = Modifier.fillMaxWidth()) {
+                            Text(
+                                text = "Projects",
+                                style = MissionTheme.typography.field,
+                                color = MissionTheme.colors.secondary,
+                            )
+                            Spacer(modifier = Modifier.height(5.dp))
+                            for (project in projects) {
+                                ComposableItemText(project, frontViewModel) { frontViewModel.openItem(project.id) }
+                                Spacer(modifier = Modifier.height(2.dp))
+                            }
+                        }
+                    }
+                    if (tasks == null && projects == null) {
                         Text(
                             text = "--Not found--",
                             style = MissionTheme.typography.field,
@@ -278,5 +321,18 @@ private fun ComposableItemText(
                     else this
                 },
         )
+    }
+}
+
+
+@Composable
+private fun LabelRadioButton(model: LabelModel, selected: Boolean) {
+    Row(modifier = Modifier.height(IntrinsicSize.Min), verticalAlignment = Alignment.CenterVertically) {
+        RadioButton(
+            selected = selected,
+            onClick = null
+        )
+        Spacer(modifier = Modifier.width(2.dp))
+        LabelButton(modifier = Modifier.padding(3.dp), label = model.title, color = model.color) {}
     }
 }

@@ -5,8 +5,6 @@ import ru.kyamshanov.mission.components.point.impl.data.model.*
 import ru.kyamshanov.mission.components.point.impl.data.model.CreateProjectsRqDto
 import ru.kyamshanov.mission.components.point.impl.data.model.GetProjectRsDto
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.ProjectInteractor
-import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
-import ru.kyamshanov.mission.components.point.impl.domain.models.LabelModel
 import ru.kyamshanov.mission.components.point.impl.domain.models.ProjectEditingRules
 import ru.kyamshanov.mission.components.point.impl.domain.models.ProjectModel
 import ru.kyamshanov.mission.components.points.api.common.*

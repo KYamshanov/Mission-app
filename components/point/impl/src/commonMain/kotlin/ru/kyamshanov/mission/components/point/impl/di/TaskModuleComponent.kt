@@ -5,7 +5,9 @@ import ru.kyamshanov.mission.components.point.impl.domain.interactor.ProjectInte
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
 import ru.kyamshanov.mission.components.point.impl.domain.usecase.GetTaskUseCase
 import ru.kyamshanov.mission.components.points.api.di.TaskComponent
+import ru.kyamshanov.mission.components.points.api.domain.LabelsRepository
 import ru.kyamshanov.mission.components.points.api.domain.ProjectsRepository
+import ru.kyamshanov.mission.components.points.api.domain.SearchInteractor
 import ru.kyamshanov.mission.components.points.api.domain.TaskRepository
 import ru.kyamshanov.mission.components.points.api.presentation.navigation.ProjectLauncher
 import ru.kyamshanov.mission.components.points.api.presentation.navigation.TaskLauncher
@@ -16,6 +18,8 @@ internal class TaskModuleComponent : AbstractComponent(), TaskComponent {
     override val launcher: TaskLauncher = resolve()
     override val projectsRepository: ProjectsRepository = resolve()
     override val projectLauncher: ProjectLauncher = resolve()
+    override val searchInteractor: SearchInteractor = resolve()
+    override val labelsRepository: LabelsRepository = resolve()
 
     val getTaskUseCase: GetTaskUseCase = resolve()
     val interactor: TaskInteractor = resolve()

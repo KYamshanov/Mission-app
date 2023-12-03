@@ -15,6 +15,7 @@ fun Search(
     modifier: Modifier = Modifier,
     value: String,
     trailingIcon: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     onValueChange: (String) -> Unit,
 ) {
     TextField(
@@ -30,6 +31,7 @@ fun Search(
         textStyle = MissionTheme.typography.large,
         shape = MissionTheme.shapes.mediumHuge,
         trailingIcon = trailingIcon,
+        leadingIcon = leadingIcon,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = MissionTheme.colors.input,
             cursorColor = MissionTheme.colors.darkSecondary,

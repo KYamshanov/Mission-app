@@ -2,26 +2,24 @@ package ru.kyamshanov.mission.components.point.impl.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.painterResource
 import ru.kyamshanov.mission.MissionTheme
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
+import ru.kyamshanov.mission.components.points.api.common.TaskSlim
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
-import ru.kyamshanov.mission.components.points.api.common.TaskType
 import ru.kyamshanov.mission.core.ui.Res
 import ru.kyamshanov.mission.core.ui.components.*
 
@@ -102,5 +100,98 @@ internal fun EditingProjectComposable(
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
+
+        Spacer(modifier = Modifier.height(8.dp))
+        ComplexCell(modifier = Modifier.fillMaxWidth()) {
+            val tasks = state.tasks
+            if (tasks.isNotEmpty()) {
+                item {
+                    Column {
+                        Text(
+                            text = "Tasks",
+                            style = MissionTheme.typography.field,
+                            color = MissionTheme.colors.success,
+                        )
+                        Spacer(modifier = Modifier.height(5.dp))
+                        for (task in tasks) {
+                            ComposableItemText(task) { viewModel.openTask(task) }
+                            Spacer(modifier = Modifier.height(2.dp))
+                        }
+                        Spacer(modifier = Modifier.height(5.dp))
+                    }
+                }
+            }
+            item {
+                EditTextField(
+                    modifier = Modifier.fillMaxWidth().padding(5.dp),
+                    text = state.newTaskTitle,
+                    label = "new task",
+                    editable = true,
+                    underlined = false,
+                    onValueChange = { viewModel.setNexTaskTitle(it) },
+                    rightIcon = {
+                        Image(
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .clickable { viewModel.createNewTask() }
+                                .size(32.dp),
+                            painter = painterResource(Res.images.ic_check_circle),
+                            contentDescription = "done",
+                            colorFilter = ColorFilter.tint(MissionTheme.colors.success)
+                        )
+                    }
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+private fun ComposableItemText(
+    item: TaskSlim,
+    onClick: () -> Unit
+) {
+    val isHighPriority = item.priority == TaskPriority.PRIMARY
+    val isLowPriority = item.priority == TaskPriority.LOW
+    val isCompleted = item.status == TaskStatus.COMPLETED
+    if (isHighPriority || isLowPriority) {
+        Row {
+            Text(
+                modifier = Modifier.clickable { onClick() },
+                text = item.title,
+                style = MissionTheme.typography.titleSecondary
+                    .run {
+                        if (isCompleted) copy(textDecoration = TextDecoration.LineThrough)
+                        else this
+                    },
+            )
+            if (isHighPriority) {
+                Image(
+                    modifier = Modifier.fillMaxHeight(),
+                    painter = painterResource(Res.images.ic_keyboard_double_arrow_up),
+                    contentDescription = "high priority",
+                    colorFilter = ColorFilter.tint(MissionTheme.colors.wrong)
+                )
+            } else {
+                Image(
+                    modifier = Modifier.fillMaxHeight(),
+                    painter = painterResource(Res.images.ic_keyboard_double_arrow_down),
+                    contentDescription = "low priority",
+                    colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
+                )
+            }
+        }
+    } else {
+        Text(
+            modifier = Modifier
+                .clickable { onClick() },
+            text = item.title,
+            style = MissionTheme.typography.titleSecondary
+                .run {
+                    if (isCompleted) copy(textDecoration = TextDecoration.LineThrough)
+                    else this
+                },
+        )
     }
 }

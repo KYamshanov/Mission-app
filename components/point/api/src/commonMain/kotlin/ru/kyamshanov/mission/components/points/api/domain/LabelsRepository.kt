@@ -1,8 +1,9 @@
-package ru.kyamshanov.mission.components.point.impl.domain.interactor
+package ru.kyamshanov.mission.components.points.api.domain
 
 import ru.kyamshanov.mission.components.points.api.common.LabelModel
 
-internal interface LabelInteractor {
+
+interface LabelsRepository {
 
     suspend fun getAll(): Result<List<LabelModel>>
 }

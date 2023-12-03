@@ -1,7 +1,7 @@
 package ru.kyamshanov.mission.components.point.impl.data.model
 
 import kotlinx.serialization.Serializable
-import ru.kyamshanov.mission.components.point.impl.domain.models.LabelModel
+import ru.kyamshanov.mission.components.points.api.common.LabelModel
 
 @Serializable
 internal data class LabelRsDto(

@@ -2,13 +2,12 @@ package ru.kyamshanov.mission.components.point.impl.presentation
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,14 +20,14 @@ import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
 import dev.icerock.moko.resources.compose.painterResource
 import ru.kyamshanov.mission.MissionTheme
-import ru.kyamshanov.mission.components.point.impl.domain.models.LabelModel
+import ru.kyamshanov.mission.components.points.api.common.LabelModel
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
 import ru.kyamshanov.mission.components.points.api.common.TaskType
 import ru.kyamshanov.mission.core.ui.Res
 import ru.kyamshanov.mission.core.ui.components.*
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalFoundationApi::class)
 @Composable
 internal fun EditingTaskComposable(
     viewModel: EditingTaskViewModel
@@ -192,7 +191,7 @@ internal fun EditingTaskComposable(
 
             FlowRow(
                 modifier = Modifier
-                    .clickable { viewModel.startEditingLabels() },
+                    .clickable(enabled = state.isSettingLabelsAvailable) { viewModel.startEditingLabels() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (state.selectedLabels.isEmpty()) {
@@ -204,43 +203,32 @@ internal fun EditingTaskComposable(
                 } else {
                     for (model in state.selectedLabels) {
                         Spacer(modifier = Modifier.width(2.dp))
-                        LabelButton(modifier = Modifier.padding(3.dp), label = model.title, color = model.color) {}
+                        LabelButton(modifier = Modifier.padding(3.dp), label = model.title, color = model.color)
                     }
                 }
 
                 Spacer(modifier = Modifier.width(2.dp))
-                Image(
-                    painter = painterResource(Res.images.ic_settings),
-                    contentDescription = "settings",
-                    modifier = Modifier.size(24.dp),
-                    colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
-                )
-            }
-        }
+                Box {
+                    Image(
+                        painter = painterResource(Res.images.ic_settings),
+                        contentDescription = "settings",
+                        modifier = Modifier.size(24.dp),
+                        colorFilter = ColorFilter.tint(MissionTheme.colors.gray)
+                    )
 
-        if (state.labels.isNotEmpty()) {
-            for (labelEntry in state.labels) {
-                val labelModel = labelEntry.key
-                Spacer(modifier = Modifier.height(2.dp))
-                LabelCheckBox(labelModel, labelEntry.value) { viewModel.selectLabel(labelModel.id) }
-            }
-            if (state.isSaveLabelsAvailable) {
-                AlternativeButton(
-                    content = {
-                        Text(
-                            text = "Сохранить",
-                            style = MissionTheme.typography.alternativeButtonStyle + MissionTheme.typography.medium
-                        )
-                        Image(
-                            painter = painterResource(Res.images.ic_expand_less),
-                            contentDescription = "save and up",
-                            modifier = Modifier.size(16.dp),
-                            colorFilter = ColorFilter.tint(MissionTheme.colors.secondary)
-                        )
-                    },
-                    onClick = viewModel::saveLabels,
-                    contentPadding = PaddingValues(3.dp),
-                )
+                    DropdownMenu(
+                        expanded = state.labels.isNotEmpty(),
+                        onDismissRequest = viewModel::saveLabels,
+                    ) {
+                        for (labelEntry in state.labels) {
+                            val labelModel = labelEntry.key
+                            DropdownMenuItem({ viewModel.selectLabel(labelModel.id) }) {
+                                Spacer(modifier = Modifier.height(2.dp))
+                                LabelCheckBox(labelModel, labelEntry.value) { viewModel.selectLabel(labelModel.id) }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -272,26 +260,12 @@ internal fun LabelCheckBox(model: LabelModel, checked: Boolean, onClick: () -> U
             ) {
                 Image(
                     painter = painterResource(Res.images.ic_done),
-                    contentDescription = "Поиск",
+                    contentDescription = "select",
                     modifier = Modifier.matchParentSize(),
                     colorFilter = ColorFilter.tint(MissionTheme.colors.input)
                 )
             }
         }
-
-        /*  Checkbox(
-              modifier = Modifier
-                  .width(IntrinsicSize.Min),
-              checked = checked,
-              onCheckedChange = {},
-              colors = CheckboxDefaults.colors(
-                  uncheckedColor = MissionTheme.colors.secondary,
-                  checkedColor = MissionTheme.colors.secondary,
-                  checkmarkColor = MissionTheme.colors.secondary,
-                  disabledColor = MissionTheme.colors.secondary,
-                  disabledIndeterminateColor = MissionTheme.colors.secondary,
-              )
-          )*/
         Spacer(modifier = Modifier.width(2.dp))
         LabelButton(modifier = Modifier.padding(3.dp), label = model.title, color = model.color) {}
     }

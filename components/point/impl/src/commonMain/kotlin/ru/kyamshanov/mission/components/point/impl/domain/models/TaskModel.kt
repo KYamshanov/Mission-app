@@ -1,6 +1,7 @@
 package ru.kyamshanov.mission.components.point.impl.domain.models
 
 import kotlinx.datetime.LocalDateTime
+import ru.kyamshanov.mission.components.points.api.common.LabelModel
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
 import ru.kyamshanov.mission.components.points.api.common.TaskType

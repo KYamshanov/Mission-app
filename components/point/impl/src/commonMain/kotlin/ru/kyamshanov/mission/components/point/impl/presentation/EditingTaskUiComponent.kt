@@ -11,7 +11,7 @@ import kotlinx.coroutines.*
 import ru.kyamshanov.mission.components.point.impl.di.TaskModuleComponent
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.LabelInteractor
 import ru.kyamshanov.mission.components.point.impl.domain.interactor.TaskInteractor
-import ru.kyamshanov.mission.components.point.impl.domain.models.LabelModel
+import ru.kyamshanov.mission.components.points.api.common.LabelModel
 import ru.kyamshanov.mission.components.point.impl.domain.usecase.GetTaskUseCase
 import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
@@ -307,12 +307,15 @@ internal class EditingTaskUiComponent(
 
         override fun startEditingLabels() {
             if (initialLabels != null) {
-                _taskState.update {
-                    it.copy(
-                        labels = initialLabels.orEmpty(),
-                        isSettingLabelsAvailable = false,
-                        isSaveLabelsAvailable = true
-                    )
+                if (_taskState.value.labels.isNotEmpty()) saveLabels()
+                else {
+                    _taskState.update {
+                        it.copy(
+                            labels = initialLabels.orEmpty(),
+                            isSettingLabelsAvailable = false,
+                            isSaveLabelsAvailable = true
+                        )
+                    }
                 }
             }
         }
@@ -348,10 +351,10 @@ internal class EditingTaskUiComponent(
                     .onSuccess { result ->
                         val labels =
                             labelInteractor.getAll().getOrElse { emptyList() }.associateWith { false }.toMutableMap()
-                        result.labels.forEach {m ->
-                           labels.entries.find { it.key.id == m.id}?.key?.also {
-                               labels[it] = true
-                           }
+                        result.labels.forEach { m ->
+                            labels.entries.find { it.key.id == m.id }?.key?.also {
+                                labels[it] = true
+                            }
                         }
                         initialLabels = labels
                         initialTitle = result.title

@@ -1,6 +1,6 @@
 package ru.kyamshanov.mission.components.point.impl.domain.interactor
 
-import ru.kyamshanov.mission.components.point.impl.domain.models.LabelModel
+import ru.kyamshanov.mission.components.points.api.common.LabelModel
 import ru.kyamshanov.mission.components.points.api.common.TaskId
 import ru.kyamshanov.mission.components.points.api.common.TaskPriority
 import ru.kyamshanov.mission.components.points.api.common.TaskStatus
@@ -8,7 +8,7 @@ import ru.kyamshanov.mission.components.points.api.common.TaskType
 
 internal interface TaskInteractor {
 
-    suspend fun create(title: String, description: String): Result<TaskId>
+    suspend fun create(title: String, description: String, label: String? = null): Result<TaskId>
 
     suspend fun delete(taskId: TaskId): Result<Unit>
 

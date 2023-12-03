@@ -1,5 +1,7 @@
 package ru.kyamshanov.mission.components.point.impl.domain.models
 
+import ru.kyamshanov.mission.components.points.api.common.LabelModel
+
 internal data class ProjectModel(
     val id: String,
     val title: String,

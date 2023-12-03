@@ -18,10 +18,6 @@ internal class TaskRepositoryImpl(
         pointApi.allTasks().toDomain()
     }
 
-    override suspend fun search(phrase: String): Result<List<TaskSlim>> = runCatching {
-        pointApi.search(phrase).toDomain()
-    }
-
     override suspend fun setPosition(
         taskId: String,
         putBefore: String?,
@@ -44,12 +40,6 @@ internal class TaskRepositoryImpl(
 
 private fun AttachedTasksResponseDto.toDomain(): List<TaskSlim> = this.items.map {
     TaskSlim(it.id, it.title, it.priority.toDomain(), it.status.toDomain(), type = it.type.toDomain(), offset = 0)
-}
-
-private fun TaskStatusDto.toDomain(): TaskStatus = when (this) {
-    CREATED -> TaskStatus.CREATED
-    IN_PROCESSING -> TaskStatus.IN_PROCESSING
-    COMPLETED -> TaskStatus.COMPLETED
 }
 
 private fun TaskPriorityDto?.toDomain(): TaskPriority? = when (this) {

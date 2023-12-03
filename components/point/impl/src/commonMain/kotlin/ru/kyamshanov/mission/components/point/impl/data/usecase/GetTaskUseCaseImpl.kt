@@ -35,13 +35,13 @@ private fun GetTaskRsDto.toDomain(): TaskModel = TaskModel(
     labels = labels.map { it.toDomain() }
 )
 
-private fun TaskStatusDto.toDomain(): TaskStatus = when (this) {
+internal fun TaskStatusDto.toDomain(): TaskStatus = when (this) {
     CREATED -> TaskStatus.CREATED
     IN_PROCESSING -> TaskStatus.IN_PROCESSING
     COMPLETED -> TaskStatus.COMPLETED
 }
 
-private fun TaskPriorityDto.toDomain(): TaskPriority = when (this) {
+internal fun TaskPriorityDto.toDomain(): TaskPriority = when (this) {
     PRIMARY -> TaskPriority.PRIMARY
     LOW -> TaskPriority.LOW
 }
