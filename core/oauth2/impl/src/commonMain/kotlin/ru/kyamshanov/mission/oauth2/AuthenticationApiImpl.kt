@@ -24,7 +24,7 @@ internal class AuthenticationApiImpl(
                 listOf(
                     "grant_type" to "authorization_code",
                     "code" to authorizationCode,
-                    "redirect_uri" to "http://127.0.0.1:$callbackPort/desktop/authorized",
+                    "redirect_uri" to "https://127.0.0.1:$callbackPort/desktop/authorized",
                     "code_verifier" to codeVerifier
                 ).formUrlEncode()
             )

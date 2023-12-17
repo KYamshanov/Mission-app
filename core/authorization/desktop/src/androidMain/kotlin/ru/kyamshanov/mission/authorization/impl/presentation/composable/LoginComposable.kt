@@ -45,10 +45,10 @@ fun LoginComposable(
                             view: WebView,
                             url: String?
                         ): Boolean {
-                            if (url != null && url.startsWith("http://127.0.0.1:8080/desktop/authorized?code=")) {
+                            if (url != null && url.startsWith("https://127.0.0.1:8080/desktop/authorized?code=")) {
                                 runBlocking {
                                     val code =
-                                        url.removePrefix("http://127.0.0.1:8080/desktop/authorized?code=")
+                                        url.removePrefix("https://127.0.0.1:8080/desktop/authorized?code=")
                                     val token =
                                         authenticationInteractor.getToken(code, codeVerifier)
                                     val accessData = AccessData(

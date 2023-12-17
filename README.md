@@ -54,3 +54,7 @@
 1) ~~портировать функциональность разработанного приложения mission-android (https://github.com/KYamshanov/mission-android) с поддержкой android/desktop;~~ LEGACY. see point 3;
 2) реализовывать функциональность таск менеджера на основе главы "Практики экономии мыслетоплива" книги "Джедайские техники Как воспитать свою обезьяну, опустошить инбокс и сберечь мыслетопливо";
 3) реализовывать функциональность управления проектами. Связывание задач с проектами и их менеджмент.
+
+
+## Feedback and support
+To ask a question or send feedback, you can use github issues or [contact me by email](mailto:kyamshanov@vk.ru)

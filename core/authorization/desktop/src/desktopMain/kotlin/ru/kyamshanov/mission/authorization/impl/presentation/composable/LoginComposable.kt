@@ -48,8 +48,9 @@ fun LoginComposable(
                 val line: String = reader.readLine()
 
                 val authorizationCode =
-                    requireNotNull(authenticationInteractor.obtainAuthorizationCode(line)) { "authorizationCode required" }
-                val state = requireNotNull(authenticationInteractor.obtainState(line)) { "obtainState required" }
+                    checkNotNull(authenticationInteractor.obtainAuthorizationCode(line)) { "AuthorizationCode not found at response $line" }
+                val state =
+                    checkNotNull(authenticationInteractor.obtainState(line)) { "State not found at response $line" }
 
                 if (state != requestState) throw IllegalStateException("State is not matched")
 
@@ -75,7 +76,7 @@ fun LoginComposable(
             }
 
             openBrowser(
-                authenticationInteractor.provideAuthorizationUri(
+                authenticationInteractor.getAuthorizationUri(
                     codeVerifier,
                     serverSocket.getLocalPort(),
                     requestState

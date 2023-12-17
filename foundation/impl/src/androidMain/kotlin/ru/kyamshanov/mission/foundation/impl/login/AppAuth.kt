@@ -88,15 +88,15 @@ internal object AppAuth {
     }
 
     private object AuthConfig {
-        const val AUTH_URI = "http://127.0.0.1:9000/oauth2/authorize"
-        const val TOKEN_URI = "http://127.0.0.1:9000/oauth2/token"
-        const val END_SESSION_URI = "http://127.0.0.1:9000/oauth2/logout"
+        const val AUTH_URI = "https://127.0.0.1:9000/oauth2/authorize"
+        const val TOKEN_URI = "https://127.0.0.1:9000/oauth2/token"
+        const val END_SESSION_URI = "https://127.0.0.1:9000/oauth2/logout"
         const val RESPONSE_TYPE = ResponseTypeValues.CODE
         const val SCOPE = "point"
 
         const val CLIENT_ID = "desktop-client"
         const val CLIENT_SECRET = "secret"
-        const val CALLBACK_URL = "http://127.0.0.1:8080/desktop/authorized"
+        const val CALLBACK_URL = "https://127.0.0.1:8080/desktop/authorized"
         const val LOGOUT_CALLBACK_URL = "ru.mission.id://github.com/logout_callback"
     }
 }

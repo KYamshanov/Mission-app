@@ -17,14 +17,16 @@ internal class AuthenticationInteractorImpl(
 ) : AuthenticationInteractor {
     override fun getCodeVerifier(): String = generateCodeVerifier()
 
-    override fun provideAuthorizationUri(codeVerifier: String, callbackPort: Int, state: String): String = buildString {
+    override fun getAuthorizationUri(codeVerifier: String, callbackPort: Int, state: String): String = buildString {
         val responseType = "code"
         val clientId = "desktop-client"
         val scope = "point"
+
+        //redirectUri use not security channel (http) and it`s ok (quite security) due to code verifier
         val redirectUri = "http://127.0.0.1:${callbackPort}/desktop/authorized"
         val codeChallenge = generateCodeChallange(codeVerifier)
 
-        append("http://127.0.0.1:6543/oauth2/authorize?")
+        append("https://127.0.0.1:6543/oauth2/authorize?")
         //   append("http://192.168.43.29:6543/oauth2/authorize?")
         append("client_id=$clientId&")
         append("response_type=$responseType&")
