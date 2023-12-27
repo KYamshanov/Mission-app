@@ -26,7 +26,9 @@ fun LoginComposable(
     Box(modifier = Modifier.fillMaxSize().background(color = MissionTheme.colors.background)) {
 
         val codeVerifier = authenticationInteractor.getCodeVerifier()
-        val mUrl = authenticationInteractor.provideAuthorizationUri(codeVerifier)
+        val requestState = authenticationInteractor.getCodeVerifier()
+
+        val mUrl = authenticationInteractor.getAuthorizationUri(codeVerifier, state = requestState)
 
         println("URL1: ${mUrl}")
         // Adding a WebView inside AndroidView
@@ -45,12 +47,18 @@ fun LoginComposable(
                             view: WebView,
                             url: String?
                         ): Boolean {
-                            if (url != null && url.startsWith("https://127.0.0.1:8080/desktop/authorized?code=")) {
+                            if (url != null && url.startsWith("http://127.0.0.1:8080/desktop/authorized?code=")) {
                                 runBlocking {
-                                    val code =
-                                        url.removePrefix("https://127.0.0.1:8080/desktop/authorized?code=")
+
+                                    val authorizationCode =
+                                        checkNotNull(authenticationInteractor.obtainAuthorizationCode(url)) { "AuthorizationCode not found at response $url" }
+                                    val state =
+                                        checkNotNull(authenticationInteractor.obtainState(url)) { "State not found at response $url" }
+
+                                    if (state != requestState) throw IllegalStateException("State is not matched")
+
                                     val token =
-                                        authenticationInteractor.getToken(code, codeVerifier)
+                                        authenticationInteractor.getToken(authorizationCode, codeVerifier)
                                     val accessData = AccessData(
                                         Token(token.accessToken), Token(token.refreshToken),
                                         emptyList()
@@ -62,7 +70,7 @@ fun LoginComposable(
                             }
                             return false
                         }
-                    }
+                    }.apply { settings.javaScriptEnabled = true }
                     loadUrl(mUrl)
                 }
             }, update = {

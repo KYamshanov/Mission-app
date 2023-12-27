@@ -26,7 +26,7 @@ internal class AuthenticationInteractorImpl(
         val redirectUri = "http://127.0.0.1:${callbackPort}/desktop/authorized"
         val codeChallenge = generateCodeChallange(codeVerifier)
 
-        append("https://127.0.0.1:6543/oauth2/authorize?")
+        append("https://kyamshanov.ru:6543/oauth2/authorize?")
         //   append("http://192.168.43.29:6543/oauth2/authorize?")
         append("client_id=$clientId&")
         append("response_type=$responseType&")

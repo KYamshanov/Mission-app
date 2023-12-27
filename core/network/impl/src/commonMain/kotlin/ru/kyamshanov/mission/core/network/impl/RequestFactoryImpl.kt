@@ -32,6 +32,11 @@ class RequestFactoryImpl(isAuthModule: Boolean = false) : RequestFactory {
             })
         }
 
+        install(HttpTimeout) {
+            requestTimeoutMillis = 120_000
+            socketTimeoutMillis = 120_000
+        }
+
         if (!isAuthModule)
             install(Auth) {
                 bearer {
@@ -56,7 +61,7 @@ class RequestFactoryImpl(isAuthModule: Boolean = false) : RequestFactory {
             }
 
         defaultRequest {
-            url("https://127.0.0.1:3456/") //wifi
+            url("https://www.kyamshanov.ru:3456/") //wifi
         }
     }
 
