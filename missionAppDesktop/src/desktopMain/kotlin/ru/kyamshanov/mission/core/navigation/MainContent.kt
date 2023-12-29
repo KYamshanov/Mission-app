@@ -6,6 +6,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.awt.ComposeWindow
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
@@ -13,12 +14,20 @@ import ru.kyamshanov.mission.MissionTheme
 import ru.kyamshanov.mission.core.navigation.common.ComposableScreen
 import ru.kyamshanov.mission.core.navigation.common.utils.composeComponentContext
 import ru.kyamshanov.mission.core.navigation.impl.domain.RootComponent
+import java.awt.Component
 
 @Composable
-fun MainContent(defaultRootComponent: RootComponent) {
+fun MainContent(window: ComposeWindow, defaultRootComponent: RootComponent) {
     MissionTheme {
         Surface(modifier = Modifier.fillMaxSize(), color = MissionTheme.colors.background) {
-
+            window.apply {
+                val composeColor = MissionTheme.colors.background
+                val color = java.awt.Color(composeColor.red, composeColor.green, composeColor.blue)
+                background = color
+                rootPane.background = color
+                contentPane.background = color
+                layeredPane.background = color
+            }
             Children(
                 stack = defaultRootComponent.childStack
             ) { active ->

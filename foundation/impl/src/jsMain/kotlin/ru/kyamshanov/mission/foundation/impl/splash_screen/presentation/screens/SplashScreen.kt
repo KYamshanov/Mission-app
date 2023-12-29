@@ -3,16 +3,7 @@ package ru.kyamshanov.mission.foundation.impl.splash_screen.presentation.screens
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
 import dev.icerock.moko.resources.compose.stringResource
-import org.jetbrains.compose.web.css.DisplayStyle
-import org.jetbrains.compose.web.css.JustifyContent
-import org.jetbrains.compose.web.css.display
-import org.jetbrains.compose.web.css.justifyContent
-import org.jetbrains.compose.web.css.maxHeight
-import org.jetbrains.compose.web.css.maxWidth
-import org.jetbrains.compose.web.css.padding
-import org.jetbrains.compose.web.css.percent
-import org.jetbrains.compose.web.css.px
-import org.jetbrains.compose.web.css.width
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.H1
 import org.jetbrains.compose.web.dom.Img
@@ -31,7 +22,6 @@ internal actual class SplashScreen : Screen, JsComposableScreen {
 
         Div(attrs = {
             style {
-                padding(16.px)
                 width(100.percent)
                 display(DisplayStyle.Flex)
                 justifyContent(JustifyContent.Center)
@@ -46,7 +36,6 @@ internal actual class SplashScreen : Screen, JsComposableScreen {
         }
         Div(attrs = {
             style {
-                padding(16.px)
                 width(100.percent)
                 display(DisplayStyle.Flex)
                 justifyContent(JustifyContent.Center)

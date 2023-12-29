@@ -14,6 +14,7 @@ kotlin {
     js(IR) {
         browser()
         binaries.executable()
+        version = "1.0.0"
     }
 
     sourceSets {
