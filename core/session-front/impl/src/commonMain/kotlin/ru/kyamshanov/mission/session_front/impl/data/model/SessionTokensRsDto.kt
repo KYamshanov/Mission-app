@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  */
 
 @Serializable
-internal data class TokensRsDto(
+internal data class SessionTokensRsDto(
     val accessToken: AccessTokenDto,
     val refreshToken: String
 )

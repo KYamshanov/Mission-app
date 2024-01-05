@@ -3,10 +3,11 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 group = "ru.kyamshanov.mission"
-version = "1.0.0"
+version = "0.0.1"
 
 kotlin {
     jvm("desktop")
@@ -16,6 +17,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(libs.decompose.core)
+                implementation(libs.ktor.serialization.json)
+                implementation(libs.kotlinx.serialization.json)
             }
         }
 
@@ -64,15 +67,16 @@ compose.desktop {
             packageVersion = "1.0.0"
             description = "Mission application"
             copyright = "© 2023 KYamshanov. All rights reserved."
+            vendor = "KYamshanov"
 
             windows {
                 menu = true
                 iconFile.set(project.file("icons/app_icon.ico"))
             }
         }
-
         buildTypes.release.proguard {
-            configurationFiles.from(project.file("compose-desktop-rules.pro"))
+            obfuscate.set(true)
+            configurationFiles.from("proguard-rules.pro")
         }
     }
 }

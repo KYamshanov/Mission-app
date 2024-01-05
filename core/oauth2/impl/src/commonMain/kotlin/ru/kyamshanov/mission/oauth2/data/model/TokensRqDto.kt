@@ -1,4 +1,4 @@
-package ru.kyamshanov.mission.oauth2
+package ru.kyamshanov.mission.oauth2.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -1,7 +1,6 @@
 package ru.kyamshanov.mission.core.network.impl
 
 import io.github.aakira.napier.Napier
-import io.ktor.client.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
@@ -19,7 +18,7 @@ import ru.kyamshanov.mission.session_front.api.session.LoggedSession
 
 class RequestFactoryImpl(isAuthModule: Boolean = false) : RequestFactory {
 
-    private val client = HttpClient {
+    private val client = httpClient {
         install(Logging) {
             logger = NetworkLogger()
             level = LogLevel.ALL

@@ -9,14 +9,14 @@ import ru.kyamshanov.mission.session_front.impl.data.model.BlockRefreshRqDto
 import ru.kyamshanov.mission.session_front.impl.data.model.CheckAccessRqDto
 import ru.kyamshanov.mission.session_front.impl.data.model.CheckAccessRsDto
 import ru.kyamshanov.mission.session_front.impl.data.model.RefreshRqDto
-import ru.kyamshanov.mission.session_front.impl.data.model.TokensRsDto
+import ru.kyamshanov.mission.session_front.impl.data.model.SessionTokensRsDto
 import ru.kyamshanov.mission.session_front.impl.data.model.UserDto
 
 internal class AuthenticationApiImpl constructor(
     private val requestFactory: RequestFactory
 ) : AuthenticationApi {
 
-    override suspend fun login(rq: UserDto): Result<TokensRsDto> = runCatching {
+    override suspend fun login(rq: UserDto): Result<SessionTokensRsDto> = runCatching {
         val response = requestFactory.post("auth/login") {
             contentType(ContentType.Application.Json)
             setBody(rq)
@@ -32,7 +32,7 @@ internal class AuthenticationApiImpl constructor(
         response.retrieveBody()
     }
 
-    override suspend fun refresh(rq: RefreshRqDto): Result<TokensRsDto> = runCatching {
+    override suspend fun refresh(rq: RefreshRqDto): Result<SessionTokensRsDto> = runCatching {
         val response = requestFactory.post("auth/refresh") {
             contentType(ContentType.Application.Json)
             setBody(rq)

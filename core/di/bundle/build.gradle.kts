@@ -13,6 +13,5 @@ dependencies {
     commonMainImplementation(projects.components.time)
     commonMainImplementation(projects.core.oauth2.impl)
     commonMainImplementation(projects.components.point.impl)
-
     commonMainImplementation(projects.core.authorization.desktop)
 }
