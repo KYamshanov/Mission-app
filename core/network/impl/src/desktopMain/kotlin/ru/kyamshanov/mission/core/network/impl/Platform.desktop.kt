@@ -1,16 +1,8 @@
 package ru.kyamshanov.mission.core.network.impl
 
 import io.ktor.client.*
-import io.ktor.client.engine.okhttp.*
-import java.util.concurrent.TimeUnit
+import io.ktor.client.engine.cio.*
 
-actual fun httpClient(config: HttpClientConfig<*>.() -> Unit) = HttpClient(OkHttp) {
+actual fun httpClient(config: HttpClientConfig<*>.() -> Unit) = HttpClient(CIO) {
     config(this)
-
-    engine {
-        config {
-            retryOnConnectionFailure(true)
-            connectTimeout(0, TimeUnit.SECONDS)
-        }
-    }
 }

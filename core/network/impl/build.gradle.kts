@@ -26,7 +26,7 @@ kotlin {
 
         val desktopMain by getting {
             dependencies {
-                implementation(libs.ktor.client.okhttp)
+                implementation(libs.ktor.client.cio)
             }
         }
 

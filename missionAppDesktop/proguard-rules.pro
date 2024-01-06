@@ -7,7 +7,6 @@
 -keep class com.arkivanov.decompose.**
 -keep class io.ktor.** { *; }
 
-
 -keepattributes Annotation, InnerClasses
 -dontnote kotlinx.serialization.AnnotationsKt
 -dontnote kotlinx.serialization.SerializationKt
