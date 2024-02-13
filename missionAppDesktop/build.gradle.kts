@@ -57,6 +57,13 @@ compose.desktop {
         mainClass = "MainKt"
 
         nativeDistributions {
+            includeAllModules = false
+            modules = arrayListOf(
+                "java.base",
+                "java.desktop",
+                "java.logging",
+                "jdk.crypto.ec"
+            )
             targetFormats(
                 TargetFormat.Dmg,
                 TargetFormat.Msi,
@@ -73,6 +80,8 @@ compose.desktop {
                 menu = true
                 iconFile.set(project.file("icons/app_icon.ico"))
             }
+            appResourcesRootDir.set(project.layout.projectDirectory.dir("assets"))
+            jvmArgs += "-splash:app/resources/splash_logo.png"
         }
         buildTypes.release.proguard {
             obfuscate.set(true)

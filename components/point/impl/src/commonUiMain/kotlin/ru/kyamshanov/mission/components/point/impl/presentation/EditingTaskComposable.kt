@@ -9,7 +9,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -192,7 +193,7 @@ internal fun EditingTaskComposable(
             FlowRow(
                 modifier = Modifier
                     .clickable(enabled = state.isSettingLabelsAvailable) { viewModel.startEditingLabels() },
-                verticalAlignment = Alignment.CenterVertically
+                verticalArrangement = Arrangement.Center
             ) {
                 if (state.selectedLabels.isEmpty()) {
                     Spacer(modifier = Modifier.width(2.dp))

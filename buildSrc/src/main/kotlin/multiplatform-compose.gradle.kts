@@ -47,7 +47,6 @@ kotlin {
         val jsMain by getting {
             dependencies {
                 implementation(compose.html.core)
-                implementation(compose.runtime)
             }
         }
     }
