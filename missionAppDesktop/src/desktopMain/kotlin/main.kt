@@ -44,9 +44,9 @@ fun main() = application {
 
     val icon = painterResource(Res.images.app_icon)
     Toolkit.getDefaultToolkit().setDynamicLayout(false)
-    val size = java.awt.Toolkit.getDefaultToolkit().getScreenSize()
-    val height = (size.height - 50).dp
-    val width = (size.height * 0.667).dp
+    val size = Toolkit.getDefaultToolkit().screenSize
+    val height = (size.height * 0.85).dp
+    val width = (size.height * 0.6).dp
     Window(
         title = "Mission-app",
         state = rememberWindowState(

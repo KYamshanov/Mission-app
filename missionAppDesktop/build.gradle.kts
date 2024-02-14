@@ -71,7 +71,7 @@ compose.desktop {
                 TargetFormat.Exe
             )
             packageName = "MissionApp"
-            packageVersion = "1.0.0"
+            packageVersion = "1.1.1"
             description = "Mission application"
             copyright = "© 2023 KYamshanov. All rights reserved."
             vendor = "KYamshanov"
@@ -85,6 +85,7 @@ compose.desktop {
         }
         buildTypes.release.proguard {
             obfuscate.set(true)
+            isEnabled.set(true)
             configurationFiles.from("proguard-rules.pro")
         }
     }
