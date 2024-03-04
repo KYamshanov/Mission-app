@@ -42,7 +42,7 @@ object Di {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : Any> getBuilder(clazz: KClass<Any>): ComponentBuilder<T>? =
+    fun <T : Any> getBuilder(clazz: KClass<out Any>): ComponentBuilder<T>? =
         this.builders[clazz] as? ComponentBuilder<T>
 
     @Suppress("UNCHECKED_CAST")

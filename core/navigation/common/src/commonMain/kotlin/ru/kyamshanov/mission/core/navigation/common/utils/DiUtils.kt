@@ -4,10 +4,22 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.essenty.lifecycle.doOnDestroy
+import org.koin.core.scope.Scope
 import ru.kyamshanov.mission.core.di.impl.Di
+import ru.kyamshanov.mission.core.di.impl.buildObject
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
+fun <C : ComponentContext> ComponentContext.buildComponent(
+    vararg components: KClass<out Any>,
+    factory: Scope.(root: ComponentContext) -> C
+): C {
+    val (obj, closeCallback) = buildObject(
+        components = components,
+        factory = { factory(it, this) })
+    lifecycle.doOnDestroy { closeCallback.invoke() }
+    return obj
+}
 
 inline fun <reified ComponentType : Any> ComponentContext.di(): ComponentType? {
     if (lifecycle.state == Lifecycle.State.DESTROYED) return null
